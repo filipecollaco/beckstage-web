@@ -2,7 +2,7 @@
    the Representative Pro calculator (1–60 artists with an active deal). */
 import { useState } from 'react';
 import { Icon } from './icons';
-import { LINKS, PRICING, mailto, money, repPrice, type Feat, type Plan } from '../data/site';
+import { LINKS, PRICING, money, repPrice, type Feat, type Plan } from '../data/site';
 
 type Billing = 'monthly' | 'yearly';
 const cents = (n: number) => Math.round(n * 100) / 100;
@@ -144,7 +144,6 @@ export default function Pricing() {
               <li key={r.t}><Icon name="check" size={15} /><div><strong>{r.t}</strong><span>{r.d}</span></div></li>
             ))}
           </ul>
-          <p className="price-foot-note">{pr.footNote}<a href={mailto('More than 60 artists')}>{pr.footLink}</a>.</p>
         </>
       )}
     </div>

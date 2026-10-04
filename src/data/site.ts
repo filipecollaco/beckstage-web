@@ -9,7 +9,7 @@ export const LINKS = {
   signup: 'https://app.beckstage.music/signup',
   login: 'https://app.beckstage.music/login',
   email: 'hello@beckstage.music',
-  instagram: 'https://instagram.com/beckstage',
+  instagram: 'https://www.instagram.com/beckstage.music/',
   // The apps are not public yet. The "Get the app" band renders only once
   // both of these are set.
   appStore: null as string | null,
@@ -276,8 +276,6 @@ export const PRICING = {
     { t: 'Downgrading is clean', d: 'Nothing is deleted, nothing stops being readable, editable or closable.' },
     { t: 'Recording money is free', d: 'Registering a payment made outside Beckstage, on every plan, forever.' },
   ],
-  footNote: 'Annual billing = 10× monthly, 2 months free. Full price after the trial — no founding discounts, no comped accounts. Prices exclude VAT; EU businesses with a valid VAT number are reverse-charged. Billing on the web only. More than 60 artists, multi-office or central billing? ',
-  footLink: 'Get in touch',
 };
 
 /** Representative Pro, per month: artists 1–2 = €25 total, then +€5 (3rd–6th),
