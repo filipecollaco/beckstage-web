@@ -186,6 +186,7 @@ img { max-width: none; }
 .hv2-show-dot { width: 6px; height: 6px; border-radius: 999px; background: var(--orange); box-shadow: 0 0 0 3px rgba(255,143,0,0.22); flex: none; }
 .hv2-show-title { font-family: var(--display); font-size: 15px; font-weight: 600; letter-spacing: -0.005em; color: var(--orange); white-space: nowrap; }
 .hv2-show-meta { margin-left: auto; font-size: 12.5px; line-height: 1.4; text-align: right; color: rgba(255,249,243,0.55); min-width: 0; }
+.hv2-show-meta .nowrap { white-space: nowrap; }
 .hv2-show-status { flex: none; display: inline-flex; align-items: center; height: 21px; padding: 0 9px;
   border-radius: 999px; font-family: var(--body); font-size: 10.5px; font-weight: 600; letter-spacing: 0.04em;
   color: #8ed6ae; background: rgba(44,116,73,0.22); border: 1px solid rgba(142,214,174,0.28); }

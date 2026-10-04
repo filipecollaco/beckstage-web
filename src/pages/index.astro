@@ -63,7 +63,7 @@ const ogImage = new URL('/og.png', site).href;
             <div class="hv2-show">
               <span class="hv2-show-dot"></span>
               <span class="hv2-show-title">{SHOW.artist}</span>
-              <span class="hv2-show-meta">{SHOW.venue} · {SHOW.date}</span>
+              <span class="hv2-show-meta">{SHOW.venue} · <span class="nowrap">{SHOW.date}</span></span>
               <span class="hv2-show-status">{SHOW.status}</span>
             </div>
             <HeroStream client:load />
