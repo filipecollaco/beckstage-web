@@ -1,0 +1,36 @@
+---
+import '@fontsource/inter/600.css';
+import '@fontsource/poppins/400.css';
+import '@fontsource/poppins/600.css';
+import '../styles/site.css';
+import { BeckstageWordmark, Icon } from '../components/icons';
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Page not found · Beckstage</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body class="bk-site">
+    <main class="hv2 notfound">
+      <div class="bk-wrap">
+        <a href="/" aria-label="Beckstage home"><BeckstageWordmark height={24} color="#ff9e2c" /></a>
+        <h1 class="bk-h1">This page isn’t <em>on the bill.</em></h1>
+        <p class="hv2-sub">The link may be old, or the page may have moved.</p>
+        <div class="hv2-ctas">
+          <a class="bk-btn bk-btn-lg bk-btn-onDark" href="/">Go to beckstage.music<Icon name="arrow" size={18} color="#fff" /></a>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
+
+<style>
+  .notfound { min-height: 100vh; display: flex; align-items: center; padding: 64px 0; }
+  .notfound .bk-wrap { position: relative; z-index: 2; width: 100%; }
+  .notfound .bk-h1 { color: var(--spotlightFg); margin-top: 48px; max-width: 760px; }
+  .notfound .bk-h1 em { font-style: normal; color: var(--burning); }
+</style>

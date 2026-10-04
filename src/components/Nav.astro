@@ -1,0 +1,48 @@
+---
+import { BeckstageWordmark, Icon } from './icons';
+import { LINKS, NAV } from '../data/site';
+---
+<nav class="bk-nav" aria-label="Main">
+  <div class="bk-wrap bk-nav-inner">
+    <a href="/" class="bk-nav-brand"><BeckstageWordmark height={24} color="#ff9e2c" /></a>
+    <div class="bk-nav-links">
+      {NAV.map((l) => <a class="bk-nav-link" href={l.href}>{l.label}</a>)}
+    </div>
+    <div class="bk-nav-actions">
+      <a class="bk-nav-ig" href={LINKS.instagram} target="_blank" rel="noopener" aria-label="Beckstage on Instagram"><Icon name="instagram" size={20} /></a>
+      <a class="bk-login" href={LINKS.login}>Log in</a>
+      <a class="bk-btn bk-btn-onDark" href={LINKS.signup}>Create free account</a>
+      <button class="bk-burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="bk-menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+  <!-- Mobile menu. Not in the design (the burger was left undesigned); kept to
+       the nav's own vocabulary: the same links, Log in and the same button. -->
+  <div class="bk-menu" id="bk-menu" hidden>
+    <div class="bk-wrap">
+      {NAV.map((l) => <a class="bk-menu-link" href={l.href}>{l.label}</a>)}
+      <a class="bk-menu-link" href={LINKS.login}>Log in</a>
+      <a class="bk-btn bk-btn-lg bk-btn-onDark bk-menu-cta" href={LINKS.signup}>Create your free account<Icon name="arrow" size={18} color="#fff" /></a>
+    </div>
+  </div>
+</nav>
+
+<script>
+  const nav = document.querySelector<HTMLElement>('.bk-nav');
+  const burger = nav?.querySelector<HTMLButtonElement>('.bk-burger');
+  const menu = nav?.querySelector<HTMLElement>('.bk-menu');
+  if (nav && burger && menu) {
+    const set = (open: boolean) => {
+      menu.hidden = !open;
+      burger.setAttribute('aria-expanded', String(open));
+      nav.classList.toggle('menu-open', open);
+    };
+    burger.addEventListener('click', () => set(burger.getAttribute('aria-expanded') !== 'true'));
+    menu.addEventListener('click', (e) => {
+      if ((e.target as HTMLElement).closest('a')) set(false);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !menu.hidden) { set(false); burger.focus(); }
+    });
+    matchMedia('(min-width: 761px)').addEventListener('change', (e) => { if (e.matches) set(false); });
+  }
+</script>

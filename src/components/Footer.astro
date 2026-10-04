@@ -1,0 +1,44 @@
+---
+/* The app band and footer: one dark closing block. */
+import { BeckstageWordmark } from './icons';
+import { APPS, FOOTER, LINKS, NAV } from '../data/site';
+// The band only exists once both apps are public.
+const stores = LINKS.appStore && LINKS.googlePlay
+  ? [
+    { href: LINKS.appStore, src: '/badges/app-store-badge.svg', alt: 'Download on the App Store' },
+    { href: LINKS.googlePlay, src: '/badges/google-play-badge.png', alt: 'Get it on Google Play' },
+  ]
+  : null;
+---
+{stores && (
+  <section class="app-band">
+    <div class="bk-wrap app-band-inner">
+      <div class="app-band-copy">
+        <div class="app-band-label">{APPS.label}</div>
+        <h3>{APPS.line}</h3>
+      </div>
+      <div class="app-band-badges">
+        {stores.map((s) => <a class="store-badge-img" href={s.href}><img src={s.src} alt={s.alt} height="48" /></a>)}
+      </div>
+    </div>
+  </section>
+)}
+
+<footer class="bk-footer">
+  <div class="bk-wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <BeckstageWordmark height={24} color="#ff9e2c" />
+        <p>{FOOTER.blurb}</p>
+      </div>
+      <div class="footer-col">
+        <h4>Beckstage</h4>
+        {NAV.map((l) => <a href={l.href}>{l.label}</a>)}
+      </div>
+    </div>
+    {stores && <p class="footer-legal">{APPS.legal}</p>}
+    <div class="footer-bottom">
+      <span>{FOOTER.copyright}</span>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,53 @@
+---
+import { Icon } from './icons';
+import { PRIVACY } from '../data/site';
+const p = PRIVACY;
+const ACCESS_ICON = { full: 'checkCircle', part: 'eye' } as const;
+---
+<section class="bk-section pv-section" id="privacy">
+  <div class="bk-wrap">
+    <div class="bk-section-head">
+      <p class="bk-eyebrow">{p.eyebrow}</p>
+      <h2 class="bk-h2">{p.h2}</h2>
+      <p class="bk-lead">{p.lead}</p>
+    </div>
+    <div class="pv-grid">
+      <div class="pv-matrix">
+        <div class="pv-matrix-head">
+          <Icon name="eye" size={15} color="var(--foreground)" />
+          <span>{p.matrix.title}</span>
+        </div>
+        {p.matrix.rows.map((r) => (
+          <div class="pv-row">
+            <div class="pv-row-who">
+              <div class="pv-row-avatars">
+                {r.avatars.map((av) => (
+                  <img class:list={['pv-av', { org: 'org' in av }]} src={av.img} alt="" width="38" height="38" loading="lazy" decoding="async" />
+                ))}
+              </div>
+              <div>
+                <div class="pv-row-name">{r.who}</div>
+                <div class="pv-row-role">{r.role}</div>
+              </div>
+            </div>
+            <div class="pv-row-access">
+              <span class={`pv-access pv-access-${r.level}`}><Icon name={ACCESS_ICON[r.level]} size={14} />{r.label}</span>
+              <p class="pv-access-desc">{r.summary}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+      <ul class="pv-pillars">
+        {p.pillars.map((pl) => (
+          <li>
+            <span class="pv-pillar-ic"><Icon name={pl.icon} size={18} /></span>
+            <div>
+              <strong>{pl.t}</strong>
+              <span>{pl.d}</span>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>

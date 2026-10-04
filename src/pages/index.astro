@@ -1,0 +1,102 @@
+---
+import '@fontsource/inter/500.css';
+import '@fontsource/inter/600.css';
+import '@fontsource/inter/700.css';
+import '@fontsource/poppins/400.css';
+import '@fontsource/poppins/500.css';
+import '@fontsource/poppins/600.css';
+import '@fontsource/poppins/700.css';
+import '../styles/site.css';
+
+import Nav from '../components/Nav.astro';
+import Privacy from '../components/Privacy.astro';
+import Contact from '../components/Contact.astro';
+import Footer from '../components/Footer.astro';
+import HeroStream from '../components/HeroStream';
+import AudienceDesktop from '../components/AudienceDesktop';
+import AudienceMobile from '../components/AudienceMobile';
+import Pricing from '../components/Pricing';
+import Faq from '../components/Faq';
+import { Icon } from '../components/icons';
+import { HERO, LINKS, SHOW } from '../data/site';
+
+const title = 'Beckstage · Where live music works';
+const description = 'Shows, tours and payments, centralised. Your whole team on the same page. For artists, touring professionals, artist managers and agents.';
+const site = Astro.site ?? new URL('https://beckstage.music');
+const ogImage = new URL('/og.png', site).href;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={site.href} />
+    <meta name="theme-color" content="#1a1410" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Beckstage" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={site.href} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+  </head>
+  <body class="bk-site">
+    <header class="hv2">
+      <Nav />
+      <div class="bk-wrap hv2-grid">
+        <div class="hv2-copy">
+          <h1 class="bk-h1">{HERO.h1[0]} <em>{HERO.h1[1]}</em> {HERO.h1[2]}</h1>
+          <p class="hv2-sub">{HERO.sub[0]}<br />{HERO.sub[1]}</p>
+          <div class="hv2-ctas">
+            <a class="bk-btn bk-btn-lg bk-btn-onDark" href={LINKS.signup}>{HERO.primary}<Icon name="arrow" size={18} color="#fff" /></a>
+          </div>
+        </div>
+        <div class="hv2-stage">
+          <div class="hv2-frame" role="img" aria-label="Activity on one show: the booking confirmed, crew invited, itinerary, venue, rider, accounting and balance updates.">
+            <div class="hv2-show">
+              <span class="hv2-show-dot"></span>
+              <span class="hv2-show-title">{SHOW.artist}</span>
+              <span class="hv2-show-meta">{SHOW.venue} · {SHOW.date}</span>
+              <span class="hv2-show-status">{SHOW.status}</span>
+            </div>
+            <HeroStream client:load />
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="aud-root" id="audience" aria-label="Who’s Beckstage for?">
+        <div class="aud-host-desktop"><AudienceDesktop client:idle /></div>
+        <div class="aud-host-mobile"><AudienceMobile client:idle /></div>
+      </section>
+
+      <Privacy />
+
+      <section class="bk-section pricing-section" id="pricing">
+        <Pricing client:idle />
+      </section>
+
+      <section class="bk-section faq-section" id="faq">
+        <div class="bk-wrap faq-grid">
+          <div class="faq-head">
+            <p class="bk-eyebrow">FAQ</p>
+            <h2 class="bk-h2">Questions</h2>
+            <p class="bk-lead">About plans, the trial and who pays for what.</p>
+          </div>
+          <Faq client:idle />
+        </div>
+      </section>
+      <Contact />
+    </main>
+
+    <Footer />
+  </body>
+</html>

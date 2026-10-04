@@ -1,0 +1,19 @@
+---
+import { Icon } from './icons';
+import { CONTACT, mailto } from '../data/site';
+const c = CONTACT;
+---
+<section class="bk-contact" id="contact">
+  <div class="bk-wrap">
+    <div class="bk-contact-grid">
+      <div class="bk-contact-head">
+        <p class="bk-eyebrow">{c.eyebrow}</p>
+        <h2 class="bk-h2">{c.h2}</h2>
+      </div>
+      <div class="bk-contact-body">
+        {c.body.map((t) => <p class="bk-lead">{t}</p>)}
+        <a class="bk-btn bk-btn-lg bk-btn-primary bk-contact-cta" href={mailto('Feedback')}>{c.primary}<Icon name="arrow" size={18} color="#fff" /></a>
+      </div>
+    </div>
+  </div>
+</section>
