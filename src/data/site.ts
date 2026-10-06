@@ -33,64 +33,8 @@ export const HERO = {
   sub: ['Shows, tours and payments, centralised.', 'Your whole team on the same page.'],
   primary: 'Create your free account',
   secondary: 'See how it works',
+  reach: 'For artists, their crew, and the managers and agents who book them.',
 };
-
-export const SHOW = { artist: 'The Sundowners', venue: 'Aurora Hall, Berlin', date: '14 Mar', status: 'Confirmed' };
-
-export const ORG_LOGOS: Record<string, string> = {
-  'Meridian Bookings': '/avatars/agency-1.webp',
-};
-
-export interface StreamCard {
-  name: string;
-  role: string;
-  av: string;
-  avs?: string[];
-  org?: string;
-  area: string;
-  icon: IconName;
-  act: string;
-  meta?: string;
-  invited?: { name: string; role: string; av?: string; mono?: string; status?: string }[];
-  pill?: string;
-  pillTone?: 'warn';
-}
-
-/* One show seen from eight positions, in a fixed order: booking confirmed →
-   fee settled. */
-export const STREAM: StreamCard[] = [
-  { name: 'Elena Roth', role: 'Booking agent, Meridian Bookings', av: '/avatars/user-2.webp', org: 'Meridian Bookings',
-    area: 'Booking', icon: 'calendar',
-    act: 'Confirmed the booking', meta: 'The Sundowners · Aurora Hall, Berlin · 14 Mar' },
-  { name: 'Maya Sundowner', role: 'Artist', av: '/avatars/crew-light.webp',
-    area: 'Crew', icon: 'crew',
-    act: 'Invited 4 people to the booking',
-    invited: [
-      { name: 'Dan Whitaker', role: 'Tour manager', av: '/avatars/crew-tm.webp' },
-      { name: 'nils@lumenlx.com', role: 'Lighting designer', mono: 'N', status: 'By email' },
-      { name: 'Rui Pacheco', role: 'Backline tech', av: '/avatars/crew-backline.webp' },
-      { name: 'Petr Novak', role: 'Driver', av: '/avatars/crew-driver.webp' },
-    ] },
-  { name: 'Maya Sundowner & Nils Bergman', role: 'Artist · Lighting designer',
-    av: '/avatars/crew-light.webp', avs: ['/avatars/crew-light.webp', '/avatars/user-4.webp'],
-    area: 'Itinerary', icon: 'truck',
-    act: 'Added to “Travel to Berlin”', meta: 'Leipzig 09:30 → Aurora Hall 12:15' },
-  { name: 'Dan Whitaker', role: 'Tour manager', av: '/avatars/crew-tm.webp',
-    area: 'Venue', icon: 'pin',
-    act: 'Added Load-in and Parking instructions', meta: 'Load-in 15:00 · rear entrance' },
-  { name: 'Jonas Keller', role: 'Production, Meridian Bookings', av: '/avatars/crew-foh.webp', org: 'Meridian Bookings',
-    area: 'Artist rider', icon: 'doc',
-    act: 'Uploaded the artist rider', meta: 'Every crew member has access to it' },
-  { name: 'Julien Mercier', role: 'Artist manager', av: '/avatars/user-6.webp',
-    area: 'Accounting', icon: 'calc',
-    act: 'Updated the booking expenses and closed the books' },
-  { name: 'Rui Pacheco', role: 'Backline tech', av: '/avatars/crew-backline.webp',
-    area: 'Balance', icon: 'wallet',
-    act: 'Requested payment of his booking fee', pill: 'Pending', pillTone: 'warn' },
-  { name: 'Tobias Vogel', role: 'Finance, Meridian Bookings', av: '/avatars/crew-musician.webp', org: 'Meridian Bookings',
-    area: 'Balance', icon: 'wallet',
-    act: 'Paid Rui Pacheco’s booking fee', pill: 'Settled' },
-];
 
 /* ---- Who's Beckstage for? ----------------------------------------------- */
 

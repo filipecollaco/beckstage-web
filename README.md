@@ -3,9 +3,10 @@
 The public marketing site for Beckstage, served at **https://beckstage.music**.
 The app itself lives at `app.beckstage.music` (repo `beckstage-fe`).
 
-Astro (static output) + React islands for the five interactive parts: the hero
-activity stream, *How it works*, *Who's Beckstage for?*, Pricing and the FAQ.
-Everything else is plain HTML with no JavaScript.
+Astro (static output) + React islands for the four interactive parts: *How it
+works* (the two phones under the hero), *Who's Beckstage for?*, Pricing and the
+FAQ. Everything else — the hero included, which is the claim only — is plain
+HTML with no JavaScript.
 
 ## Run it
 
@@ -41,7 +42,9 @@ is free forever.
 ## How it works
 
 The two-phone piece under the hero comes from the Claude Design handoff
-*How it works* (2026-10-06). `data.ts` is the timeline (`BEATS`, `hiwFrame`),
+*How it works* (2026-10-06, second version: claim-only hero, poster frame,
+Maya's representation on the booking). Until playback starts it shows
+`HIW_POSTER`; it starts on its own at ≥ 50% visible. `data.ts` is the timeline (`BEATS`, `hiwFrame`),
 `screens.tsx` the app screens, `HowItWorks.tsx` the player (desktop: two phones;
 ≤ 760px: one in front, scaled to fit the column and one viewport). These three
 are kept close to the reference (`@ts-nocheck`) so a later handoff diffs cleanly.
@@ -70,4 +73,4 @@ Built from the Claude Design handoff *Beckstage marketing website* (October
 2026). Desktop matches the 1320 artboard and mobile the 390 artboard; the
 reference's `.is-mobile` class is the `max-width: 760px` media query. Two
 things the handoff did not design were added: the mobile menu behind the
-burger, and a tablet step (below 980px the nav collapses and the hero stacks).
+burger, and a tablet step (below 980px the nav collapses into the menu).

@@ -1,12 +1,12 @@
 // @ts-nocheck — ported from the Claude Design prototype (handoff_how_it_works, 2026-10-06), kept
-// close to the reference so later handoffs diff cleanly. The site-facing seams are typed in HowItWorks.astro.
+// close to the reference so later handoffs diff cleanly.
 // How it works — the timeline as data. Same shape idea as STREAM in beckstage-web/src/data/site.ts:
 // one array the animation reads; nothing here knows how it is drawn.
 // A beat: { id, n, title, dur (ms), cap, steps }. A step: { t (ms into the beat), L?, R? (full screen state
 // for that phone), act ('L' | 'R' | 'both'), ping? { side, id } (the one cross-phone signal), inset? { side, id }
 // (mobile: the other phone's reacting region), cap? (caption override), cut? (show-day card), key? (static frame label) }.
 
-export const HIW_AV = { harbour: '/avatars/artist-3.webp', meridian: '/avatars/agency-1.webp', maya: '/avatars/crew-light.webp', petr: '/avatars/crew-driver.webp', rui: '/avatars/crew-foh.webp', nils: '/avatars/user-4.webp', dan: '/avatars/crew-tm.webp', band: '/avatars/artist-1.webp' };
+export const HIW_AV = { harbour: '/avatars/artist-3.webp', meridian: '/avatars/agency-1.webp', lumen: '/avatars/lumen.webp', maya: '/avatars/crew-light.webp', petr: '/avatars/crew-driver.webp', rui: '/avatars/crew-foh.webp', nils: '/avatars/user-4.webp', dan: '/avatars/crew-tm.webp', band: '/avatars/artist-1.webp' };
 export const HIW_PEOPLE = {
   maya: { name: 'Maya Sundowner', role: 'Artist · booking organizer' },
   petr: { name: 'Petr Novak', role: 'Driver', fee: 200, user: 'petr.novak' },
@@ -14,6 +14,8 @@ export const HIW_PEOPLE = {
   nils: { name: 'Nils Bergman', role: 'Lighting Designer', fee: 250 },
   dan: { name: 'Dan Whitaker', role: 'Tour Manager', fee: 350 },
 };
+// Maya's representation: on the booking as an organizer option, a delegation row and a commission — never an actor.
+export const HIW_REP = { name: 'Meridian Bookings', scope: 'Worldwide · management deal', commission: '15% gross', pct: 15 };
 export const HIW_VENUE = { rider: 'Aurora Hall – Tech Rider.pdf', contact: { name: 'Lena Hartmann', role: 'Production Manager', phone: '+49 30 5557 2190', email: 'lena@aurorahall.de' }, contact2: { name: 'Jonas Becker', role: 'Stage Manager', phone: '+49 30 5557 2194', email: 'jonas@aurorahall.de' }, loadIn: 'Rear entrance · dock on Schillingbrücke side', parking: 'One van in the courtyard. Gate code from the house manager.' };
 
 export const HIW_COPY = { eyebrow: 'How it works', h2: ['One show, from ', 'booked to settled', '.'], line: '', end: ['Where ', 'live music', ' works.'] };
@@ -42,10 +44,10 @@ export const BEATS = [
     { t: 0, L: cr(0), R: OFF, act: 'L', inset: null, key: 'New booking — artist set', say: { L: 'New booking', R: '' } },
     { t: 900, L: cr(1) },
     { t: 1900, L: cr(2), key: 'Date and venue' },
-    { t: 3000, L: cr(2, { scroll: 330 }) },
-    { t: 3800, L: cr(3, { scroll: 330, press: 'prod' }), key: 'Who else can edit → Tour manager · Production' },
-    { t: 4800, L: cr(4, { scroll: 330, press: 'status' }) },
-    { t: 5600, L: cr(4, { scroll: 330, press: 'save' }), key: 'Confirmed · Save' },
+    { t: 3000, L: cr(2, { scroll: 470 }) },
+    { t: 3800, L: cr(3, { scroll: 470, press: 'prod' }), key: 'Who else can edit → Tour manager · Production' },
+    { t: 4800, L: cr(4, { scroll: 470, press: 'status' }) },
+    { t: 5600, L: cr(4, { scroll: 470, press: 'save' }), key: 'Confirmed · Save' },
     { t: 6100, L: { scr: 'ovEmpty' }, key: 'Lands on the empty booking', say: { L: 'Booking created' } },
     { t: 7300, L: { scr: 'ovEmpty', press: 'invite' } },
   ] },
@@ -146,6 +148,13 @@ export const BEATS = [
   ] },
 ];
 export const HIW_END_MS = 3000;
+// Poster: what the stage shows before playback starts (and as the first reduced-motion stop) — two people, one show,
+// everything already filled in. Playback still starts on its own when half the stage is on screen.
+export const HIW_POSTER = {
+  L: { scr: 'ov', crew: { dan: 'c', rui: 'c', nils: 'c', petr: 'c' }, venue: 1, riders: 1, contacts: 2, itin: 1, scroll: 0 },
+  R: { scr: 'dov', p: 'dan', venue: 1, riders: 1, contacts: 2, itin: 1, scroll: 0 },
+  act: 'R', say: { L: '4 of 4 accepted', R: 'Runs production' }, cap: 'One show, from booked to settled.',
+};
 // Tempo: every step time is authored in brief-scale ms and multiplied here. 1.2 after the rhythm pass.
 export const HIW_TEMPO = 1.2;
 BEATS.forEach((beat) => { beat.dur = Math.round(beat.dur * HIW_TEMPO); beat.steps.forEach((s) => { s.t = Math.round(s.t * HIW_TEMPO); }); });

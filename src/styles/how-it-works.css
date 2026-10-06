@@ -14,6 +14,12 @@
 .hv2:has(+ .hiw-band)::before{background:radial-gradient(58% 52% at 78% 4%,rgba(255,143,0,.20),transparent 66%)}
 .hv2 + .hiw-band::before{background:radial-gradient(46% 30% at 4% 100%,rgba(244,115,64,.13),transparent 68%)}
 .hv2 + .hiw-band .hiw-head{padding-top:40px}
+.hv3:has(+ .hiw-band)::before{background:radial-gradient(70% 90% at 50% 0%,rgba(255,143,0,.18),transparent 70%)}
+.hv3 + .hiw-band::before{background:radial-gradient(46% 30% at 4% 100%,rgba(244,115,64,.13),transparent 68%)}
+/* The claim and the proof are one band: no second headline between them — the phones follow the CTAs. */
+.hv3 + .hiw-band .hiw-head{display:none}
+.hv3 + .hiw-band .hiw-stage{margin-top:40px}
+.hv3 + .hiw-band .fr-fit{margin-top:16px}
 .hiw-wrap{position:relative;max-width:1180px;margin:0 auto;padding:0 64px}
 .hiw-head{text-align:center;padding-top:88px}
 .hiw-eyebrow{font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--tintStrong);display:inline-flex;align-items:center;gap:8px}

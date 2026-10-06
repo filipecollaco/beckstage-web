@@ -1,9 +1,9 @@
 // @ts-nocheck — ported from the Claude Design prototype (handoff_how_it_works, 2026-10-06), kept
-// close to the reference so later handoffs diff cleanly. The site-facing seams are typed in HowItWorks.astro.
+// close to the reference so later handoffs diff cleanly.
 // App screens, part 1 — primitives + Maya's booking screens. Every string is lifted from beckstage-fe (see source-notes.md).
 import { useState as apUseState, useEffect as apUseEffect, useRef as apUseRef, useLayoutEffect as apUseLayout } from 'react';
 import { MDI } from './mdi';
-import { HIW_AV, HIW_PEOPLE, HIW_VENUE, HIW_ITIN, hiwItinItems } from './data';
+import { HIW_AV, HIW_ITIN, HIW_PEOPLE, HIW_REP, HIW_VENUE, hiwItinItems } from './data';
 
 // Icons: the app's Material Design glyphs, inlined (see mdi.ts) instead of the reference's CDN font.
 export function I({ n, s = 16, c, style }) {
@@ -119,12 +119,18 @@ export function ScrCreate({ st }) {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             <Lbl style={{ padding: '0 4px' }}>ORGANIZER</Lbl>
             <div className="ap-cap" style={{ color: 'var(--tsu)', padding: '0 4px', lineHeight: '18px' }}>Runs this booking.</div>
-            <div className="ap-card"><div className="ap-row" style={{ gap: 12, padding: 12, background: 'var(--tint)' }}>
-              <span style={{ width: 18, height: 18, borderRadius: 9, background: 'var(--fg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><span style={{ width: 6, height: 6, borderRadius: 3, background: '#fff' }}></span></span>
-              <Av who="band" s={34} />
-              <div style={{ flex: 1 }} className="ap-row"><span className="ap-bsm" style={{ fontWeight: 600 }}>The Sundowners</span><span className="ap-micro" style={{ color: 'var(--tsu)', letterSpacing: .5, marginLeft: 6 }}>· ARTIST</span></div>
-              <span className="ap-pill" style={{ gap: 4, padding: '3px 6px', background: 'var(--tm)' }}><I n="shield-check" s={10} c="var(--fg)" /><span className="ap-micro" style={{ color: 'var(--fg)', fontWeight: 700, textTransform: 'none' }}>Locked</span></span>
-            </div></div>
+            <div className="ap-card">
+              <div className="ap-row" style={{ gap: 12, padding: 12, background: 'var(--tint)', borderBottom: '1px solid var(--b)' }}>
+                <span style={{ width: 18, height: 18, borderRadius: 9, background: 'var(--fg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><span style={{ width: 6, height: 6, borderRadius: 3, background: '#fff' }}></span></span>
+                <Av who="band" s={34} />
+                <div style={{ flex: 1 }} className="ap-row"><span className="ap-bsm" style={{ fontWeight: 600 }}>The Sundowners</span><span className="ap-micro" style={{ color: 'var(--tsu)', letterSpacing: .5, marginLeft: 6 }}>· ARTIST</span></div>
+              </div>
+              <div className="ap-row" style={{ gap: 12, padding: 12 }}>
+                <span style={{ width: 18, height: 18, borderRadius: 9, border: '2px solid var(--bm)' }}></span>
+                <Av who="meridian" s={34} style={{ borderRadius: 8 }} />
+                <div style={{ flex: 1, minWidth: 0 }}><div className="ap-bsm" style={{ fontWeight: 600 }}>{HIW_REP.name}</div><div className="ap-cap" style={{ color: 'var(--tmu)', marginTop: 2 }}>{HIW_REP.scope} · {HIW_REP.commission}</div></div>
+              </div>
+            </div>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             <div style={{ padding: '0 4px', display: 'flex', flexDirection: 'column', gap: 6 }}>
@@ -132,6 +138,11 @@ export function ScrCreate({ st }) {
               <div className="ap-cap" style={{ color: 'var(--tsu)', lineHeight: '18px' }}><b style={{ color: 'var(--tb)', fontWeight: 600 }}>Production</b> = itinerary, venue, contacts.{'  '}<b style={{ color: 'var(--tb)', fontWeight: 600 }}>Crew</b> = inviting people, fees, roles.</div>
             </div>
             <P id="deleg" ping={st.ping} className="ap-card" style={{ borderRadius: 8 }}>
+              <div className="ap-row" style={{ gap: 12, padding: '12px 16px', borderBottom: '1px solid var(--b)' }}>
+                <Av who="meridian" s={34} style={{ borderRadius: 8 }} />
+                <span className="ap-bsm" style={{ fontWeight: 600, flex: 1, minWidth: 0 }}>{HIW_REP.name}</span>
+                <div className="ap-row" style={{ gap: 6, flex: 'none' }}><Toggle on={false}>Production</Toggle><Toggle on={false}>Crew</Toggle></div>
+              </div>
               <div className="ap-row" style={{ gap: 12, padding: '12px 16px' }}>
                 <span style={{ width: 34, height: 34, borderRadius: 6, background: 'var(--sm)', border: '1px solid var(--b)', display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none' }}><I n="account-group-outline" s={17} c="var(--tb)" /></span>
                 <span className="ap-bsm" style={{ fontWeight: 600, flex: 1, minWidth: 0 }}>Tour manager</span>
@@ -600,8 +611,8 @@ export function ScrAcct({ st, ping }) {
               <div style={{ marginTop: -1 }}><WRow op="" label="Total fee" sub="Flat Fee" c={400000} /></div>
               <WRow op="−" label="Expenses" sub={`${n} items`} c={total} />
               <WRow op="=" label="After expenses" kind="subtotal" c={400000 - total} />
-              <WRow op="−" label="Commissions" sub="No agency on this booking" c={0} />
-              <WRow op="=" label="Artist earnings" kind="accent" c={400000 - total} />
+              <WRow op="−" label={HIW_REP.name} sub={'Commission · ' + HIW_REP.commission} c={400000 * HIW_REP.pct / 100} />
+              <WRow op="=" label="Artist earnings" sub="The Sundowners" kind="accent" c={400000 - total - 400000 * HIW_REP.pct / 100} />
               {st.closed ? <div className="ap-row ap-fade" style={{ gap: 9, padding: '11px 14px', background: 'var(--sm)', borderTop: '1px solid var(--bm)' }}><I n="account-multiple-outline" s={14} c="var(--tmu)" /><span className="ap-cap" style={{ color: 'var(--tb)', flex: 1 }}>Paid as one — what this booking earns isn't divided between members.</span></div> : null}
               {st.closed ? <div className="ap-fade"><BalNote text="The €2,840 is in The Sundowners’s Balance" /></div> : null}
             </P></div>
@@ -619,7 +630,7 @@ export function ScrAcct({ st, ping }) {
         footer={<div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}><Btn kind="wf" icon="shield-lock-outline" press={st.closeSheet === 1}>{st.closeSheet === 1 ? 'Closing…' : 'Close & lock the books'}</Btn><span className="ap-cap" style={{ color: 'var(--tsu)', textAlign: 'center' }}>You won't be able to change the fee or the expenses after this.</span></div>}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
           <div><div className="ap-label" style={{ color: 'var(--tmu)', marginBottom: 8 }}>THE NUMBERS</div>
-            <div className="ap-card" style={{ borderRadius: 6 }}><WRow op="" label="Total fee" sub="Flat Fee" c={400000} /><WRow op="−" label="Expenses" sub="5 items" c={116000} /><WRow op="=" label="After expenses" kind="subtotal" c={284000} /><WRow op="−" label="Commissions" sub="No agency on this booking" c={0} /><WRow op="=" label="Artist earnings" sub="The Sundowners" kind="accent" c={284000} /></div></div>
+            <div className="ap-card" style={{ borderRadius: 6 }}><WRow op="" label="Total fee" sub="Flat Fee" c={400000} /><WRow op="−" label="Expenses" sub="5 items" c={116000} /><WRow op="=" label="After expenses" kind="subtotal" c={284000} /><WRow op="−" label={HIW_REP.name} sub={'Commission · ' + HIW_REP.commission} c={60000} /><WRow op="=" label="Artist earnings" sub="The Sundowners" kind="accent" c={224000} /></div></div>
           <div style={{ height: 1, background: 'var(--b)' }}></div>
           <div className="ap-dis" style={{ fontSize: 15, lineHeight: '20px' }}>How are this booking's artist earnings divided?</div>
           {[['Collective — the artist is paid as one', true], ['Individual — each member gets their share', false]].map(([t, on]) => <div key={t} style={{ padding: 12, borderRadius: 8, border: '1.5px solid ' + (on ? 'var(--fg)' : 'var(--bm)'), background: 'var(--s)', display: 'flex', gap: 10 }}><span style={{ width: 16, height: 16, marginTop: 2, borderRadius: 999, border: '1.5px solid ' + (on ? 'var(--fg)' : 'var(--bs)'), background: on ? 'var(--fg)' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none' }}>{on ? <span style={{ width: 6, height: 6, borderRadius: 3, background: '#fff' }}></span> : null}</span><div><div style={{ fontWeight: 600, fontSize: 13 }}>{t}</div>{on ? <div className="ap-bsm" style={{ color: 'var(--tmu)', marginTop: 4 }}>The whole €2,840 goes to the artist balance. No member is owed anything personally.</div> : null}</div></div>)}
@@ -719,13 +730,13 @@ export function ScrDbal({ st, ping }) {
   const s = st.s || 'list';
   const settled = s === 'settled';
   // Dan works for more than one artist: his Balance holds what each of them owes him.
-  const others = [['harbour', 'Harbour Lights', '€280'], ['meridian', 'Meridian Bookings', '€1,200']];
+  const others = [['harbour', 'Harbour Lights', '€280'], ['lumen', 'Lumen Artists', '€1,200']];
   return (
     <div className="ap-col"><ApStatus /><BalHead wallets={[['dan', 'Dan Whitaker', '€0', settled ? '€1,480' : '€1,890', true]]} />
       <div style={{ padding: '0 16px' }}>
         <CpGroup dir="collect" count={settled ? 2 : 3} total={settled ? '€1,480' : '€1,890'}>
           {settled ? null : <HiwCpRow who="band" square name="The Sundowners" dir="collect" amt="€410" asked={s === 'sent' ? '€410' : null} />}
-          {others.map(([w, n, v], i) => <HiwCpRow key={w} who={w} square name={n} dir="collect" amt={v} asked={w === 'meridian' ? '€1,200' : null} last={i === others.length - 1} />)}
+          {others.map(([w, n, v], i) => <HiwCpRow key={w} who={w} square name={n} dir="collect" amt={v} asked={w === 'lumen' ? '€1,200' : null} last={i === others.length - 1} />)}
         </CpGroup>
         {settled ? <CpGroup dir="square" count={1}><HiwCpRow id="settled" ping={ping} who="band" square name="The Sundowners" dir="square" last /></CpGroup> : null}
       </div>

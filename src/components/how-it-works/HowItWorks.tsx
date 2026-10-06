@@ -6,7 +6,7 @@
 // one (≤ 760px is mobile). The hidden one never reaches 50% visible, so it never plays.
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { AppScreen, I } from './screens';
-import { BEATS, HIW_AV, HIW_COPY, HIW_KEYS, HIW_PEOPLE, hiwFrame } from './data';
+import { BEATS, HIW_AV, HIW_COPY, HIW_KEYS, HIW_PEOPLE, HIW_POSTER, hiwFrame } from './data';
 
 const useIsoLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
@@ -24,7 +24,8 @@ function useReducedMotion() {
 }
 
 // Timeline clock. Re-renders only when the step or the ping window changes; progress bars are written directly.
-function useTimeline(rootRef, { reduced }) {
+// poster: a ready frame (HIW_POSTER) the stage shows until playback starts, and as the first reduced-motion stop.
+function useTimeline(rootRef, { reduced, poster }) {
   const pos = useRef({ b: 0, t: 0 });
   const [, force] = useState(0);
   const sig = useRef('');
@@ -66,7 +67,11 @@ function useTimeline(rootRef, { reduced }) {
 
   const jump = (b) => { pos.current = { b: Math.max(0, Math.min(BEATS.length - 1, b)), t: 0 }; setEnded(false); setStarted(true); paint(); };
   return {
-    get frame() { return reduced ? hiwFrame(HIW_KEYS[kIdx].b, HIW_KEYS[kIdx].t) : hiwFrame(pos.current.b, pos.current.t); },
+    get frame() {
+      if (poster && !started && (!reduced || kIdx === 0)) return { ping: null, focus: null, inset: null, cut: false, half: null, b: 0, idx: 0, ...poster };
+      return reduced ? hiwFrame(HIW_KEYS[kIdx].b, HIW_KEYS[kIdx].t) : hiwFrame(pos.current.b, pos.current.t);
+    },
+    started,
     b: reduced ? HIW_KEYS[kIdx].b : pos.current.b, ended: reduced ? false : ended, playing, reduced, bars,
     jump: (b) => (reduced ? setKIdx(HIW_KEYS.findIndex((k) => k.b === b)) : jump(b)),
     next: () => (reduced ? setKIdx((i) => Math.min(HIW_KEYS.length - 1, i + 1)) : jump(pos.current.b + 1)),
@@ -122,7 +127,7 @@ function Stepper({ tl }) {
 function HowItWorksDesktop() {
   const ref = useRef(null);
   const reduced = useReducedMotion();
-  const tl = useTimeline(ref, { reduced });
+  const tl = useTimeline(ref, { reduced, poster: HIW_POSTER });
   const f = tl.frame;
   const lit = (side) => f.act === 'both' || f.act === side || (f.ping && f.ping.side === side);
   const onKey = (e) => { if (e.key === 'ArrowRight') { e.preventDefault(); tl.next(); } if (e.key === 'ArrowLeft') { e.preventDefault(); tl.prev(); } };
@@ -206,7 +211,7 @@ function HowItWorksMobile() {
   const host = useRef(null);
   const probe = useRef(null);
   const reduced = useReducedMotion();
-  const tl = useTimeline(ref, { reduced });
+  const tl = useTimeline(ref, { reduced, poster: HIW_POSTER });
   const s = useFrScale(host, probe);
   const f = tl.frame;
   const solo = f.R.scr === 'off';

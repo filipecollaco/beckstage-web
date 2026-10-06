@@ -3,9 +3,9 @@
    the last category of a persona it moves to the next persona and wraps.
    Hover pauses it, and so does the section being off screen.
 
-   Every persona is rendered into one grid cell and only the active one is
-   visible, so the section always reserves the height of the tallest one and
-   the page never jumps. */
+   The section is as tall as what is on screen (only the active persona and
+   category take space); its height eases between categories so the content
+   below glides instead of jumping. */
 import { useEffect, useRef, useState } from 'react';
 import { Icon } from './icons';
 import { LineText } from './Keywords';
@@ -21,6 +21,8 @@ export default function AudienceDesktop() {
   const [hovered, setHovered] = useState(false);
   const [onScreen, setOnScreen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
+  const bodyRef = useRef<HTMLDivElement>(null);
+  const [bodyH, setBodyH] = useState<number | null>(null);
   const paused = hovered || !onScreen;
 
   useEffect(() => {
@@ -29,6 +31,14 @@ export default function AudienceDesktop() {
     const io = new IntersectionObserver(([e]) => setOnScreen(e.isIntersecting), { threshold: 0.25 });
     io.observe(el);
     return () => io.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const el = bodyRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(() => setBodyH(el.offsetHeight));
+    ro.observe(el);
+    return () => ro.disconnect();
   }, []);
 
   useEffect(() => {
@@ -58,7 +68,8 @@ export default function AudienceDesktop() {
             ))}
           </div>
         </div>
-        <div className="aud-personas">
+        <div className="aud-body" style={bodyH == null ? undefined : { height: bodyH }}>
+        <div className="aud-personas" ref={bodyRef}>
           {a.views.map((cats, ti) => {
             const active = ti === tab;
             const [lead, hl] = splitOpening(a.lines[ti]);
@@ -96,6 +107,7 @@ export default function AudienceDesktop() {
               </div>
             );
           })}
+        </div>
         </div>
       </div>
     </div>

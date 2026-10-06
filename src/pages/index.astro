@@ -15,14 +15,13 @@ import Nav from '../components/Nav.astro';
 import Privacy from '../components/Privacy.astro';
 import Contact from '../components/Contact.astro';
 import Footer from '../components/Footer.astro';
-import HeroStream from '../components/HeroStream';
 import AudienceDesktop from '../components/AudienceDesktop';
 import AudienceMobile from '../components/AudienceMobile';
 import Pricing from '../components/Pricing';
 import Faq from '../components/Faq';
 import HowItWorks from '../components/how-it-works/HowItWorks';
 import { Icon } from '../components/icons';
-import { HERO, LINKS, SHOW } from '../data/site';
+import { HERO, LINKS } from '../data/site';
 
 const title = 'Beckstage · Where live music works';
 const description = 'Shows, tours and payments, centralised. Your whole team on the same page. For artists, touring professionals, artist managers and agents.';
@@ -52,28 +51,16 @@ const ogImage = new URL('/og.png', site).href;
     <meta name="twitter:card" content="summary_large_image" />
   </head>
   <body class="bk-site">
-    <header class="hv2">
+    <header class="hv2 hv3">
       <Nav />
-      <div class="bk-wrap hv2-grid">
-        <div class="hv2-copy">
-          <h1 class="bk-h1">{HERO.h1[0]} <em>{HERO.h1[1]}</em> {HERO.h1[2]}</h1>
-          <p class="hv2-sub">{HERO.sub[0]}<br />{HERO.sub[1]}</p>
-          <div class="hv2-ctas">
-            <a class="bk-btn bk-btn-lg bk-btn-onDark" href={LINKS.signup}>{HERO.primary}<Icon name="arrow" size={18} color="#fff" /></a>
-            <a class="hv2-secondary" href="#how-it-works">{HERO.secondary}<Icon name="arrowDown" size={16} /></a>
-          </div>
+      <div class="bk-wrap hv3-copy">
+        <h1 class="bk-h1">{HERO.h1[0]} <em>{HERO.h1[1]}</em> {HERO.h1[2]}</h1>
+        <p class="hv2-sub">{HERO.sub[0]}<br />{HERO.sub[1]}</p>
+        <div class="hv3-ctas">
+          <a class="bk-btn bk-btn-lg bk-btn-onDark" href={LINKS.signup}>{HERO.primary}<Icon name="arrow" size={18} color="#fff" /></a>
+          <a class="hv3-secondary" href="#how-it-works">{HERO.secondary}<Icon name="arrowDown" size={16} /></a>
         </div>
-        <div class="hv2-stage">
-          <div class="hv2-frame" role="img" aria-label="Activity on one show: the booking confirmed, crew invited, itinerary, venue, rider, accounting and balance updates.">
-            <div class="hv2-show">
-              <span class="hv2-show-dot"></span>
-              <span class="hv2-show-title">{SHOW.artist}</span>
-              <span class="hv2-show-meta">{SHOW.venue} · <span class="nowrap">{SHOW.date}</span></span>
-              <span class="hv2-show-status">{SHOW.status}</span>
-            </div>
-            <HeroStream client:load />
-          </div>
-        </div>
+        <p class="hv3-reach">{HERO.reach}</p>
       </div>
     </header>
 
