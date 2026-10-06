@@ -88,7 +88,6 @@
 .hiwm-bars{position:absolute;left:10px;right:10px;top:8px;display:grid;grid-template-columns:repeat(6,1fr);gap:4px;z-index:35}
 .hiwm-bars span{height:3px;border-radius:2px;background:rgba(22,22,22,.14);overflow:hidden;position:relative}
 .hiwm-bars span i{position:absolute;inset:0;background:#ff8f00;transform-origin:0 50%}
-.hiwm-tap{position:absolute;top:0;bottom:0;width:50%;z-index:32;background:transparent;border:0;padding:0;cursor:pointer}
 .hiwm .hiw-under{margin-top:16px;padding-bottom:56px;gap:14px}
 .hiwm .hiw-cap{font-size:16px;padding:0 22px}
 .hiwm .hiw-end{padding:0 22px;text-align:center}.hiwm .hiw-end h3{font-size:32px;line-height:1.05}
@@ -186,3 +185,6 @@
 @media (min-width:761px) and (max-width:900px){.hiw-phones{zoom:.82}}
 /* Hero and section share a background; a 1px overlap keeps a fractional-pixel seam from showing the cream body. */
 .hv2 + .hiw-band{box-shadow:0 -1px 0 #1a1410}
+/* The phones are a film, not an interface: nothing in them takes a tap, a selection or a long-press menu. */
+.hiw-phone,.fr-unit{pointer-events:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.hiw-phone img,.fr-label img,.hiw-id img{-webkit-user-drag:none}

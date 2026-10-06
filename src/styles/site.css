@@ -54,7 +54,7 @@
 /* ---- base ---------------------------------------------------------------- */
 *, *::before, *::after { box-sizing: border-box; }
 /* The page opens and closes on dark, so the overscroll does too. */
-html { scroll-behavior: smooth; background: var(--spotlight); }
+html { scroll-behavior: smooth; background: var(--spotlight); -webkit-tap-highlight-color: transparent; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 body { margin: 0; }
 .bk-site {

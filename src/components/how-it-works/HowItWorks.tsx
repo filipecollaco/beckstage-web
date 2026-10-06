@@ -227,7 +227,6 @@ function HowItWorksMobile() {
           <FrUnit side="L" st={f.L} front={eye === 'L'} solo={solo} say={f.say.L} sayK={f.say.k} ping={f.ping} />
           <FrUnit side="R" st={f.R} front={eye === 'R'} gone={solo} say={f.say.R} sayK={f.say.k} ping={f.ping} />
           {tl.ended ? <EndCard onReplay={tl.replay} /> : null}
-          {reduced || tl.ended ? null : <><button type="button" className="hiwm-tap" style={{ left: 0 }} onClick={tl.prev} aria-label="Previous beat"></button><button type="button" className="hiwm-tap" style={{ right: 0 }} onClick={tl.next} aria-label="Next beat"></button></>}
         </div>
       </div>
       <div className="hiw-under fr-under"><Caption text={tl.ended ? '' : f.cap} />{reduced ? <Stepper tl={tl} /> : null}</div>
