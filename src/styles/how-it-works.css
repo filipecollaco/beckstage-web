@@ -188,3 +188,8 @@
 /* The phones are a film, not an interface: nothing in them takes a tap, a selection or a long-press menu. */
 .hiw-phone,.fr-unit{pointer-events:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 .hiw-phone img,.fr-label img,.hiw-id img{-webkit-user-drag:none}
+/* Mobile progress: each segment jumps to its beat. The bar stays 3px; the tap target is ~28px tall. */
+.fr-stage .hiwm-bars{top:0}
+.hiwm-seg{all:unset;box-sizing:border-box;display:block;padding:3px 0 22px;cursor:pointer}
+.hiwm-seg>span{display:block}
+.hiwm-seg:focus-visible>span{outline:2px solid var(--orange);outline-offset:3px}

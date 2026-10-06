@@ -109,7 +109,7 @@ function Progress({ tl, mobile }) {
   return (
     <div className={mobile ? 'hiwm-bars' : 'hiw-segs'} role="group" aria-label="Beats">
       {BEATS.map((beat, i) => mobile
-        ? <span key={beat.id}><i ref={(el) => (tl.bars.current[i] = el)} style={{ transform: tl.reduced ? `scaleX(${i <= tl.b ? 1 : 0})` : 'scaleX(0)' }}></i></span>
+        ? <button key={beat.id} type="button" className="hiwm-seg" onClick={() => tl.jump(i)} aria-label={`Beat ${beat.n}: ${beat.title}`} aria-current={i === tl.b ? 'step' : undefined}><span><i ref={(el) => (tl.bars.current[i] = el)} style={{ transform: tl.reduced ? `scaleX(${i <= tl.b ? 1 : 0})` : 'scaleX(0)' }}></i></span></button>
         : <button key={beat.id} type="button" className="hiw-seg" onClick={() => tl.jump(i)} aria-label={`Beat ${beat.n}: ${beat.title}`} aria-current={i === tl.b ? 'step' : undefined}><span><i ref={(el) => (tl.bars.current[i] = el)} style={{ transform: tl.reduced ? `scaleX(${i <= tl.b ? 1 : 0})` : 'scaleX(0)' }}></i></span></button>)}
     </div>
   );
