@@ -3,9 +3,9 @@
 The public marketing site for Beckstage, served at **https://beckstage.music**.
 The app itself lives at `app.beckstage.music` (repo `beckstage-fe`).
 
-Astro (static output) + React islands for the four interactive parts: the hero
-activity stream, *Who's Beckstage for?*, Pricing and the FAQ. Everything else
-is plain HTML with no JavaScript.
+Astro (static output) + React islands for the five interactive parts: the hero
+activity stream, *How it works*, *Who's Beckstage for?*, Pricing and the FAQ.
+Everything else is plain HTML with no JavaScript.
 
 ## Run it
 
@@ -24,6 +24,7 @@ npx astro check    # type-check (CI runs this too)
 | Styles and design tokens | `src/styles/site.css` |
 | Page order and meta tags | `src/pages/index.astro` |
 | Share image (1200×630) | `public/og.png` |
+| How it works (two phones) | `src/components/how-it-works/` + `src/styles/how-it-works.css` |
 
 - Sign-up and log-in buttons point at `LINKS.signup` / `LINKS.login`.
 - The **Get the app** band and its store badges stay hidden until both
@@ -36,6 +37,15 @@ Copy rules from the design handoff: never "agency" in copy (artist
 representation / representatives); the plans are Artist Free / Pro and
 Representative Free / Pro; never mention transaction fees; never promise crew
 is free forever.
+
+## How it works
+
+The two-phone piece under the hero comes from the Claude Design handoff
+*How it works* (2026-10-06). `data.ts` is the timeline (`BEATS`, `hiwFrame`),
+`screens.tsx` the app screens, `HowItWorks.tsx` the player (desktop: two phones;
+≤ 760px: one in front, scaled to fit the column and one viewport). These three
+are kept close to the reference (`@ts-nocheck`) so a later handoff diffs cleanly.
+Icons are inlined from `@mdi/js` (`mdi.ts`) — the site makes no external requests.
 
 ## Deploy
 

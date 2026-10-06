@@ -174,7 +174,11 @@ img { max-width: none; }
 .hv2-copy .bk-h1 { color: var(--spotlightFg); font-size: 68px; letter-spacing: -0.032em; line-height: 1.0; }
 .hv2-copy .bk-h1 em { font-style: normal; color: var(--burning); }
 .hv2-sub { margin-top: 26px; font-size: 20px; line-height: 1.45; color: rgba(255,249,243,0.76); max-width: 500px; }
-.hv2-ctas { display: flex; gap: 12px; align-items: center; justify-content: flex-start; flex-wrap: wrap; margin-top: 38px; }
+.hv2-ctas { display: flex; gap: 12px 26px; align-items: center; justify-content: flex-start; flex-wrap: wrap; margin-top: 38px; }
+/* Secondary hero link: scrolls to How it works. */
+.hv2-secondary { display: inline-flex; align-items: center; gap: 6px; padding: 8px 4px; font-family: var(--body); font-size: 15px; font-weight: 600;
+  color: var(--tintStrong); text-decoration: none; transition: color 140ms; }
+.hv2-secondary:hover { color: #fff; }
 
 /* the show is the container, the cards are its contents */
 .hv2-stage { position: relative; min-width: 0; }
@@ -247,7 +251,7 @@ img { max-width: none; }
   .hv2-copy { text-align: center; }
   .hv2-copy .bk-h1 { font-size: 40px; letter-spacing: -0.028em; }
   .hv2-sub { font-size: 17px; margin: 18px auto 0; }
-  .hv2-ctas { margin-top: 26px; justify-content: center; }
+  .hv2-ctas { margin-top: 26px; flex-direction: column; gap: 16px; justify-content: center; }
   .hv2-frame { border-radius: 18px; }
   .hv2-show { padding: 13px 15px 12px; }
   .hv2-show-status { display: none; }

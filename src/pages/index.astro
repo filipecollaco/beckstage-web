@@ -6,7 +6,10 @@ import '@fontsource/poppins/400.css';
 import '@fontsource/poppins/500.css';
 import '@fontsource/poppins/600.css';
 import '@fontsource/poppins/700.css';
+import '@fontsource/jetbrains-mono/500.css';
+import '@fontsource/jetbrains-mono/700.css';
 import '../styles/site.css';
+import '../styles/how-it-works.css';
 
 import Nav from '../components/Nav.astro';
 import Privacy from '../components/Privacy.astro';
@@ -17,6 +20,7 @@ import AudienceDesktop from '../components/AudienceDesktop';
 import AudienceMobile from '../components/AudienceMobile';
 import Pricing from '../components/Pricing';
 import Faq from '../components/Faq';
+import HowItWorks from '../components/how-it-works/HowItWorks';
 import { Icon } from '../components/icons';
 import { HERO, LINKS, SHOW } from '../data/site';
 
@@ -56,6 +60,7 @@ const ogImage = new URL('/og.png', site).href;
           <p class="hv2-sub">{HERO.sub[0]}<br />{HERO.sub[1]}</p>
           <div class="hv2-ctas">
             <a class="bk-btn bk-btn-lg bk-btn-onDark" href={LINKS.signup}>{HERO.primary}<Icon name="arrow" size={18} color="#fff" /></a>
+            <a class="hv2-secondary" href="#how-it-works">{HERO.secondary}<Icon name="arrowDown" size={16} /></a>
           </div>
         </div>
         <div class="hv2-stage">
@@ -71,6 +76,10 @@ const ogImage = new URL('/og.png', site).href;
         </div>
       </div>
     </header>
+
+    <section id="how-it-works" class="hiw-root hiw-band" aria-label="How it works">
+      <HowItWorks client:visible={{ rootMargin: '800px' }} />
+    </section>
 
     <main>
       <section class="aud-root" id="audience" aria-label="Who’s Beckstage for?">

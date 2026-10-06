@@ -9,6 +9,7 @@ export const LINKS = {
   signup: 'https://app.beckstage.music/signup',
   login: 'https://app.beckstage.music/login',
   email: 'hello@beckstage.music',
+  // Not linked from the nav for now (founder, 2026-10-06).
   instagram: 'https://www.instagram.com/beckstage.music/',
   // The apps are not public yet. The "Get the app" band renders only once
   // both of these are set.
@@ -31,6 +32,7 @@ export const HERO = {
   h1: ['Where', 'live music', 'works.'],
   sub: ['Shows, tours and payments, centralised.', 'Your whole team on the same page.'],
   primary: 'Create your free account',
+  secondary: 'See how it works',
 };
 
 export const SHOW = { artist: 'The Sundowners', venue: 'Aurora Hall, Berlin', date: '14 Mar', status: 'Confirmed' };

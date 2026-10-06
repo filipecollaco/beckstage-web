@@ -1,0 +1,182 @@
+/* ===========================================================================
+   How it works — one show on two phones.
+   Ported from the Claude Design handoff (handoff_how_it_works/hiw.css, 2026-10-06). Unused variants
+   (stacked crops, fixed places, main + inset, static boards) dropped. Class families: hiw-* section,
+   hiwm/fr-* mobile stage, ap-* the app screens (beckstage-fe tokens), .pg the cross-phone ping.
+   =========================================================================== */
+/* How it works — site band (beckstage-web tokens) + app screens (beckstage-fe BK tokens). */
+.hiw-root{--orange:#ff8f00;--sfg:#b05c0c;--spot:#1a1410;--spotFg:#fff9f3;--tintStrong:#ffcc80;--display:"Inter",-apple-system,sans-serif;--body:"Poppins","Inter",-apple-system,sans-serif;font-family:var(--body);-webkit-font-smoothing:antialiased}
+.hiw-root a{color:var(--tintStrong);text-decoration:none}.hiw-root a:hover{color:#fff}
+.hiw-band{position:relative;background:var(--spot);color:var(--spotFg);overflow:hidden}
+.hiw-band::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(52% 40% at 50% 0%,rgba(255,143,0,.13),transparent 70%),radial-gradient(40% 40% at 0% 100%,rgba(244,115,64,.08),transparent 70%)}
+/* Directly under the hero the two read as one dark band: the hero keeps its top-right glow, the band carries the
+   bottom-left one, and no gradient ends at the seam. */
+.hv2:has(+ .hiw-band)::before{background:radial-gradient(58% 52% at 78% 4%,rgba(255,143,0,.20),transparent 66%)}
+.hv2 + .hiw-band::before{background:radial-gradient(46% 30% at 4% 100%,rgba(244,115,64,.13),transparent 68%)}
+.hv2 + .hiw-band .hiw-head{padding-top:40px}
+.hiw-wrap{position:relative;max-width:1180px;margin:0 auto;padding:0 64px}
+.hiw-head{text-align:center;padding-top:88px}
+.hiw-eyebrow{font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--tintStrong);display:inline-flex;align-items:center;gap:8px}
+.hiw-eyebrow::before{content:"";width:18px;height:1.5px;background:currentColor;opacity:.55}
+.hiw-h2{font-family:var(--display);font-weight:600;letter-spacing:-.02em;line-height:1.08;font-size:40px;margin:16px 0 0;color:var(--spotFg)}
+.hiw-h2 em{font-style:normal;color:#f47340}
+.hiw-line{margin:14px 0 0;font-size:17px;line-height:1.5;color:rgba(255,249,243,.7)}
+.hiw-stage{position:relative;margin-top:44px;outline:none}
+.hiw-phones{display:flex;justify-content:center;gap:88px;position:relative}
+.hiw-side{display:flex;flex-direction:column;align-items:center;gap:14px;width:320px;transition:opacity .45s cubic-bezier(.2,.7,.3,1),filter .45s}
+.hiw-side.dim{opacity:.38;filter:saturate(.6)}
+/* The second phone takes no room until someone is on it: the stage opens from one centred phone to two. */
+.hiw-right{overflow:hidden;transition:width .8s cubic-bezier(.2,.7,.3,1),margin .8s cubic-bezier(.2,.7,.3,1),opacity .6s ease .15s,filter .45s}
+.hiw-right>.hiw-slot{flex:none}
+.hiw-right.gone{width:0;margin-left:-88px;opacity:0}
+.hiw-reduced .hiw-right{transition:opacity .35s ease}
+.hiw-id{display:flex;align-items:center;gap:10px;height:40px;min-width:0;flex:none}
+.hiw-id img{width:32px;height:32px;border-radius:999px;object-fit:cover;flex:none;box-shadow:0 0 0 2px rgba(255,249,243,.12)}
+.hiw-id-name{font-family:var(--display);font-size:15px;font-weight:600;color:var(--spotFg);white-space:nowrap}
+.hiw-id-role{font-size:12.5px;color:var(--tintStrong);white-space:nowrap}
+.hiw-id-ghost{width:32px;height:32px;border-radius:999px;border:1.5px dashed rgba(255,249,243,.28);flex:none}
+.hiw-id-wait{font-size:13px;color:rgba(255,249,243,.5);white-space:nowrap}
+.hiw-slot{position:relative;width:310px;height:696px}
+.hiw-slide{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;gap:14px}
+.hiw-slide.in{animation:hiwIn .5s cubic-bezier(.2,.7,.3,1) both}
+.hiw-slide.out{animation:hiwOut .42s cubic-bezier(.5,0,.75,0) both}
+@keyframes hiwIn{from{transform:translateX(70px);opacity:0}to{transform:none;opacity:1}}
+@keyframes hiwOut{from{transform:none;opacity:1}to{transform:translateX(-70px);opacity:0}}
+.hiw-phone{box-sizing:border-box;width:308px;height:642px;border-radius:44px;background:#0d0a08;padding:9px;box-shadow:0 30px 80px rgba(0,0,0,.55),inset 0 0 0 1px rgba(255,255,255,.08);position:relative;flex:none}
+.hiw-phone-scr{width:290px;height:624px;border-radius:36px;overflow:hidden;position:relative;background:#fff9f3}
+.hiw-phone-scr>.ap-scale{transform:scale(.7436);transform-origin:0 0;position:absolute;left:0;top:0}
+.hiw-island{position:absolute;top:19px;left:50%;transform:translateX(-50%);width:86px;height:24px;border-radius:14px;background:#0d0a08;z-index:30}
+.hiw-under{margin-top:30px;display:flex;flex-direction:column;align-items:center;gap:18px;padding-bottom:84px}
+.hiw-cap{margin:0;min-height:26px;font-family:var(--display);font-size:19px;font-weight:500;letter-spacing:-.01em;color:var(--spotFg);text-align:center;text-wrap:balance}
+.hiw-cap.fade{animation:capIn .45s ease both}
+@keyframes capIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.hiw-prog{display:flex;align-items:center;gap:14px}
+.hiw-segs{display:grid;grid-template-columns:repeat(6,80px);gap:6px}
+.hiw-seg{all:unset;cursor:pointer;height:20px;display:flex;align-items:center}
+.hiw-seg span{display:block;width:100%;height:3px;border-radius:2px;background:rgba(255,249,243,.18);overflow:hidden;position:relative}
+.hiw-seg span i{position:absolute;inset:0;background:var(--orange);transform-origin:0 50%}
+.hiw-seg:focus-visible{outline:2px solid var(--orange);outline-offset:3px;border-radius:3px}
+.hiw-ctrl{all:unset;cursor:pointer;width:34px;height:34px;border-radius:999px;display:flex;align-items:center;justify-content:center;color:var(--spotFg);border:1px solid rgba(255,249,243,.22);font-size:16px;flex:none}
+.hiw-ctrl:hover{background:rgba(255,249,243,.08)}
+.hiw-ctrl:focus-visible{outline:2px solid var(--orange);outline-offset:2px}
+.hiw-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:40;pointer-events:none;animation:capIn .4s ease both}
+.hiw-overlay.cut{background:rgba(26,20,16,.82)}
+.hiw-overlay.end{background:linear-gradient(180deg,rgba(26,20,16,0) 0%,rgba(26,20,16,.72) 40%,rgba(26,20,16,.72) 60%,rgba(26,20,16,0) 100%)}
+.hiw-cutcard{font-family:var(--display);font-size:30px;font-weight:600;letter-spacing:-.02em;color:var(--spotFg);display:flex;align-items:center;gap:14px}
+.hiw-cutcard b{color:var(--orange);font-weight:600}
+.hiw-end{display:flex;flex-direction:column;align-items:center;gap:22px;pointer-events:auto}
+.hiw-end h3{margin:0;font-family:var(--display);font-size:46px;font-weight:600;letter-spacing:-.03em;color:var(--spotFg)}
+.hiw-end h3 em{font-style:normal;color:#f47340}
+.hiw-btn{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:9px;font-weight:600;font-size:15px;padding:12px 22px;border-radius:999px;background:var(--orange);color:#fff;box-shadow:0 8px 26px rgba(255,143,0,.35)}
+.hiw-btn:hover{background:#ffa01f}.hiw-btn:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.hiw-btn.ghost{background:transparent;box-shadow:none;border:1px solid rgba(255,249,243,.28);color:var(--spotFg)}
+.hiw-step{display:flex;align-items:center;gap:12px}
+.hiw-step-n{font-size:12.5px;color:rgba(255,249,243,.6);font-variant-numeric:tabular-nums;min-width:64px;text-align:center}
+.hiw-xfade{animation:capIn .35s ease both}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+/* mobile stage */
+.hiwm .hiw-wrap{padding:0 22px}
+.hiwm .hiw-head{padding-top:56px}
+.hiwm .hiw-h2{font-size:28px}
+.hiwm .hiw-h2 em{font-style:normal;color:#f47340}
+.hiwm-bars{position:absolute;left:10px;right:10px;top:8px;display:grid;grid-template-columns:repeat(6,1fr);gap:4px;z-index:35}
+.hiwm-bars span{height:3px;border-radius:2px;background:rgba(22,22,22,.14);overflow:hidden;position:relative}
+.hiwm-bars span i{position:absolute;inset:0;background:#ff8f00;transform-origin:0 50%}
+.hiwm-tap{position:absolute;top:0;bottom:0;width:50%;z-index:32;background:transparent;border:0;padding:0;cursor:pointer}
+.hiwm .hiw-under{margin-top:16px;padding-bottom:56px;gap:14px}
+.hiwm .hiw-cap{font-size:16px;padding:0 22px}
+.hiwm .hiw-end{padding:0 22px;text-align:center}.hiwm .hiw-end h3{font-size:32px;line-height:1.05}
+
+/* ping — the one animation besides the screens. Drawn with outline (never clipped by the element's own overflow)
+   and an inset glow, so the card keeps its own background. */
+.pg{outline:2px solid rgba(255,143,0,0);outline-offset:3px;animation:pgRing 1.6s cubic-bezier(.2,.7,.3,1)}
+@keyframes pgRing{0%{outline-color:rgba(255,143,0,0);outline-offset:8px;box-shadow:inset 0 0 0 999px rgba(255,143,0,0)}18%{outline-color:#ff8f00;outline-offset:3px;box-shadow:inset 0 0 0 999px rgba(255,143,0,.10)}70%{outline-color:#ff8f00;outline-offset:3px;box-shadow:inset 0 0 0 999px rgba(255,143,0,.04)}100%{outline-color:rgba(255,143,0,0);outline-offset:3px;box-shadow:inset 0 0 0 999px rgba(255,143,0,0)}}
+.pg.round{border-radius:999px}
+.pg.static,.hiw-reduced .pg{animation:none;outline-color:#ff8f00}
+/* =================== APP (390 logical) =================== */
+.ap{--o:#ff8f00;--fg:#c84300;--bg:#fff9f3;--s:#fff;--sa:#fcf3e8;--sm:#f6ece1;--chrome:#211a15;--tint:#fff8ee;--tm:#ffe0b2;--ts:#ffcc80;--t:#161616;--tb:#3a312b;--tmu:#6b5d54;--tsu:#8c7e76;--tf:#b5a89e;--b:#efe4d8;--bm:#e0d2c2;--bs:#cfbfb0;--bo:#ffd8a8;--ok:#2c7449;--okb:#e6f3ec;--w:#8a6312;--wb:#fbf1d6;--info:#2563a8;--infob:#e3eef9;
+  width:390px;position:relative;overflow:hidden;background:var(--bg);color:var(--t);font-family:"Poppins",sans-serif;font-size:13px;line-height:20px;text-align:left;letter-spacing:0}
+.ap *{box-sizing:border-box}
+.ap .mdi::before{line-height:1}
+.ap-sb{height:50px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 30px 8px 34px;font-family:"Inter";font-weight:600;font-size:15px;color:var(--t);flex:none;position:relative;z-index:3}
+.ap-sb .ic{display:flex;gap:5px;font-size:16px}
+.ap-col{display:flex;flex-direction:column;height:100%}
+.ap-scroll{flex:1;min-height:0;overflow:hidden;position:relative}
+.ap-scroll>.in{transition:transform .7s cubic-bezier(.2,.7,.3,1)}
+.ap-fade{animation:apFade .32s ease both}
+@keyframes apFade{from{opacity:0}to{opacity:1}}
+.ap-dis{font-family:"Inter";font-weight:600}
+.ap-mono{font-family:"JetBrains Mono",monospace;font-weight:500;font-variant-numeric:tabular-nums}
+.ap-label{font-family:"Poppins";font-weight:600;font-size:11px;line-height:13px;letter-spacing:.66px;text-transform:uppercase}
+.ap-micro{font-family:"Poppins";font-weight:600;font-size:10px;line-height:12px;letter-spacing:.8px;text-transform:uppercase}
+.ap-cap{font-family:"Poppins";font-weight:500;font-size:11px;line-height:16px;letter-spacing:.11px}
+.ap-bsm{font-size:12px;line-height:17px}
+.ap-card{background:var(--s);border:1px solid var(--b);border-radius:8px;overflow:hidden;box-shadow:0 1px 0 rgba(99,65,30,.04)}
+.ap-xl{border-radius:12px}
+.ap-row{display:flex;align-items:center}
+.ap-av{border-radius:999px;object-fit:cover;flex:none;display:block;background:var(--tm)}
+.ap-btn{display:flex;align-items:center;justify-content:center;gap:8px;height:48px;border-radius:12px;font-family:"Inter";font-weight:600;font-size:14px;border:1px solid transparent;transition:background .15s,transform .15s}
+.ap-btn.pri{background:var(--o);color:#fff}
+.ap-btn.pri.dis{background:#f3ddbe;color:#c2b2a2}
+.ap-btn.ghost{color:var(--fg)}
+.ap-btn.sec{background:var(--tint);color:var(--fg);border-color:var(--bo)}
+.ap-btn.wf{background:var(--chrome);color:#fff9f3}
+.ap-btn.md{height:40px;border-radius:10px;font-size:13px}
+.ap-btn.sm{height:34px;border-radius:8px;font-size:13px;padding:0 14px}
+.press{animation:apPress .5s ease both}
+@keyframes apPress{0%,100%{transform:none}40%{transform:scale(.95);filter:brightness(.92)}}
+.ap-top{height:52px;display:flex;align-items:center;gap:10px;padding:0 14px;flex:none}
+.ap-circle{width:36px;height:36px;border-radius:18px;border:1px solid var(--b);background:var(--s);display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--t);flex:none}
+.ap-scrim{position:absolute;inset:0;background:rgba(33,26,21,.55);z-index:10;animation:apFade .3s ease both}
+.ap-sheet{position:absolute;left:0;right:0;bottom:0;background:var(--bg);border-radius:16px 16px 0 0;z-index:11;display:flex;flex-direction:column;box-shadow:0 8px 24px rgba(99,65,30,.1);animation:apUp .36s cubic-bezier(.2,.7,.3,1) both}
+@keyframes apUp{from{transform:translateY(100%)}to{transform:none}}
+.ap-grab{align-self:center;width:40px;height:2px;border-radius:2px;background:var(--bs);margin:8px 0 4px;flex:none}
+.ap-toast{position:absolute;left:14px;right:14px;bottom:30px;z-index:20;background:var(--chrome);color:#fff;border-radius:12px;padding:12px 14px;display:flex;gap:10px;align-items:center;font-size:13px;font-weight:500;box-shadow:0 10px 28px rgba(0,0,0,.4);animation:toast 3.2s ease both}
+@keyframes toast{0%{opacity:0;transform:translateY(16px)}10%,78%{opacity:1;transform:none}100%{opacity:0;transform:translateY(8px)}}
+.ap-toast.hold{animation:none}
+.ap-off{position:absolute;inset:0;background:#0d0a08}
+.ap-pill{display:inline-flex;align-items:center;gap:5px;border-radius:999px}
+.caret{display:inline-block;width:1.5px;height:17px;background:var(--o);vertical-align:-3px;margin-left:1px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.ap-typed{animation:apFade .25s ease both}
+/* reduced motion: no slides, no presses, no rings in motion — cross-fades only */
+.hiw-reduced .hiw-slide.in,.hiw-reduced .hiw-slide.out,.hiw-reduced .hiwm-main.in,.hiw-reduced .hiwm-inset,.hiw-reduced .ap-sheet,.hiw-reduced .press{animation:none!important}
+.hiw-reduced .ap-scroll>.in{transition:none!important}
+.hiw-reduced .ap-toast{animation:none}
+@media (prefers-reduced-motion:reduce){.hiw-slide.in,.hiw-slide.out,.hiwm-main.in,.hiwm-inset,.ap-sheet,.press{animation:none!important}.ap-scroll>.in{transition:none!important}}
+
+/* mobile · side by side, one in front */
+.fr-stage{position:absolute;left:50%;top:0;width:390px;height:698px;overflow:hidden;touch-action:manipulation;transform-origin:top center}
+.fr-stage .hiwm-bars{top:3px;left:14px;right:14px}
+.fr-stage .hiwm-bars span{background:rgba(255,249,243,.18)}
+.fr-unit{position:absolute;left:0;top:0;transform-origin:0 0;transition:transform .75s cubic-bezier(.2,.7,.3,1),opacity .6s ease,filter .6s;filter:brightness(.62) saturate(.6)}
+.fr-unit.on{filter:none}
+.fr-unit .hiw-phone{box-shadow:0 30px 70px rgba(0,0,0,.6),inset 0 0 0 1px rgba(255,255,255,.08)}
+.fr-label{position:absolute;left:0;top:0;z-index:4;transition:transform .75s cubic-bezier(.2,.7,.3,1),opacity .6s;pointer-events:none;display:flex;align-items:flex-end;gap:9px}
+.fr-label img{width:30px;height:30px;border-radius:999px;object-fit:cover;flex:none;box-shadow:0 0 0 2px rgba(255,249,243,.14)}
+.fr-txt{min-width:0;flex:1;display:flex;flex-direction:column;gap:2px}
+.fr-l1{display:flex;align-items:baseline;flex-wrap:wrap;column-gap:7px;row-gap:0}
+.fr-l1 .n,.fr-l1 .r{white-space:nowrap}
+.fr-label .n{font-family:var(--display);font-size:13.5px;line-height:17px;font-weight:600;color:#fff9f3}
+.fr-label .r{font-size:11.5px;line-height:15px;color:rgba(255,249,243,.55)}
+.fr-say{font-size:12px;line-height:15px;font-weight:600;color:#ffcc80;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;animation:capIn .4s ease both}
+.fr-label.back{gap:6px}
+.fr-label.back.right{justify-content:flex-end}
+.fr-label.back img{width:22px;height:22px;opacity:.7}
+.fr-label.back .n{font-size:11.5px;line-height:15px;color:rgba(255,249,243,.55);font-weight:600}
+.fr-under{margin-top:4px!important;padding-bottom:12px!important;gap:4px!important}
+.fr-under .hiw-cap{font-size:15px;line-height:1.3;min-height:36px;display:flex;align-items:center;justify-content:center}
+.hiw-reduced .fr-unit,.hiw-reduced .fr-label{transition:opacity .35s ease}
+
+/* ---- site seams (not in the reference) ---------------------------------- */
+/* Both stages are server-rendered; ≤ 760px shows the mobile one. */
+.hiw-mobile{display:none;position:relative}
+@media (max-width:760px){.hiw-desktop{display:none}.hiw-mobile{display:block}}
+.hiw-root{scroll-margin-top:0}
+/* Mobile stage host: holds the scaled 390 × 698 stage; the probe reads 100svh. */
+.fr-fit{position:relative;margin-top:20px;overflow:hidden}
+.fr-probe{position:absolute;left:0;top:0;width:1px;height:100vh;height:100svh;visibility:hidden;pointer-events:none}
+/* Two phones need 728px; the narrowest desktop column is 633. */
+@media (min-width:761px) and (max-width:900px){.hiw-phones{zoom:.82}}
+/* Hero and section share a background; a 1px overlap keeps a fractional-pixel seam from showing the cream body. */
+.hv2 + .hiw-band{box-shadow:0 -1px 0 #1a1410}
