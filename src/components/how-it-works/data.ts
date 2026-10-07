@@ -79,7 +79,7 @@ export const BEATS = [
     { t: 6700, R: { scr: 'dov', p: 'dan', toast: true }, ping: { side: 'R', id: 'strip' }, key: 'Dan’s booking — You can edit production' },
     { t: 8300, L: ov(C4), ping: { side: 'L', id: 'crew', also: ['crew-dan', 'crew-rui', 'crew-nils', 'crew-petr'] }, inset: { side: 'L', id: 'crew-strip' }, key: 'Maya: all four confirmed', say: { L: '4 of 4 accepted' } },
   ] },
-  { id: 'production', n: 4, title: 'Production', dur: 21600, cap: 'Dan fills in the venue, the contacts and the itinerary. Maya’s overview syncs automatically.', steps: [
+  { id: 'production', n: 4, title: 'Production', dur: 23000, cap: 'Dan fills in the venue, the contacts and the itinerary. Maya’s overview syncs automatically.', steps: [
     // Dan enters everything first; then Maya's Overview, with every block he filled already there.
     { t: 0, L: ov(C4), R: { scr: 'venue', p: 'dan', f: 0 }, act: 'R', inset: null, key: 'Dan · Venue', say: { L: '', R: 'Filling in the venue' } },
     { t: 700, R: { scr: 'venue', p: 'dan', f: 1 } },
@@ -87,41 +87,46 @@ export const BEATS = [
     { t: 2100, R: { scr: 'venue', p: 'dan', f: 2 }, L: ov(C4, { venue: 1 }), key: 'Load in · Parking' },
     { t: 2700, R: { scr: 'venue', p: 'dan', f: 3 }, say: { R: 'Adding the venue rider' } },
     { t: 3200, R: { scr: 'venue', p: 'dan', f: 4 }, L: ov(C4, { venue: 1, riders: 1 }), key: 'Venue Riders — Tech Rider' },
-    { t: 4000, R: { scr: 'contacts', p: 'dan', f: 0 }, say: { R: 'Adding the venue contact' } },
-    { t: 4700, R: { scr: 'contacts', p: 'dan', f: 1 } },
-    { t: 5300, R: { scr: 'contacts', p: 'dan', f: 2 }, key: 'Add contact — Production Manager' },
-    { t: 5900, R: { scr: 'contacts', p: 'dan', f: 3 } },
-    { t: 6200, R: { scr: 'contacts', p: 'dan', f: 4 }, L: ov(C4, { venue: 1, riders: 1, contacts: 1 }) },
-    { t: 6600, R: { scr: 'contacts', p: 'dan', f: 5 }, L: ov(C4, { venue: 1, riders: 1, contacts: 2 }), key: 'Second contact — Stage Manager' },
-    { t: 8300, R: { scr: 'itin', p: 'dan', n: 0 }, key: 'Dan · Itinerary — empty', say: { R: 'Starting the itinerary' } },
-    { t: 9700, R: { scr: 'itin', p: 'dan', n: 0, press: true } },
+    // Dan goes back to his Overview, scrolls to the empty Contacts block and taps it, then the form opens.
+    { t: 4000, R: { scr: 'dov', p: 'dan', venue: 1, riders: 1 }, say: { R: 'Going to Contacts' } },
+    { t: 4600, R: { scr: 'dov', p: 'dan', venue: 1, riders: 1, scroll: 120 }, key: 'Dan · Overview → Contacts' },
+    { t: 5100, R: { scr: 'dov', p: 'dan', venue: 1, riders: 1, scroll: 120, press: 'contacts' } },
+    { t: 5400, R: { scr: 'contacts', p: 'dan', f: 0 }, say: { R: 'Adding the venue contact' } },
+    { t: 6100, R: { scr: 'contacts', p: 'dan', f: 1 } },
+    { t: 6700, R: { scr: 'contacts', p: 'dan', f: 2 }, key: 'Add contact — Production Manager' },
+    { t: 7300, R: { scr: 'contacts', p: 'dan', f: 3 } },
+    { t: 7600, R: { scr: 'contacts', p: 'dan', f: 4 }, L: ov(C4, { venue: 1, riders: 1, contacts: 1 }) },
+    { t: 8000, R: { scr: 'contacts', p: 'dan', f: 5 }, L: ov(C4, { venue: 1, riders: 1, contacts: 2 }), key: 'Second contact — Stage Manager' },
+    { t: 9700, R: { scr: 'itin', p: 'dan', n: 0 }, key: 'Dan · Itinerary — empty', say: { R: 'Starting the itinerary' } },
+    { t: 11100, R: { scr: 'itin', p: 'dan', n: 0, press: true } },
     // The first item through the full New item form; the rest appear as if he had just made them too.
-    { t: 10200, R: { scr: 'item', p: 'dan', mode: 'new', f: 0 }, key: 'Dan · New item', say: { R: 'Adding the load-in' } },
-    { t: 10800, R: { scr: 'item', p: 'dan', mode: 'new', f: 1 } },
-    { t: 11400, R: { scr: 'item', p: 'dan', mode: 'new', f: 2, editing: true }, key: 'New item — Load-in · 15:00' },
-    { t: 12100, R: { scr: 'item', p: 'dan', mode: 'new', f: 3 } },
-    { t: 12500, R: { scr: 'item', p: 'dan', mode: 'new', f: 3, press: true } },
-    { t: 12800, R: { scr: 'itin', p: 'dan', n: 1 }, L: ov(C4, { venue: 1, riders: 1, contacts: 2, itin: 1, itinN: 1 }), key: 'Load-in 15:00' },
-    { t: 13300, R: { scr: 'itin', p: 'dan', n: 1, qa: 0 }, key: 'Quick add on the same day', say: { R: 'Adding the soundcheck' } },
-    { t: 13900, R: { scr: 'itin', p: 'dan', n: 1, qa: 1 }, key: 'Quick add — Soundcheck · 17:00' },
-    { t: 14500, R: { scr: 'itin', p: 'dan', n: 1, qa: 2 } },
-    { t: 14800, R: { scr: 'itin', p: 'dan', n: 2 }, L: ov(C4, { venue: 1, riders: 1, contacts: 2, itin: 1, itinN: 2 }) },
-    { t: 15400, R: { scr: 'itin', p: 'dan', n: 3 }, L: ov(C4, { venue: 1, riders: 1, contacts: 2, itin: 1, itinN: 3 }), say: { R: 'Building the day' } },
-    { t: 15800, R: { scr: 'itin', p: 'dan', n: 4 }, L: ov(C4, { venue: 1, riders: 1, contacts: 2, itin: 1, itinN: 4 }) },
-    { t: 16200, R: { scr: 'itin', p: 'dan', n: 5 }, L: ov(C4, { venue: 1, riders: 1, contacts: 2, itin: 1, itinN: 5 }) },
-    { t: 16600, R: { scr: 'itin', p: 'dan', n: 6 }, L: ov(C4, { venue: 1, riders: 1, contacts: 2, itin: 1 }), key: 'The whole day — 6 items' },
+    { t: 11600, R: { scr: 'item', p: 'dan', mode: 'new', f: 0 }, key: 'Dan · New item', say: { R: 'Adding the load-in' } },
+    { t: 12200, R: { scr: 'item', p: 'dan', mode: 'new', f: 1 } },
+    { t: 12800, R: { scr: 'item', p: 'dan', mode: 'new', f: 2, editing: true }, key: 'New item — Load-in · 15:00' },
+    { t: 13500, R: { scr: 'item', p: 'dan', mode: 'new', f: 3 } },
+    { t: 13900, R: { scr: 'item', p: 'dan', mode: 'new', f: 3, press: true } },
+    { t: 14200, R: { scr: 'itin', p: 'dan', n: 1 }, L: ov(C4, { venue: 1, riders: 1, contacts: 2, itin: 1, itinN: 1 }), key: 'Load-in 15:00' },
+    { t: 14700, R: { scr: 'itin', p: 'dan', n: 1, qa: 0 }, key: 'Quick add on the same day', say: { R: 'Adding the soundcheck' } },
+    { t: 15300, R: { scr: 'itin', p: 'dan', n: 1, qa: 1 }, key: 'Quick add — Soundcheck · 17:00' },
+    { t: 15900, R: { scr: 'itin', p: 'dan', n: 1, qa: 2 } },
+    { t: 16200, R: { scr: 'itin', p: 'dan', n: 2 }, L: ov(C4, { venue: 1, riders: 1, contacts: 2, itin: 1, itinN: 2 }) },
+    { t: 16800, R: { scr: 'itin', p: 'dan', n: 3 }, L: ov(C4, { venue: 1, riders: 1, contacts: 2, itin: 1, itinN: 3 }), say: { R: 'Building the day' } },
+    { t: 17200, R: { scr: 'itin', p: 'dan', n: 4 }, L: ov(C4, { venue: 1, riders: 1, contacts: 2, itin: 1, itinN: 4 }) },
+    { t: 17600, R: { scr: 'itin', p: 'dan', n: 5 }, L: ov(C4, { venue: 1, riders: 1, contacts: 2, itin: 1, itinN: 5 }) },
+    { t: 18000, R: { scr: 'itin', p: 'dan', n: 6 }, L: ov(C4, { venue: 1, riders: 1, contacts: 2, itin: 1 }), key: 'The whole day — 6 items' },
     // Maya's Overview is now taller than her screen: first the day and the contact, then the venue with its rider.
-    { t: 17500, L: ov(C4, { venue: 1, riders: 1, contacts: 2, itin: 1, scroll: 90 }), ping: { side: 'L', id: 'itin', also: ['contacts'] }, inset: { side: 'L', id: 'itin' }, key: 'Maya’s overview — the day and the contact', say: { L: 'Itinerary and contacts filled in by Dan' } },
-    { t: 19300, L: ov(C4, { venue: 1, riders: 1, contacts: 2, itin: 1, scroll: 520 }), ping: { side: 'L', id: 'venue' }, inset: { side: 'L', id: 'venue' }, key: 'Maya’s overview — venue and rider', say: { L: 'Venue and rider filled in by Dan' } },
+    { t: 18900, L: ov(C4, { venue: 1, riders: 1, contacts: 2, itin: 1, scroll: 90 }), ping: { side: 'L', id: 'itin', also: ['contacts'] }, inset: { side: 'L', id: 'itin' }, key: 'Maya’s overview — the day and the contact', say: { L: 'Itinerary and contacts filled in by Dan' } },
+    { t: 20700, L: ov(C4, { venue: 1, riders: 1, contacts: 2, itin: 1, scroll: 520 }), ping: { side: 'L', id: 'venue' }, inset: { side: 'L', id: 'venue' }, key: 'Maya’s overview — venue and rider', say: { L: 'Venue and rider filled in by Dan' } },
   ] },
-  { id: 'shared', n: 5, title: 'Shared, not public', dur: 7300, cap: 'Maya sees the whole accounting. Dan sees only his fee and his expenses.', steps: [
+  { id: 'shared', n: 5, title: 'Shared, not public', dur: 8300, cap: 'Maya sees the whole accounting. Dan sees only his fee and his expenses.', steps: [
     // Each one opens Accounting from their own Overview: the whole show, then his part.
     { t: 0, L: ov(C4, { venue: 1, riders: 1, contacts: 2, itin: 1, scroll: 9999 }), R: { scr: 'dov', p: 'dan', venue: 1, riders: 1, contacts: 2, itin: 1, scroll: 9999 }, act: 'both', inset: null, half: 'L', say: { L: '', R: '' } },
     { t: 700, L: ov(C4, { venue: 1, riders: 1, contacts: 2, itin: 1, scroll: 9999, press: 'acct' }) },
-    { t: 1000, L: { scr: 'acct', scroll: 230 }, key: 'The whole show', say: { L: 'The whole show' } },
-    { t: 4000, half: 'R' },
-    { t: 4600, R: { ...{ scr: 'dov', p: 'dan', venue: 1, riders: 1, contacts: 2, itin: 1, scroll: 9999, press: 'acct' } } },
-    { t: 4900, R: { scr: 'dacct', p: 'dan' }, key: 'His part', say: { R: 'His part' } },
+    { t: 1000, L: { scr: 'acct' }, key: 'The whole show', say: { L: 'The whole show' } },
+    { t: 2400, L: { scr: 'acct', scroll: 230 } },
+    { t: 5000, half: 'R' },
+    { t: 5600, R: { ...{ scr: 'dov', p: 'dan', venue: 1, riders: 1, contacts: 2, itin: 1, scroll: 9999, press: 'acct' } } },
+    { t: 5900, R: { scr: 'dacct', p: 'dan' }, key: 'His part', say: { R: 'His part' } },
   ] },
   { id: 'money', n: 6, title: 'The money', dur: 19800, cap: 'Dan submits what he spent on the road. It goes straight into the booking’s accounting.', steps: [
     { t: 0, L: { scr: 'acct' }, R: { scr: 'dacct', p: 'dan', add: 0 }, act: 'R', inset: null, key: 'Dan · Add expense', say: { L: '', R: 'Adding an expense' } },
@@ -158,6 +163,21 @@ export const HIW_POSTER = {
 // Tempo: every step time is authored in brief-scale ms and multiplied here. 1.2 after the rhythm pass.
 export const HIW_TEMPO = 1.2;
 BEATS.forEach((beat) => { beat.dur = Math.round(beat.dur * HIW_TEMPO); beat.steps.forEach((s) => { s.t = Math.round(s.t * HIW_TEMPO); }); });
+// First-view pacing (handoff 2026-10-07): pauses between ideas, taps and typing at the same speed. Each beat opens
+// on its caption before anything moves; every key step and every mid-beat caption change gets a short dwell.
+export const HIW_LEAD_MS = 1500;
+export const HIW_KEY_HOLD = 350;
+export const HIW_CAP_HOLD = 1500;
+BEATS.forEach((beat) => {
+  let shift = 0;
+  beat.steps.forEach((s, i) => {
+    if (i === 1) shift += HIW_LEAD_MS;
+    s.t += shift;
+    if (s.key) shift += HIW_KEY_HOLD;
+    if (s.cap) shift += HIW_CAP_HOLD;
+  });
+  beat.dur += shift;
+});
 export const HIW_PING_MS = 2200;
 export const HIW_FLY_MS = Math.round(560 * HIW_TEMPO); // an invite / an answer crossing between the phones
 

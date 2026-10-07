@@ -410,7 +410,7 @@ export function ScrDov({ st, ping }) {
         <ApHero /><ApStrip ping={ping} />
         <div style={{ padding: '0 14px 24px', display: 'flex', flexDirection: 'column', gap: 10 }}>
           {st.itin ? <OvBlock icon="clock-outline" title="Itinerary" summary={[HIW_ITIN.length + ' items across 1 day']} flush><ItinBody loadIn={st.itin === 2 ? '16:00' : '15:00'} /></OvBlock> : <OvBlock icon="clock-outline" title="Itinerary" cta={CTA.itinerary} />}
-          {st.contacts ? <OvBlock icon="card-account-phone" title="Contacts"><ContactsBody n={st.contacts === 1 ? 1 : 2} /></OvBlock> : <OvBlock icon="card-account-phone" title="Contacts" cta={CTA.contacts} />}
+          {st.contacts ? <OvBlock icon="card-account-phone" title="Contacts"><ContactsBody n={st.contacts === 1 ? 1 : 2} /></OvBlock> : <OvBlock icon="card-account-phone" title="Contacts" cta={CTA.contacts} pressed={st.press === 'contacts'} />}
           {st.venue ? <OvBlock icon="map-marker" title="Venue"><VenueBody riders={st.riders} /></OvBlock> : <OvBlock icon="map-marker" title="Venue" cta={CTA.venue} />}
           <OvBlock icon="account-group" title="Crew" summary={['4 confirmed']}><CrewStrip crew={{ dan: 'c', rui: 'c', nils: 'c', petr: 'c' }} viewer="dan" /></OvBlock>
           <OvBlock icon="guitar-electric" title="Artist Riders" cta={CTA.backline} />
