@@ -29,19 +29,22 @@ function useTimeline(rootRef, { reduced, poster }) {
   const pos = useRef({ b: 0, t: 0 });
   const [, force] = useState(0);
   const sig = useRef('');
-  const [visible, setVisible] = useState(false);
+  // How much of the stage is on screen. Playback starts at half; once started it only pauses when the stage is
+  // nearly gone (a small scroll must not stop it) and resumes as soon as it is back.
+  const [ratio, setRatio] = useState(0);
   const [started, setStarted] = useState(false);
-  const [hover, setHover] = useState(false);
+  const [userPaused, setUserPaused] = useState(false);
   const [ended, setEnded] = useState(false);
   const bars = useRef([]);
   const [kIdx, setKIdx] = useState(0);
 
   useEffect(() => {
     const el = rootRef.current; if (!el) return;
-    const io = new IntersectionObserver(([e]) => setVisible(e.intersectionRatio >= 0.5), { threshold: [0, 0.5, 1] });
+    const io = new IntersectionObserver(([e]) => setRatio(e.intersectionRatio), { threshold: [0, 0.15, 0.5, 1] });
     io.observe(el); return () => io.disconnect();
   }, []);
-  useEffect(() => { if (visible && !started && !reduced) setStarted(true); }, [visible, started, reduced]);
+  useEffect(() => { if (ratio >= 0.5 && !started && !reduced) setStarted(true); }, [ratio, started, reduced]);
+  const onScreen = ratio >= 0.15;
 
   const paint = () => {
     const { b, t } = pos.current;
@@ -51,7 +54,7 @@ function useTimeline(rootRef, { reduced, poster }) {
     if (s !== sig.current) { sig.current = s; force((x) => x + 1); }
   };
 
-  const playing = started && visible && !hover && !ended && !reduced;
+  const playing = started && onScreen && !userPaused && !ended && !reduced;
   useEffect(() => {
     if (!playing) { paint(); return; }
     let last = performance.now();
@@ -65,7 +68,7 @@ function useTimeline(rootRef, { reduced, poster }) {
   }, [playing]);
   useEffect(paint, [ended]);
 
-  const jump = (b) => { pos.current = { b: Math.max(0, Math.min(BEATS.length - 1, b)), t: 0 }; setEnded(false); setStarted(true); paint(); };
+  const jump = (b) => { pos.current = { b: Math.max(0, Math.min(BEATS.length - 1, b)), t: 0 }; setEnded(false); setStarted(true); setUserPaused(false); paint(); };
   return {
     get frame() {
       if (poster && !started && (!reduced || kIdx === 0)) return { ping: null, focus: null, inset: null, cut: false, half: null, b: 0, idx: 0, ...poster };
@@ -76,7 +79,8 @@ function useTimeline(rootRef, { reduced, poster }) {
     jump: (b) => (reduced ? setKIdx(HIW_KEYS.findIndex((k) => k.b === b)) : jump(b)),
     next: () => (reduced ? setKIdx((i) => Math.min(HIW_KEYS.length - 1, i + 1)) : jump(pos.current.b + 1)),
     prev: () => (reduced ? setKIdx((i) => Math.max(0, i - 1)) : jump(pos.current.t > 1200 ? pos.current.b : pos.current.b - 1)),
-    replay: () => jump(0), setHover, kIdx, kLen: HIW_KEYS.length,
+    replay: () => jump(0), kIdx, kLen: HIW_KEYS.length,
+    userPaused, togglePause: () => { setStarted(true); setUserPaused((v) => !v); },
   };
 }
 
@@ -135,7 +139,7 @@ function HowItWorksDesktop() {
     <div className={'hiw-desktop' + (reduced ? ' hiw-reduced' : '')}>
       <div className="hiw-wrap">
         <HiwSectionHead />
-        <div ref={ref} className="hiw-stage" tabIndex={0} onKeyDown={onKey} onMouseEnter={() => tl.setHover(true)} onMouseLeave={() => tl.setHover(false)}
+        <div ref={ref} className="hiw-stage" tabIndex={0} onKeyDown={onKey}
           aria-label="How it works, played on two phones. Left and right arrows step through it.">
           <div className="hiw-phones">
             <div className={'hiw-side' + (lit('L') ? '' : ' dim')}><Identity side="L" /><Phone st={f.L} ping={f.ping && f.ping.side === 'L' ? f.ping : null} label="Maya Sundowner’s phone" /></div>
@@ -144,7 +148,7 @@ function HowItWorksDesktop() {
           </div>
           <div className="hiw-under">
             <Caption text={tl.ended ? '' : f.cap} />
-            <div className="hiw-prog">{reduced ? <Stepper tl={tl} /> : null}<Progress tl={tl} />{reduced ? null : <button type="button" className="hiw-ctrl" onClick={tl.replay} aria-label="Replay"><I n="replay" s={16} /></button>}</div>
+            <div className="hiw-prog">{reduced ? <Stepper tl={tl} /> : null}<Progress tl={tl} />{reduced ? null : <>{tl.ended ? null : <button type="button" className="hiw-ctrl" onClick={tl.togglePause} aria-label={tl.userPaused ? 'Play' : 'Pause'}><I n={tl.userPaused ? 'play' : 'pause'} s={16} /></button>}<button type="button" className="hiw-ctrl" onClick={tl.replay} aria-label="Replay"><I n="replay" s={16} /></button></>}</div>
           </div>
         </div>
       </div>
