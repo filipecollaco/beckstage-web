@@ -9,7 +9,7 @@ import { LINKS, NAV } from '../data/site';
       {NAV.map((l) => <a class="bk-nav-link" href={l.href}>{l.label}</a>)}
     </div>
     <div class="bk-nav-actions">
-      {/* Instagram hidden for now (2026-10-06): <a class="bk-nav-ig" href={LINKS.instagram} …> */}
+      <a class="bk-nav-ig" href={LINKS.instagram} target="_blank" rel="noopener" aria-label="Beckstage on Instagram"><Icon name="instagram" size={20} /></a>
       <a class="bk-login" href={LINKS.login}>Log in</a>
       <a class="bk-btn bk-btn-onDark" href={LINKS.signup}>Create free account</a>
       <button class="bk-burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="bk-menu"><span></span><span></span><span></span></button>

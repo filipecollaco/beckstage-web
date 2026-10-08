@@ -9,7 +9,6 @@ export const LINKS = {
   signup: 'https://app.beckstage.music/signup',
   login: 'https://app.beckstage.music/login',
   email: 'hello@beckstage.music',
-  // Not linked from the nav for now (founder, 2026-10-06).
   instagram: 'https://www.instagram.com/beckstage.music/',
   // The apps are not public yet. The "Get the app" band renders only once
   // both of these are set.
