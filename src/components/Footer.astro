@@ -1,7 +1,13 @@
 ---
 /* The app band and footer: one dark closing block. */
 import { BeckstageWordmark } from './icons';
-import { APPS, FOOTER, LINKS, NAV } from '../data/site';
+import { APPS, FOOTER, LEGAL_NAV, LINKS, NAV } from '../data/site';
+
+interface Props {
+  /** The legal page being shown, if any: its footer link reads as current. */
+  current?: 'privacy' | 'terms';
+}
+const { current } = Astro.props;
 // The band only exists once both apps are public.
 const stores = LINKS.appStore && LINKS.googlePlay
   ? [
@@ -34,6 +40,10 @@ const stores = LINKS.appStore && LINKS.googlePlay
       <div class="footer-col">
         <h4>Beckstage</h4>
         {NAV.map((l) => <a href={l.href}>{l.label}</a>)}
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        {LEGAL_NAV.map((l) => <a href={l.href} aria-current={current === l.slug ? 'page' : undefined}>{l.label}</a>)}
       </div>
     </div>
     {stores && <p class="footer-legal">{APPS.legal}</p>}

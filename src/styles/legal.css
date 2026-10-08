@@ -1,0 +1,132 @@
+/* ===========================================================================
+   Legal pages (/privacy, /terms) — from handoff_legal_pages (2026-10-08).
+   The nav and footer are the site's own; this file is the header band, the
+   contents list and the reading column. The reference's `.m` class is the
+   ≤ 760px media query; below 1024px the contents list becomes the accordion.
+   =========================================================================== */
+
+/* ---- header (dark) -------------------------------------------------------- */
+.lg-head { position: relative; color: var(--spotlightFg);
+  background: radial-gradient(55% 80% at 82% 0%, rgba(255,143,0,.16), transparent 70%), var(--spotlight); }
+.lg-title { max-width: 1180px; margin: 0 auto; padding: 56px 64px 64px; display: flex; flex-direction: column; gap: 14px; }
+.lg-eyebrow { font-size: 12px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--tintStrong);
+  display: inline-flex; align-items: center; gap: 8px; }
+.lg-eyebrow::before { content: ""; width: 18px; height: 1.5px; background: currentColor; opacity: .55; }
+.lg-title h1 { font-family: var(--display); font-weight: 600; font-size: 52px; line-height: 1.05; letter-spacing: -.025em;
+  color: var(--spotlightFg); text-wrap: balance; }
+.lg-updated { font-size: 15px; color: rgba(255,249,243,.72); }
+
+/* ---- body (light) --------------------------------------------------------- */
+.lg-body { max-width: 1180px; margin: 0 auto; padding: 72px 64px 104px; display: grid;
+  grid-template-columns: 280px minmax(0, 1fr); gap: 72px; align-items: start; }
+.lg-body a { color: var(--foreground); }
+.lg-body a:hover { color: var(--ember); }
+
+/* contents (desktop, sticky) */
+.lg-toc { position: sticky; top: 28px; }
+.lg-toc-label { font-size: 12px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--foreground); margin-bottom: 14px; }
+.lg-toc-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.lg-toc-list a { display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 6px; padding: 7px 10px; margin: 0 -10px; border-radius: 10px;
+  font-size: 14px; line-height: 1.4; color: var(--textMuted); text-decoration: none; transition: background 140ms, color 140ms; }
+.lg-toc-list a:hover { color: var(--text); background: var(--surfaceAlt); }
+.lg-toc-list a.is-active { color: var(--text); font-weight: 500; background: var(--surface); box-shadow: var(--sh-sm), 0 0 0 1px var(--border); }
+.lg-toc-n { font-variant-numeric: tabular-nums; color: var(--foreground); font-weight: 600; }
+.lg-other { display: inline-block; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--borderMid);
+  font-size: 14px; font-weight: 600; text-decoration: none; width: 100%; }
+.lg-other-m { display: none; }
+
+/* reading column */
+.lg-doc { max-width: 700px; min-width: 0; }
+.lg-intro { display: flex; flex-direction: column; gap: 14px; padding-bottom: 40px; margin-bottom: 8px; border-bottom: 1px solid var(--borderMid); }
+.lg-intro p { font-size: 19px; line-height: 1.6; color: var(--textBody); text-wrap: pretty; }
+.lg-sec { padding-top: 48px; display: flex; flex-direction: column; gap: 16px; scroll-margin-top: 28px; }
+.lg-sec h2 { display: grid; grid-template-columns: 44px minmax(0, 1fr); font-family: var(--display); font-weight: 600; font-size: 24px;
+  line-height: 1.25; letter-spacing: -.015em; margin-bottom: 4px; text-wrap: balance; }
+.lg-snum { color: var(--foreground); font-variant-numeric: tabular-nums; }
+.lg-p, .lg-clause p, .lg-ul li, .lg-ol li { font-size: 16px; line-height: 1.7; color: var(--textBody); text-wrap: pretty; }
+.lg-p { padding-left: 44px; }
+.lg-clause { display: grid; grid-template-columns: 44px minmax(0, 1fr); }
+.lg-cnum { font-size: 13.5px; font-weight: 600; color: var(--textMuted); font-variant-numeric: tabular-nums; padding-top: 3px; }
+.lg-ul { margin: 0; padding: 0 0 0 44px; list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.lg-ul li { position: relative; padding-left: 20px; }
+.lg-ul li::before { content: ""; position: absolute; left: 2px; top: .72em; width: 6px; height: 6px; border-radius: 50%; background: var(--orange); }
+.lg-ul strong { color: var(--text); font-weight: 600; }
+.lg-ol { margin: 0; padding: 0 0 0 44px; list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.lg-ol li { display: grid; grid-template-columns: 24px minmax(0, 1fr); }
+.lg-olm { color: var(--foreground); font-weight: 600; }
+
+/* Privacy §6: a table on desktop, one card per row on mobile */
+.lg-table-wrap { margin: 8px 0 0 44px; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; box-shadow: var(--sh-sm); overflow: hidden; }
+.lg-table { width: 100%; border-collapse: collapse; font-size: 14px; line-height: 1.55; }
+.lg-table thead th { text-align: left; font-size: 11.5px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--foreground);
+  padding: 14px 16px; background: var(--tint); border-bottom: 1px solid var(--border); }
+.lg-table tbody th, .lg-table td { text-align: left; vertical-align: top; padding: 14px 16px; border-top: 1px solid var(--border); }
+.lg-table tbody tr:first-child th, .lg-table tbody tr:first-child td { border-top: 0; }
+.lg-table tbody th { font-family: var(--display); font-weight: 600; font-size: 14.5px; color: var(--text); width: 34%; }
+.lg-table td { color: var(--textBody); }
+.lg-table td:last-child { width: 33%; }
+.lg-tcards { display: none; flex-direction: column; gap: 10px; margin-top: 4px; }
+.lg-tcard { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 16px 18px; box-shadow: var(--sh-sm); }
+.lg-tcard-t { font-family: var(--display); font-weight: 600; font-size: 15.5px; line-height: 1.35; margin-bottom: 10px; }
+.lg-tcard dl { margin: 0; display: flex; flex-direction: column; gap: 2px; }
+.lg-tcard dt { font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--foreground); margin-top: 8px; }
+.lg-tcard dt:first-child { margin-top: 0; }
+.lg-tcard dd { margin: 0; font-size: 14px; line-height: 1.55; color: var(--textBody); }
+
+/* data-subject rights, contact card */
+.lg-rights { margin: 8px 0 0 44px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.lg-rights > div { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 18px 20px; box-shadow: var(--sh-sm); }
+.lg-rights dt { font-family: var(--display); font-weight: 600; font-size: 16px; line-height: 1.3; margin-bottom: 8px; }
+.lg-rights dd { margin: 0; font-size: 14.5px; line-height: 1.6; color: var(--textBody); text-wrap: pretty; }
+.lg-addr { margin-left: 44px; font-style: normal; display: flex; flex-direction: column; gap: 2px; padding: 18px 20px; background: var(--surface);
+  border: 1px solid var(--border); border-radius: 16px; box-shadow: var(--sh-sm); font-size: 15px; line-height: 1.6; color: var(--textBody); }
+.lg-addr span:first-child { font-family: var(--display); font-weight: 600; color: var(--text); }
+
+/* contents accordion (below 1024px) */
+.lg-mtoc { display: none; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; box-shadow: var(--sh-sm); }
+.lg-mtoc-btn { width: 100%; min-height: 52px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px;
+  background: none; border: 0; cursor: pointer; font-family: var(--display); font-weight: 600; font-size: 16px; color: var(--text); border-radius: 16px; }
+.lg-mtoc-count { color: var(--textMuted); font-weight: 500; }
+.lg-plus { position: relative; width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--borderMid);
+  transition: transform 260ms var(--ease), background 200ms, border-color 200ms; }
+.lg-plus::before, .lg-plus::after { content: ""; position: absolute; left: 50%; top: 50%; width: 12px; height: 1.6px; background: var(--text); transform: translate(-50%, -50%); }
+.lg-plus::after { transform: translate(-50%, -50%) rotate(90deg); }
+.lg-mtoc.open .lg-plus { transform: rotate(45deg); background: var(--orange); border-color: var(--orange); }
+.lg-mtoc.open .lg-plus::before, .lg-mtoc.open .lg-plus::after { background: #fff; }
+.lg-mtoc-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 260ms var(--ease); }
+.lg-mtoc.open .lg-mtoc-body { grid-template-rows: 1fr; }
+.lg-mtoc-body > div { overflow: hidden; }
+.lg-mtoc:not(.open) .lg-mtoc-body > div { visibility: hidden; }
+.lg-mtoc .lg-toc-list { padding: 0 16px 12px; }
+.lg-mtoc .lg-toc-list a { min-height: 44px; align-items: center; font-size: 14.5px; }
+@media (prefers-reduced-motion: reduce) { .lg-mtoc-body, .lg-plus { transition: none; } }
+
+/* tablet: the 280px contents list and a 700px column don't fit — the accordion takes over */
+@media (max-width: 1023px) {
+  .lg-body { display: block; }
+  .lg-toc { display: none; }
+  .lg-doc { margin: 0 auto; }
+  .lg-mtoc { display: block; }
+  .lg-mtoc + .lg-intro { padding-top: 28px; }
+  .lg-other-m { display: inline-block; margin-top: 40px; }
+}
+
+/* mobile */
+@media (max-width: 760px) {
+  .lg-title { padding: 36px 22px 44px; gap: 12px; }
+  .lg-title h1 { font-size: 34px; }
+  .lg-updated { font-size: 14px; }
+  .lg-body { padding: 28px 22px 64px; }
+  .lg-intro { padding: 28px 0 28px; gap: 12px; }
+  .lg-intro p { font-size: 17px; }
+  .lg-sec { padding-top: 36px; gap: 14px; }
+  .lg-sec h2 { grid-template-columns: 34px minmax(0, 1fr); font-size: 20px; }
+  .lg-p, .lg-clause p, .lg-ul li, .lg-ol li { font-size: 15px; }
+  .lg-p { padding-left: 0; }
+  .lg-clause { grid-template-columns: 40px minmax(0, 1fr); }
+  .lg-ul, .lg-ol { padding-left: 0; }
+  .lg-table-wrap { display: none; }
+  .lg-tcards { display: flex; }
+  .lg-rights { margin-left: 0; grid-template-columns: 1fr; }
+  .lg-addr { margin-left: 0; }
+}

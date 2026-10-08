@@ -26,13 +26,16 @@ npx astro check    # type-check (CI runs this too)
 | Page order and meta tags | `src/pages/index.astro` |
 | Share image (1200×630) | `public/og.png` |
 | How it works (two phones) | `src/components/how-it-works/` + `src/styles/how-it-works.css` |
+| Legal pages | `src/data/legal.ts` (copy) · `src/components/legal/` · `src/styles/legal.css` |
 
 - Sign-up and log-in buttons point at `LINKS.signup` / `LINKS.login`.
 - The **Get the app** band and its store badges stay hidden until both
   `LINKS.appStore` and `LINKS.googlePlay` are set.
-- Privacy Policy and Terms are not on the site yet (no text exists). The app's
-  Settings links to `beckstage.music/terms`, which shows the 404 page until a
-  `src/pages/terms.astro` exists.
+- Legal pages: `/privacy` and `/terms` (`src/pages/privacy.astro`,
+  `terms.astro`, both `src/components/legal/LegalPage.astro`). The copy lives in
+  `src/data/legal.ts`, **verbatim approved legal text** — never edit it outside a
+  lawyer revision, and bump `updated` / `updatedISO` with every one. No cookie
+  section and no cookie banner until the site sets cookies.
 
 Copy rules from the design handoff: never "agency" in copy (artist
 representation / representatives); the plans are Artist Free / Pro and

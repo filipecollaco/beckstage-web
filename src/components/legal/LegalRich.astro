@@ -1,0 +1,11 @@
+---
+/* Legal text with its three inline links: the contact address, the CNPD site and {privacy}. */
+interface Props { s: string }
+const { s } = Astro.props;
+const parts = s.split(/(\{privacy\}|hello@beckstage\.music|https:\/\/www\.cnpd\.pt\/)/);
+---
+{parts.map((p) =>
+  p === '{privacy}' ? <a href="/privacy">beckstage.music/privacy</a>
+  : p === 'hello@beckstage.music' ? <a href="mailto:hello@beckstage.music">{p}</a>
+  : p.startsWith('https://') ? <a href={p} target="_blank" rel="noopener">{p.replace('https://', '').replace(/\/$/, '')}</a>
+  : p)}

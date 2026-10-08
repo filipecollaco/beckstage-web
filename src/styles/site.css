@@ -472,7 +472,7 @@ img { max-width: none; }
 .footer-brand p { font-size: 14px; color: rgba(255,249,243,0.6); margin-top: 16px; max-width: 280px; line-height: 1.6; }
 .footer-col h4 { font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--tintStrong); margin-bottom: 16px; }
 .footer-col a { display: block; width: fit-content; font-size: 14px; color: rgba(255,249,243,0.7); text-decoration: none; margin-bottom: 11px; transition: color 140ms; }
-.footer-col a:hover { color: #fff; }
+.footer-col a:hover, .footer-col a[aria-current="page"] { color: #fff; }
 .footer-legal { max-width: 720px; margin: 36px 0 0; font-size: 11px; line-height: 1.6; color: var(--textSubtle); }
 .footer-bottom { display: flex; justify-content: space-between; align-items: center; margin-top: 48px; padding-top: 24px;
   border-top: 1px solid rgba(255,249,243,0.12); font-size: 13px; color: rgba(255,249,243,0.5); }

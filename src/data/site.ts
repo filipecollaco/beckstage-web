@@ -19,10 +19,11 @@ export const LINKS = {
 export const mailto = (subject?: string) =>
   `mailto:${LINKS.email}${subject ? `?subject=${encodeURIComponent(subject)}` : ''}`;
 
+// Absolute (`/#…`) so they also work from /privacy and /terms; on the home page they scroll in place.
 export const NAV = [
-  { label: 'Who’s Beckstage for?', href: '#audience' },
-  { label: 'Pricing', href: '#pricing' },
-  { label: 'Contact', href: '#contact' },
+  { label: 'Who’s Beckstage for?', href: '/#audience' },
+  { label: 'Pricing', href: '/#pricing' },
+  { label: 'Contact', href: '/#contact' },
 ];
 
 /* ---- Hero --------------------------------------------------------------- */
@@ -262,6 +263,11 @@ export const APPS = {
   line: 'Already on Beckstage? Take it on the road.',
   legal: 'Apple and the Apple logo are trademarks of Apple Inc., registered in the U.S. and other countries. App Store is a service mark of Apple Inc. Google Play and the Google Play logo are trademarks of Google LLC.',
 };
+
+export const LEGAL_NAV = [
+  { slug: 'privacy', label: 'Privacy and Cookies Policy', href: '/privacy' },
+  { slug: 'terms', label: 'Terms and Conditions', href: '/terms' },
+] as const;
 
 export const FOOTER = {
   blurb: 'The operating system for live music — the network where artists, representatives and crew connect and run every show together.',

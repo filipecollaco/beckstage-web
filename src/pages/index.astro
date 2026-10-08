@@ -1,14 +1,7 @@
 ---
-import '@fontsource/inter/500.css';
-import '@fontsource/inter/600.css';
-import '@fontsource/inter/700.css';
-import '@fontsource/poppins/400.css';
-import '@fontsource/poppins/500.css';
-import '@fontsource/poppins/600.css';
-import '@fontsource/poppins/700.css';
 import '@fontsource/jetbrains-mono/500.css';
 import '@fontsource/jetbrains-mono/700.css';
-import '../styles/site.css';
+import Base from '../layouts/Base.astro';
 import '../styles/how-it-works.css';
 
 import Nav from '../components/Nav.astro';
@@ -25,32 +18,8 @@ import { HERO, LINKS } from '../data/site';
 
 const title = 'Beckstage · Where live music works';
 const description = 'Shows, tours and payments, centralised. Your whole team on the same page. For artists, touring professionals, artist managers and agents.';
-const site = Astro.site ?? new URL('https://beckstage.music');
-const ogImage = new URL('/og.png', site).href;
 ---
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{title}</title>
-    <meta name="description" content={description} />
-    <link rel="canonical" href={site.href} />
-    <meta name="theme-color" content="#1a1410" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Beckstage" />
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
-    <meta property="og:url" content={site.href} />
-    <meta property="og:image" content={ogImage} />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta name="twitter:card" content="summary_large_image" />
-  </head>
-  <body class="bk-site">
+<Base title={title} description={description} path="/">
     <header class="hv2 hv3">
       <Nav />
       <div class="bk-wrap hv3-copy">
@@ -94,5 +63,4 @@ const ogImage = new URL('/og.png', site).href;
     </main>
 
     <Footer />
-  </body>
-</html>
+</Base>

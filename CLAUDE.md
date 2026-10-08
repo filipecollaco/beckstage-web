@@ -6,6 +6,8 @@ structure, commands and deploy.
 - Copy lives in `src/data/site.ts` only. Don't hardcode strings in components.
 - Never write "agency" in user-facing copy: the entity is an *artist
   representation*, its people are *representatives*.
+- `src/data/legal.ts` is approved legal text: verbatim, not product copy (the
+  "agency" rule doesn't apply). Change it only from a lawyer-reviewed revision.
 - Never list a plan feature that doesn't exist in the app; paid plans only lift
   the Free limits.
 - Orange buttons always carry white text.

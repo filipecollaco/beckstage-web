@@ -1,0 +1,144 @@
+---
+/* A legal document page (/privacy, /terms): dark header with the nav, light reading body with a contents
+   list (sticky on desktop, an accordion below 1024px), the site footer. From the Claude Design handoff
+   handoff_legal_pages (2026-10-08). Static; one small script runs the scroll-spy and the accordion. */
+import Base from '../../layouts/Base.astro';
+import Nav from '../Nav.astro';
+import Footer from '../Footer.astro';
+import LegalRich from './LegalRich.astro';
+import '../../styles/legal.css';
+import { LEGAL_DOCS, sectionId, type LegalDoc } from '../../data/legal';
+
+interface Props { doc: LegalDoc }
+const { doc } = Astro.props;
+const other = doc.slug === 'privacy' ? LEGAL_DOCS.terms : LEGAL_DOCS.privacy;
+const letter = (i: number) => String.fromCharCode(97 + i) + '.';
+---
+<Base title={`${doc.title} · Beckstage`} path={`/${doc.slug}`}>
+  <header class="lg-head">
+    <Nav />
+    <div class="lg-title">
+      <p class="lg-eyebrow">Legal</p>
+      <h1>{doc.title}</h1>
+      <p class="lg-updated">Last updated <time datetime={doc.updatedISO}>{doc.updated}</time></p>
+    </div>
+  </header>
+
+  <main class="lg-body">
+    <aside class="lg-toc" aria-label="On this page">
+      <p class="lg-toc-label">On this page</p>
+      <ol class="lg-toc-list">
+        {doc.sections.map((s) => (
+          <li><a href={`#${sectionId(s)}`} data-toc><span class="lg-toc-n">{s.n}</span><span>{s.t}</span></a></li>
+        ))}
+      </ol>
+      <a class="lg-other" href={`/${other.slug}`}>{other.title} →</a>
+    </aside>
+
+    <article class="lg-doc">
+      <div class="lg-mtoc">
+        <button class="lg-mtoc-btn" type="button" aria-expanded="false" aria-controls="lg-mtoc-list">
+          <span>Contents <span class="lg-mtoc-count">· {doc.sections.length}</span></span>
+          <span class="lg-plus" aria-hidden="true"></span>
+        </button>
+        <div class="lg-mtoc-body">
+          <div>
+            <ol class="lg-toc-list" id="lg-mtoc-list">
+              {doc.sections.map((s) => (
+                <li><a href={`#${sectionId(s)}`} data-toc><span class="lg-toc-n">{s.n}</span><span>{s.t}</span></a></li>
+              ))}
+            </ol>
+          </div>
+        </div>
+      </div>
+
+      <div class="lg-intro">{doc.intro.map((p) => <p><LegalRich s={p} /></p>)}</div>
+
+      {doc.sections.map((s) => (
+        <section id={sectionId(s)} class="lg-sec">
+          <h2><span class="lg-snum">{s.n}</span><span>{s.t}</span></h2>
+          {s.b.map((blk) => {
+            switch (blk[0]) {
+              case 'p': return <p class="lg-p"><LegalRich s={blk[1]} /></p>;
+              case 'c': return <div class="lg-clause"><span class="lg-cnum">{blk[1]}</span><p><LegalRich s={blk[2]} /></p></div>;
+              case 'ul': return (
+                <ul class="lg-ul">{blk[1].map((it) => typeof it === 'string'
+                  ? <li><LegalRich s={it} /></li>
+                  : <li><strong>{it.b}</strong> <LegalRich s={it.t} /></li>)}</ul>
+              );
+              case 'ol': return <ol class="lg-ol">{blk[1].map((it, i) => <li><span class="lg-olm">{letter(i)}</span><span>{it}</span></li>)}</ol>;
+              case 'table': {
+                const { head, rows } = blk[1];
+                return (
+                  <>
+                    <div class="lg-table-wrap"><table class="lg-table">
+                      <thead><tr>{head.map((h) => <th scope="col">{h}</th>)}</tr></thead>
+                      <tbody>{rows.map((r) => <tr><th scope="row">{r[0]}</th><td>{r[1]}</td><td>{r[2]}</td></tr>)}</tbody>
+                    </table></div>
+                    <div class="lg-tcards">{rows.map((r) => (
+                      <div class="lg-tcard">
+                        <div class="lg-tcard-t">{r[0]}</div>
+                        <dl><dt>{head[1]}</dt><dd>{r[1]}</dd><dt>{head[2]}</dt><dd>{r[2]}</dd></dl>
+                      </div>
+                    ))}</div>
+                  </>
+                );
+              }
+              case 'rights': return <dl class="lg-rights">{blk[1].map((r) => <div><dt>{r.t}</dt><dd><LegalRich s={r.d} /></dd></div>)}</dl>;
+              case 'addr': return <address class="lg-addr">{blk[1].map((l) => <span><LegalRich s={l} /></span>)}</address>;
+            }
+          })}
+        </section>
+      ))}
+
+      <a class="lg-other lg-other-m" href={`/${other.slug}`}>{other.title} →</a>
+    </article>
+  </main>
+
+  <Footer current={doc.slug} />
+</Base>
+
+<script>
+  // Contents: the item for the section under the top of the viewport is the current one (both lists).
+  const links = [...document.querySelectorAll<HTMLAnchorElement>('a[data-toc]')];
+  const sections = [...document.querySelectorAll<HTMLElement>('.lg-sec')];
+  let current = '';
+  const setActive = (id: string) => {
+    if (id === current) return;
+    current = id;
+    for (const a of links) {
+      const on = a.hash === '#' + id;
+      a.classList.toggle('is-active', on);
+      if (on) a.setAttribute('aria-current', 'location'); else a.removeAttribute('aria-current');
+    }
+  };
+  const spy = () => {
+    const line = innerHeight * 0.3;
+    let id = sections[0]?.id ?? '';
+    for (const s of sections) if (s.getBoundingClientRect().top <= line) id = s.id;
+    if (innerHeight + scrollY >= document.documentElement.scrollHeight - 2) id = sections[sections.length - 1]?.id ?? id;
+    setActive(id);
+  };
+  // The sections entering and leaving the viewport are what can move the current item; scrolling re-reads it
+  // at most every 80ms, and once more when the scroll settles.
+  const io = new IntersectionObserver(spy, { threshold: [0, 1] });
+  sections.forEach((s) => io.observe(s));
+  let last = 0;
+  let settle = 0;
+  addEventListener('scroll', () => {
+    const now = performance.now();
+    if (now - last > 80) { last = now; spy(); }
+    clearTimeout(settle);
+    settle = window.setTimeout(spy, 100);
+  }, { passive: true });
+  spy();
+
+  // The contents accordion (below 1024px): a pick scrolls to the section and closes it.
+  const box = document.querySelector<HTMLElement>('.lg-mtoc');
+  const btn = box?.querySelector<HTMLButtonElement>('.lg-mtoc-btn');
+  if (box && btn) {
+    const set = (open: boolean) => { box.classList.toggle('open', open); btn.setAttribute('aria-expanded', String(open)); };
+    btn.addEventListener('click', () => set(!box.classList.contains('open')));
+    box.addEventListener('click', (e) => { if ((e.target as HTMLElement).closest('a')) set(false); });
+  }
+</script>
