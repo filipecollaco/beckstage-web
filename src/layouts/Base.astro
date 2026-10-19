@@ -41,6 +41,13 @@ const ogImage = new URL('/og.png', site).href;
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
+    {/* Plausible: visits, and every click out to the app (each Create free
+        account), without cookies — so the site still needs no banner. */}
+    <script is:inline async src="https://plausible.io/js/pa-dFKuQ1Eai8F4044RUiBZn.js"></script>
+    <script is:inline>
+      window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+      plausible.init()
+    </script>
   </head>
   <body class="bk-site">
     <slot />
