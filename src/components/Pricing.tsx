@@ -74,7 +74,7 @@ function RepresentativePro({ billing }: { billing: Billing }) {
         <span className="amt">{money(cents(shown))}</span><span className="per">/mo</span>
       </div>
       <div className="price-yearnote">
-        {yearly ? `${money(mo * 10)} billed yearly` : 'billed monthly'} · {money(cents(shown / n))} per artist
+        {yearly ? `${money(mo * 10)} billed yearly` : 'billed monthly'}
       </div>
       <div className="price-cta">
         <a className="bk-btn bk-btn-primary" href={LINKS.signup}>{c.cta}</a>
