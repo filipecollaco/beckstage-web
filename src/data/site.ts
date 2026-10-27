@@ -33,7 +33,6 @@ export const HERO = {
   sub: ['Tour production and accounting, in one place.', 'Artists, agents, managers and crew on the same page.'],
   primary: 'Create your free account',
   secondary: 'See how it works',
-  reach: 'For artists, their crew, and the managers and agents who book them.',
 };
 
 /* ---- Who's Beckstage for? ----------------------------------------------- */
