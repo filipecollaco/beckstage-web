@@ -175,6 +175,8 @@ img { max-width: none; }
 .hv3 .bk-h1 em { font-style: normal; color: var(--burning); }
 .hv2-sub { font-size: 20px; line-height: 1.45; color: rgba(255,249,243,0.76); }
 .hv3 .hv2-sub { margin: 20px auto 0; max-width: 560px; text-wrap: balance; }
+/* One sentence per line on desktop; on a phone each wraps, so the gap keeps them two. */
+.hv3 .hv2-sub span { display: block; }
 .hv3-ctas { display: flex; gap: 22px; align-items: center; justify-content: center; flex-wrap: wrap; margin-top: 30px; }
 /* Secondary hero link: scrolls to How it works. */
 .hv3-secondary { display: inline-flex; align-items: center; gap: 6px; padding: 8px 4px; font-family: var(--body); font-size: 15px; font-weight: 600;
@@ -184,6 +186,7 @@ img { max-width: none; }
   .hv3 .hv3-copy { padding-top: 20px; }
   .hv3 .bk-h1 { font-size: 40px; letter-spacing: -0.028em; }
   .hv3 .hv2-sub { font-size: 17px; margin-top: 16px; }
+  .hv3 .hv2-sub span + span { margin-top: 8px; }
   .hv3-ctas { flex-direction: column; gap: 10px; margin-top: 24px; }
 }
 
