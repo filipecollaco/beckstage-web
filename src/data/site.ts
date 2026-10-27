@@ -30,7 +30,7 @@ export const NAV = [
 
 export const HERO = {
   h1: ['Where', 'live music', 'works.'],
-  sub: ['Shows, tours and payments, centralised.', 'Your whole team on the same page.'],
+  sub: ['Tour production and accounting, in one place.', 'Artists, agents, managers and crew on the same page.'],
   primary: 'Create your free account',
   secondary: 'See how it works',
   reach: 'For artists, their crew, and the managers and agents who book them.',

@@ -174,7 +174,7 @@ img { max-width: none; }
 .hv3 .bk-h1 { color: var(--spotlightFg); font-size: 64px; letter-spacing: -0.032em; line-height: 1; }
 .hv3 .bk-h1 em { font-style: normal; color: var(--burning); }
 .hv2-sub { font-size: 20px; line-height: 1.45; color: rgba(255,249,243,0.76); }
-.hv3 .hv2-sub { margin: 20px auto 0; max-width: 520px; }
+.hv3 .hv2-sub { margin: 20px auto 0; max-width: 560px; text-wrap: balance; }
 .hv3-ctas { display: flex; gap: 22px; align-items: center; justify-content: center; flex-wrap: wrap; margin-top: 30px; }
 /* Secondary hero link: scrolls to How it works. */
 .hv3-secondary { display: inline-flex; align-items: center; gap: 6px; padding: 8px 4px; font-family: var(--body); font-size: 15px; font-weight: 600;
