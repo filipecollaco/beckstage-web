@@ -1,4 +1,4 @@
-// @ts-nocheck — ported from the Claude Design prototype (handoff_how_it_works, 2026-10-06), kept
+// @ts-nocheck — ported from the Claude Design prototype (handoff_how_it_works_v2, 2026-11-02), kept
 // close to the reference so later handoffs diff cleanly.
 // App screens, part 1 — primitives + Maya's booking screens. Every string is lifted from beckstage-fe (see source-notes.md).
 import { useState as apUseState, useEffect as apUseEffect, useRef as apUseRef, useLayoutEffect as apUseLayout } from 'react';
@@ -21,8 +21,9 @@ export function P({ id, ping, children, round, style, className = '', tag }) {
 export function ApStatus({ dark }) {
   return <div className="ap-sb" style={dark ? { color: '#fff' } : null}><span>9:41</span><span className="ic"><I n="signal-cellular-3" s={16} /><I n="wifi" s={16} /><I n="battery" s={18} style={{ transform: 'rotate(90deg)' }} /></span></div>;
 }
-export function ApTop() {
-  return <div className="ap-top"><span className="ap-circle"><I n="chevron-left" s={20} /></span><span className="ap-label" style={{ color: 'var(--fg)', flex: 1, textAlign: 'center' }}>BOOKING</span><span className="ap-circle"><I n="bell-outline" s={17} /></span><span className="ap-circle"><I n="pencil-outline" s={16} /></span></div>;
+// BookingDetail's top nav: bell · day-sheet export (canExportDaySheet: artist members and confirmed crew) · pencil (canEditBookingMeta: never a tour manager's).
+export function ApTop({ edit = true }) {
+  return <div className="ap-top"><span className="ap-circle"><I n="chevron-left" s={20} /></span><span className="ap-label" style={{ color: 'var(--fg)', flex: 1, textAlign: 'center' }}>BOOKING</span><span className="ap-row" style={{ gap: 8, flex: 'none' }}><span className="ap-circle"><I n="bell-outline" s={17} /></span><span className="ap-circle"><I n="export-variant" s={16} /></span>{edit ? <span className="ap-circle"><I n="pencil-outline" s={16} /></span> : null}</span></div>;
 }
 // A scrolled screen never scrolls past its own end: y is clamped to content − viewport, so the last block sits on the bottom edge instead of over empty background.
 export function ApScroll({ y = 0, children, pad }) {
@@ -117,8 +118,8 @@ export function ScrCreate({ st }) {
             </P></div>
           <Lbl c="var(--tmu)" style={{ padding: '0 4px', marginBottom: -8 }}>RUNNING THE SHOW</Lbl>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <Lbl style={{ padding: '0 4px' }}>ORGANIZER</Lbl>
-            <div className="ap-cap" style={{ color: 'var(--tsu)', padding: '0 4px', lineHeight: '18px' }}>Runs this booking.</div>
+            {/* OrganizerLabel (booking-form/organizer): the label, `What's an organizer?` on its right, nothing under it. */}
+            <div className="ap-row" style={{ justifyContent: 'space-between', gap: 8, padding: '0 4px' }}><Lbl>ORGANIZER</Lbl><span className="ap-row" style={{ gap: 5 }}><I n="information-outline" s={14} c="var(--fg)" /><span className="ap-bsm" style={{ fontWeight: 600, color: 'var(--fg)' }}>What's an organizer?</span></span></div>
             <div className="ap-card">
               <div className="ap-row" style={{ gap: 12, padding: 12, background: 'var(--tint)', borderBottom: '1px solid var(--b)' }}>
                 <span style={{ width: 18, height: 18, borderRadius: 9, background: 'var(--fg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><span style={{ width: 6, height: 6, borderRadius: 3, background: '#fff' }}></span></span>
@@ -216,11 +217,18 @@ export function PlannerRow({ start, end, color, title, place, who = [], i = 0, i
     </div>
   );
 }
+// ItineraryDayBand (components/itinerary/ItineraryDayCard.tsx): the show day's band — date, dot, `Day of show`, on tint.
+export function DayBand({ inset = 14 }) {
+  return <div className="ap-row" style={{ gap: 7, padding: `8px ${inset}px 7px`, background: 'var(--tint)', borderBottom: '1px solid var(--bo)' }}><span className="ap-label" style={{ color: 'var(--tmu)' }}>Sun 14 Mar</span><span style={{ width: 5, height: 5, borderRadius: 3, background: 'var(--o)' }}></span><span className="ap-label" style={{ color: 'var(--fg)' }}>Day of show</span></div>;
+}
+// ContactChannelPill (components/contacts/ContactLink.tsx): transparent, borderOrange hairline, full radius.
+export function ChanPill({ icon, label, big }) {
+  return <span className="ap-pill" style={{ gap: 5, padding: big ? '6px 10px' : '4px 8px', border: '1px solid var(--bo)', background: 'transparent', fontSize: big ? 12 : 11, lineHeight: '12px', fontWeight: 600, letterSpacing: .2, color: 'var(--fg)', flex: 'none' }}><I n={icon} s={big ? 12 : 11} c="var(--fg)" />{label}</span>;
+}
 export function ItinBody({ loadIn = '15:00', ping, n = HIW_ITIN.length }) {
   return (
     <div>
-      <div style={{ padding: '0 14px 10px' }}><Lbl>DAY OF SHOW</Lbl><div className="ap-bsm" style={{ color: 'var(--tmu)', marginTop: 2 }}>{`Sun 14 Mar · ${n} ${n === 1 ? 'item' : 'items'}`}</div></div>
-      <div style={{ borderTop: '1px solid var(--b)' }}>
+      <div style={{ borderTop: '1px solid var(--b)' }}><DayBand />
         {hiwItinItems(n).map((it, i) => <PlannerRow key={it.title} start={it.start === 'LOADIN' ? loadIn : it.start} end={it.end} color={it.color} title={it.title} place={it.place} who={it.who} i={i} id={it.id} ping={it.id ? ping : null} />)}
       </div>
     </div>
@@ -228,12 +236,12 @@ export function ItinBody({ loadIn = '15:00', ping, n = HIW_ITIN.length }) {
 }
 export function ContactsBody({ n = 2 }) {
   const list = [HIW_VENUE.contact, HIW_VENUE.contact2].slice(0, n);
-  return <div style={{ background: 'var(--sa)', border: '1px solid var(--b)', borderRadius: 8, overflow: 'hidden' }}>{list.map((c, i) => <div key={c.name} className="ap-row ap-fade" style={{ gap: 10, minHeight: 48, padding: '8px 10px', borderTop: i ? '1px solid var(--b)' : 0 }}><div style={{ flex: 1, minWidth: 0 }}><div className="ap-dis" style={{ fontSize: 12.5, lineHeight: '16px' }}>{c.name}</div><div className="ap-cap" style={{ color: 'var(--tmu)', fontWeight: 400 }}>{c.role}</div></div><span className="ap-pill" style={{ gap: 4, padding: '4px 9px', border: '1px solid var(--bo)', background: 'var(--tint)', fontSize: 11, fontWeight: 600, color: 'var(--fg)' }}><I n="phone" s={12} c="var(--fg)" />Call</span><span className="ap-pill" style={{ gap: 4, padding: '4px 9px', border: '1px solid var(--bo)', background: 'var(--tint)', fontSize: 11, fontWeight: 600, color: 'var(--fg)' }}><I n="email-outline" s={12} c="var(--fg)" />Email</span></div>)}</div>;
+  return <div style={{ background: 'var(--sa)', border: '1px solid var(--b)', borderRadius: 8, overflow: 'hidden' }}>{list.map((c, i) => <div key={c.name} className="ap-row ap-fade" style={{ gap: 10, minHeight: 48, padding: '8px 10px', borderTop: i ? '1px solid var(--b)' : 0 }}><div style={{ flex: 1, minWidth: 0 }}><div className="ap-dis" style={{ fontSize: 12.5, lineHeight: '16px' }}>{c.name}</div><div className="ap-cap" style={{ color: 'var(--tmu)', fontWeight: 400 }}>{c.role}</div></div><div className="ap-row" style={{ gap: 6 }}><ChanPill icon="phone" label="Call" /><ChanPill icon="email-outline" label="Email" /></div></div>)}</div>;
 }
 export function VenueBody({ riders }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-      <div className="ap-row" style={{ gap: 10 }}><span style={{ flex: 1, fontSize: 12.5, lineHeight: '18px', fontWeight: 600, color: 'var(--fg)' }}>Köpenicker Straße 70, 10179 Berlin, Germany</span><span className="ap-pill" style={{ gap: 4, padding: '4px 9px', border: '1px solid var(--bo)', background: 'var(--tint)', fontSize: 11, fontWeight: 600, color: 'var(--fg)' }}><I n="map-outline" s={12} c="var(--fg)" />Open in Maps</span></div>
+      <div className="ap-row" style={{ gap: 10 }}><span style={{ flex: 1, fontSize: 12.5, lineHeight: '18px', fontWeight: 600, color: 'var(--fg)' }}>Köpenicker Straße 70, 10179 Berlin, Germany</span><ChanPill icon="map-outline" label="Open in Maps" /></div>
       <div style={{ borderTop: '1px solid var(--b)' }}>
         {[['LOAD-IN', HIW_VENUE.loadIn], ['PARKING', HIW_VENUE.parking]].map(([l, v]) => <div key={l} className="ap-row" style={{ gap: 12, padding: '8px 0', borderBottom: '1px solid var(--b)', alignItems: 'flex-start' }}><span className="ap-micro" style={{ lineHeight: '14px', width: 62, flex: 'none', paddingTop: 2, color: 'var(--tmu)' }}>{l}</span><span style={{ flex: 1, fontSize: 12.5, lineHeight: '18px', color: 'var(--tb)' }}>{v}</span></div>)}
       </div>
@@ -241,15 +249,21 @@ export function VenueBody({ riders }) {
     </div>
   );
 }
+// OverviewCrewBody (booking/overview/OverviewCrewBody.tsx + snapshotModel.selectCrewRows): the twin of Contacts.
+// An accepted tour manager with a phone is a `Call` row; everyone else is the strip. Never the viewer's own row.
 export function CrewStrip({ crew, viewer, ping }) {
   const order = ['dan', 'rui', 'nils', 'petr'];
-  const conf = order.filter((k) => crew[k] === 'c');
+  const rows = !viewer && crew.dan === 'c' ? ['dan'] : [];
+  const conf = order.filter((k) => crew[k] === 'c' && !rows.includes(k));
   const ordered = [...conf.filter((k) => k === 'dan'), ...conf.filter((k) => k !== 'dan'), ...order.filter((k) => crew[k] !== 'c')].filter((k) => k !== viewer);
   const dot = (k) => <span style={{ position: 'absolute', right: -1, bottom: -1, width: 9, height: 9, borderRadius: 5, border: '1.5px solid #fff', background: crew[k] === 'c' ? 'var(--ok)' : 'var(--w)', transition: 'background .3s' }}></span>;
   return (
-    <div data-a="crew-strip" className="ap-card" style={{ borderRadius: 8, display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 6, minHeight: 48, padding: '8px 10px' }}>
-      {viewer ? <span style={{ position: 'relative' }}><Av who={viewer} s={28} />{dot(viewer)}</span> : null}
-      {ordered.map((k) => <P key={k} id={'crew-' + k} ping={ping} round tag="span" style={{ position: 'relative', borderRadius: 999, display: 'inline-flex' }}><Av who={k} s={28} style={{ opacity: crew[k] === 'c' ? 1 : .55, filter: crew[k] === 'c' ? 'none' : 'grayscale(.7)', transition: 'opacity .3s, filter .3s' }} />{dot(k)}</P>)}
+    <div data-a="crew-strip" style={{ background: 'var(--sa)', border: '1px solid var(--b)', borderRadius: 8, overflow: 'hidden' }}>
+      {rows.map((k) => <div key={k} className="ap-row ap-fade" style={{ gap: 10, minHeight: 48, padding: '8px 10px' }}><P id={'crew-' + k} ping={ping} round tag="span" style={{ borderRadius: 999, display: 'inline-flex' }}><Av who={k} s={30} /></P><div style={{ flex: 1, minWidth: 0 }}><div className="ap-dis" style={{ fontSize: 12.5, lineHeight: '16px' }}>{HIW_PEOPLE[k].name}</div><div className="ap-cap" style={{ color: 'var(--tmu)', fontWeight: 400 }}>{HIW_PEOPLE[k].role}</div></div><ChanPill icon="phone" label="Call" /></div>)}
+      <div className="ap-row" style={{ flexWrap: 'wrap', gap: 6, minHeight: 48, padding: '8px 10px', borderTop: rows.length ? '1px solid var(--b)' : 0 }}>
+        {viewer ? <span style={{ position: 'relative' }}><Av who={viewer} s={28} />{dot(viewer)}</span> : null}
+        {ordered.map((k) => <P key={k} id={'crew-' + k} ping={ping} round tag="span" style={{ position: 'relative', borderRadius: 999, display: 'inline-flex' }}><Av who={k} s={28} style={{ opacity: crew[k] === 'c' ? 1 : .55, filter: crew[k] === 'c' ? 'none' : 'grayscale(.7)', transition: 'opacity .3s, filter .3s' }} />{dot(k)}</P>)}
+      </div>
     </div>
   );
 }
@@ -352,10 +366,18 @@ export function CrewAddSheet({ s = 0, h = 844 }) {
 }
 
 
-
 // App screens, part 2 — the invitee, Dan's production screens, Accounting and Balance. Strings from beckstage-fe (source-notes.md).
-export function SecHero({ title, summary, entity }) {
-  return <div style={{ padding: '12px 16px 16px' }}><div className="ap-dis" style={{ fontSize: 32, lineHeight: '39px', letterSpacing: -0.5 }}>{title}</div>{summary ? <div className="ap-bsm" style={{ color: 'var(--tmu)', marginTop: 6 }}>{summary}</div> : null}{entity ? <div className="ap-bsm" style={{ color: 'var(--tsu)', fontStyle: 'italic', marginTop: 4 }}>{entity}</div> : null}</div>;
+// BookingMobileHeader (components/primitives/BookingMobileHeader.tsx): every section screen's breadcrumb.
+export function SecTop() {
+  return <div className="ap-row" style={{ gap: 10, padding: '8px 16px 4px', flex: 'none' }}><span className="ap-circle"><I n="chevron-left" s={18} /></span><div style={{ flex: 1, minWidth: 0 }}><div className="ap-label" style={{ color: 'var(--fg)' }}>BOOKING</div><div style={{ fontSize: 13, lineHeight: '19px', fontWeight: 600, marginTop: 1 }}>Aurora Hall · 14 Mar</div></div></div>;
+}
+// MobileSectionHero (components/primitives/MobileSectionHero.tsx): title + its action pill (CTABtn sm), then the summary row.
+export function HeroPill({ a }) {
+  const pri = a.kind !== 'neutral';
+  return <span className={'ap-pill' + (a.press ? ' press' : '')} style={{ height: 34, padding: '0 12px', gap: 6, borderRadius: 8, background: pri ? 'var(--o)' : 'var(--s)', border: '1px solid ' + (pri ? 'var(--o)' : 'var(--bm)'), color: pri ? '#fff' : 'var(--t)', fontFamily: 'Inter', fontWeight: 600, fontSize: 13, flex: 'none' }}>{a.icon ? <I n={a.icon} s={14} c={pri ? '#fff' : 'var(--t)'} /> : null}{a.label}</span>;
+}
+export function SecHero({ title, summary, body, action, trailing }) {
+  return <div style={{ padding: '12px 16px 16px' }}><div className="ap-row" style={{ justifyContent: 'space-between', alignItems: 'flex-end', gap: 10 }}><div className="ap-dis" style={{ fontSize: 32, lineHeight: '39px', letterSpacing: -0.5 }}>{title}</div>{action ? <HeroPill a={action} /> : null}</div>{summary ? <div className="ap-row" style={{ gap: 10, marginTop: 6 }}><div className="ap-bsm" style={{ flex: 1, minWidth: 0, color: body ? 'var(--tb)' : 'var(--tmu)' }}>{summary}</div>{trailing}</div> : null}</div>;
 }
 export function Toast({ children, hold }) { return <div className={'ap-toast' + (hold ? ' hold' : '')}><I n="check-circle" s={18} c="#57c98c" />{children}</div>; }
 export function SheetLbl({ children, tally, action }) {
@@ -392,7 +414,7 @@ export function ScrInvite({ st, h }) {
           <div className="ap-row" style={{ gap: 10 }}><I n={ROLE_ICON[p.role]} s={18} c="var(--t)" /><span className="ap-dis" style={{ fontSize: 16, lineHeight: '20px' }}>{p.role}</span></div>
           <div style={{ marginTop: 12, paddingTop: 12, borderTop: '1px solid var(--b)' }}><div style={{ fontFamily: 'Inter', fontWeight: 700, fontSize: 32, lineHeight: '34px', letterSpacing: -0.8, color: 'var(--fg)' }}>€{p.fee}</div><div className="ap-cap" style={{ color: 'var(--tmu)', marginTop: 4 }}>Fixed fee · this booking</div></div>
         </div>
-        {tm ? <div style={{ marginTop: 18, display: 'flex', gap: 10, padding: '12px 14px', borderRadius: 8, background: 'var(--tint)', border: '1px solid var(--bo)' }}><I n="shield-account-outline" s={16} c="var(--fg)" style={{ marginTop: 1 }} /><div><div className="ap-bsm" style={{ fontWeight: 600, color: 'var(--t)' }}>Eligible for delegation</div><div className="ap-cap" style={{ color: 'var(--tb)', marginTop: 2, lineHeight: '17px' }}>As Tour Manager, the organizer can later hand you this booking's production &amp; crew management.</div></div></div> : null}
+        {tm ? <div style={{ marginTop: 18, display: 'flex', gap: 10, padding: '12px 14px', borderRadius: 8, background: 'var(--tint)', border: '1px solid var(--bo)' }}><I n="shield-account-outline" s={16} c="var(--fg)" style={{ marginTop: 1 }} /><div><div className="ap-bsm" style={{ fontWeight: 600, color: 'var(--t)' }}>Delegation granted</div><div className="ap-cap" style={{ color: 'var(--tb)', marginTop: 2, lineHeight: '17px' }}>As Tour Manager, you can edit production once you accept · itinerary, venue, contacts, riders.</div></div></div> : null}
         <div style={{ marginTop: 22, paddingTop: 16, borderTop: '1px solid var(--b)', display: 'flex', flexDirection: 'column', gap: 12 }}>
           <div className="ap-row" style={{ gap: 10 }}><Av who="band" s={28} style={{ borderRadius: 7 }} /><span className="ap-cap" style={{ color: 'var(--tmu)' }}>Contracted by <b style={{ color: 'var(--tb)', fontWeight: 600 }}>The Sundowners</b></span></div>
           <div className="ap-row" style={{ gap: 10 }}><Av who="maya" s={28} /><span className="ap-cap" style={{ color: 'var(--tmu)' }}>Invite sent by <b style={{ color: 'var(--tb)', fontWeight: 600 }}>Maya Sundowner</b></span></div>
@@ -405,7 +427,7 @@ export function ScrInvite({ st, h }) {
 // ── Dan's booking (BookingDetail mobile, delegate with production grant) ──
 export function ScrDov({ st, ping }) {
   return (
-    <div className="ap-col"><ApStatus /><ApTop />
+    <div className="ap-col"><ApStatus /><ApTop edit={false} />
       <ApScroll y={st.scroll || 0}>
         <ApHero /><ApStrip ping={ping} />
         <div style={{ padding: '0 14px 24px', display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -422,14 +444,16 @@ export function ScrDov({ st, ping }) {
   );
 }
 
-// ── Venue section (app/(tabs)/bookings/[id]/venue · components/venue/sections.ts) ──
-export function VenueCard({ id, icon, label, ph, text, editing }) {
-  return (
-    <div data-a={id} className="ap-card" style={{ borderRadius: 12, borderColor: editing ? 'var(--bo)' : 'var(--b)', boxShadow: editing ? '0 0 0 3px rgba(255,143,0,.08)' : undefined }}>
-      <div className="ap-row" style={{ gap: 8, padding: '12px 14px 0' }}><I n={icon} s={15} c="var(--fg)" /><Lbl style={{ flex: 1 }}>{label}</Lbl>{text && !editing ? <I n="pencil-outline" s={14} c="var(--tsu)" /> : null}</div>
-      <div style={{ padding: '6px 14px 14px', fontSize: 13, lineHeight: '20px', color: text ? 'var(--tb)' : 'var(--tf)' }}>{editing ? <div style={{ border: '1px solid var(--o)', borderRadius: 8, padding: '9px 11px', background: 'var(--s)', color: 'var(--t)' }}>{text}<span className="caret"></span></div> : (text || ph)}</div>
-    </div>
-  );
+// ── Venue section (app/(tabs)/bookings/[id]/venue · VenueSection · venue/{VenueSectionCardMobile, VenueFieldRow, RidersBlockMobile}) ──
+// Empty: a 48px row, neutral tile, `+ Add`. Filled: orange tile, `Edit`, the text.
+export function VenueCard({ id, icon, label, text }) {
+  const ghost = (ic, l) => <span className="ap-row" style={{ gap: 5, height: 34, padding: '0 10px', color: 'var(--fg)', fontFamily: 'Inter', fontWeight: 600, fontSize: 13, flex: 'none' }}><I n={ic} s={13} c="var(--fg)" />{l}</span>;
+  if (!text) return <div data-a={id} className="ap-card" style={{ borderRadius: 8, padding: '7px 8px 7px 14px' }}><div className="ap-row" style={{ gap: 10 }}><span style={{ width: 26, height: 26, borderRadius: 6, background: 'var(--sa)', border: '1px solid var(--b)', display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none' }}><I n={icon} s={14} c="var(--tmu)" /></span><Lbl c="var(--tmu)" style={{ flex: 1 }}>{label}</Lbl>{ghost('plus', 'Add')}</div></div>;
+  return <div data-a={id} className="ap-card ap-fade" style={{ borderRadius: 8, padding: '10px 10px 14px 14px' }}><div className="ap-row" style={{ gap: 10 }}><span style={{ width: 30, height: 30, borderRadius: 6, background: 'var(--tint)', border: '1px solid var(--bo)', display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none' }}><I n={icon} s={15} c="var(--fg)" /></span><Lbl style={{ flex: 1 }}>{label}</Lbl>{ghost('pencil', 'Edit')}</div><div style={{ marginTop: 10, fontSize: 12, lineHeight: '18px', color: 'var(--tb)' }}>{text}</div></div>;
+}
+// ActionSheet `Upload file` — `Add rider` with no rider at this venue to carry over IS the file dialog.
+export function UploadSheet({ h }) {
+  return <Sheet h={h} ratio={0.4} title="Upload file">{[['image-outline', 'Photo Library'], ['folder-outline', 'Files']].map(([ic, l], i) => <div key={l} className={'ap-row' + (i === 1 ? ' press' : '')} style={{ gap: 12, height: 48, padding: '0 4px', borderTop: i ? '1px solid var(--b)' : 0 }}><I n={ic} s={20} c="var(--tb)" /><span style={{ fontSize: 14, fontWeight: 500 }}>{l}</span></div>)}</Sheet>;
 }
 export function VenueEditSheet({ h, label, text }) {
   return (
@@ -445,23 +469,24 @@ export function VenueEditSheet({ h, label, text }) {
 }
 export function ScrVenue({ st }) {
   const f = st.f || 0;
-  const n = f >= 2 && !st.editing ? 2 : f >= 2 || f >= 1 ? (f >= 2 ? 1 : 0) : 0; // the riders are files, not a filled section
+  const filled = f >= 2 && !st.editing ? 2 : f >= 2 ? 1 : 0;
   return (
-    <div className="ap-col"><ApStatus /><ApTop />
-      <SecHero title="Venue" summary={`${n} ${n === 1 ? 'section' : 'sections'} filled${n ? ' · ' + ['Load-in', 'Parking'].slice(0, n).join(' · ') : ''}`} entity="Aurora Hall · Köpenicker Straße 70, Berlin" />
-      <div style={{ padding: '0 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
-        <VenueCard id="v-loadin" icon="truck" label="LOAD IN / LOAD OUT" ph="How to access the stage, timings, dock restrictions…" text={f >= 2 ? HIW_VENUE.loadIn : ''} />
-        <VenueCard id="v-parking" icon="parking" label="PARKING" ph="Where to park, contacts, costs, alternatives…" text={f >= 2 && !st.editing ? HIW_VENUE.parking : ''} />
-        <VenueCard icon="shopping-outline" label="MERCHANDISE" ph="Stand location, commission, who runs it, payouts…" />
-        <VenueCard icon="notebook-outline" label="OTHER NOTES" ph="Wi-Fi, dressing rooms, catering, curfews, anything…" />
+    <div className="ap-col"><ApStatus /><SecTop />
+      <SecHero title="Venue" summary="Köpenicker Straße 70, 10179 Berlin, Germany" body action={filled ? { kind: 'neutral', icon: 'pencil', label: 'Edit' } : { icon: 'plus', label: 'Add venue info' }} />
+      <div style={{ padding: '0 16px', display: 'flex', flexDirection: 'column', gap: 12 }}>
         <div data-a="v-riders" className="ap-card" style={{ borderRadius: 8, padding: '14px 16px', borderColor: f === 3 ? 'var(--bo)' : 'var(--b)' }}>
           <div className="ap-row" style={{ gap: 10 }}><span style={{ width: 30, height: 30, borderRadius: 6, background: 'var(--tint)', border: '1px solid var(--bo)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><I n="paperclip" s={15} c="var(--fg)" /></span><Lbl style={{ flex: 1 }}>VENUE RIDERS</Lbl>{f >= 4 ? <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--tsu)' }}>1 file</span> : null}</div>
-          {f >= 4 ? <div className="ap-row ap-fade" style={{ gap: 10, marginTop: 10, padding: '8px 0' }}><I n="file-pdf-box" s={20} c="var(--fg)" /><span style={{ flex: 1, fontSize: 13, fontWeight: 600 }}>{HIW_VENUE.rider}</span><span className="ap-pill" style={{ padding: '3px 9px', border: '1px solid var(--bo)', background: 'var(--tint)', fontSize: 11, fontWeight: 600, color: 'var(--fg)' }}>Download</span></div>
+          {f >= 4 ? <div className="ap-row ap-fade" style={{ gap: 10, marginTop: 10, padding: '8px 0' }}><I n="file-pdf-box" s={20} c="var(--fg)" /><span style={{ flex: 1, minWidth: 0, fontSize: 13, fontWeight: 600 }}>{HIW_VENUE.rider}</span><ChanPill icon="download" label="Download" /></div>
             : <div className="ap-bsm" style={{ color: 'var(--tf)', marginTop: 10 }}>Upload technical rider, hospitality rider, stage plot…</div>}
           <div className={'ap-row' + (f === 3 ? ' press' : '')} style={{ marginTop: 10, gap: 6, justifyContent: 'center', height: 40, border: '1.5px dashed var(--bo)', borderRadius: 8, color: 'var(--fg)', fontWeight: 600, fontSize: 13 }}><I n="upload" s={15} c="var(--fg)" />Add rider</div>
         </div>
+        <VenueCard id="v-loadin" icon="truck" label="LOAD IN / LOAD OUT" text={f >= 2 ? HIW_VENUE.loadIn : ''} />
+        <VenueCard id="v-parking" icon="parking" label="PARKING" text={filled === 2 ? HIW_VENUE.parking : ''} />
+        <VenueCard icon="shopping-outline" label="MERCHANDISE" />
+        <VenueCard icon="notebook-outline" label="OTHER NOTES" />
       </div>
       {f === 1 ? <VenueEditSheet h={st.h} label="LOAD IN / LOAD OUT" text={HIW_VENUE.loadIn} /> : f === 2 && st.editing ? <VenueEditSheet h={st.h} label="PARKING" text={HIW_VENUE.parking} /> : null}
+      {f === 3 ? <UploadSheet h={st.h} /> : null}
     </div>
   );
 }
@@ -470,20 +495,25 @@ export function ScrVenue({ st }) {
 export function CField({ label, ph, value, typing, icon }) {
   return <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}><Lbl>{label}</Lbl><div className="ap-row" style={{ gap: 8, height: 44, padding: '0 12px', background: 'var(--s)', border: '1px solid ' + (typing ? 'var(--o)' : 'var(--bm)'), boxShadow: typing ? '0 0 0 3px rgba(255,143,0,.25)' : 'none', borderRadius: 8 }}>{icon ? <I n={icon} s={15} c="var(--tsu)" /> : null}<span style={{ fontSize: 14, color: value ? 'var(--t)' : 'var(--tsu)' }}>{value || ph}</span>{typing ? <span className="caret"></span> : null}</div></div>;
 }
-export function ScrContacts({ st, ping }) {
+// ContactCard (components/contacts/ContactCard.tsx) under a LetterHeader: name, role, one line per channel.
+export function ContactCardRow({ c }) {
+  return <div className="ap-card ap-fade" style={{ borderRadius: 8, padding: '12px 14px 8px' }}><div className="ap-dis" style={{ fontSize: 13, lineHeight: '16px', letterSpacing: -0.1 }}>{c.name}</div><div className="ap-cap" style={{ color: 'var(--tmu)', marginTop: 2 }}>{c.role}</div><div style={{ marginTop: 6, paddingTop: 4, borderTop: '1px solid var(--b)' }}>{[['phone', c.phone, 'Call'], ['email-outline', c.email, 'Email']].map(([ic, v, l]) => <div key={l} className="ap-row" style={{ gap: 10, minHeight: 34 }}><span style={{ flex: 1, minWidth: 0, fontSize: 13, lineHeight: '19px', fontWeight: 500, color: 'var(--tb)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontVariantNumeric: 'tabular-nums' }}>{v}</span><ChanPill icon={ic} label={l} big /></div>)}</div></div>;
+}
+export function LetterHead({ l, n }) { return <div className="ap-row" style={{ gap: 10, padding: '20px 0 10px' }}><span style={{ fontFamily: 'Inter', fontWeight: 700, fontSize: 24, lineHeight: '24px' }}>{l}</span><span style={{ flex: 1, height: 1, background: 'var(--b)' }}></span><span className="ap-bsm" style={{ color: 'var(--tmu)' }}>{n}</span></div>; }
+export function ScrContacts({ st }) {
   const f = st.f || 0;
   const c = HIW_VENUE.contact;
+  const list = f >= 5 ? [HIW_VENUE.contact2, HIW_VENUE.contact] : f >= 4 ? [HIW_VENUE.contact] : [];
   return (
-    <div className="ap-col"><ApStatus /><ApTop />
-      <SecHero title="Contacts" summary={f >= 5 ? '2 contacts' : f >= 4 ? '1 contact' : 'Nothing added yet'} />
-      <div style={{ padding: '0 16px' }}>
-        {f >= 4 ? <ContactsBody n={f >= 5 ? 2 : 1} /> : null}
-        {false ? <div className="ap-card ap-fade" style={{ borderRadius: 8, background: 'var(--sa)' }}><div className="ap-row" style={{ gap: 10, minHeight: 48, padding: '8px 10px' }}><div style={{ flex: 1 }}><div className="ap-dis" style={{ fontSize: 12.5 }}>{c.name}</div><div className="ap-cap" style={{ color: 'var(--tmu)', fontWeight: 400 }}>{c.role}</div></div><span className="ap-pill" style={{ gap: 4, padding: '4px 9px', border: '1px solid var(--bo)', background: 'var(--tint)', fontSize: 11, fontWeight: 600, color: 'var(--fg)' }}><I n="phone" s={12} c="var(--fg)" />Call</span><span className="ap-pill" style={{ gap: 4, padding: '4px 9px', border: '1px solid var(--bo)', background: 'var(--tint)', fontSize: 11, fontWeight: 600, color: 'var(--fg)' }}><I n="email-outline" s={12} c="var(--fg)" />Email</span></div></div> : null}
-      </div>
-      {f < 4 ? <Sheet h={st.h} ratio={0.8} title="Add contact" footer={<Btn press={f === 3} dis={f < 1}>{f === 3 ? 'Saving…' : 'Add contact'}</Btn>}>
+    <div className="ap-col"><ApStatus /><SecTop />
+      <SecHero title="Contacts" summary={list.length ? list.length + (list.length === 1 ? ' contact' : ' contacts') : null} action={{ icon: 'plus', label: 'Add contact' }} />
+      {list.length ? <div style={{ padding: '0 16px', marginTop: -20 }}>{list.map((x) => <div key={x.name}><LetterHead l={x.name[0]} n={1} /><ContactCardRow c={x} /></div>)}</div>
+        : <div style={{ padding: '48px 32px', textAlign: 'center' }}><div className="ap-dis" style={{ fontSize: 17 }}>No contacts yet</div><div className="ap-bsm" style={{ color: 'var(--tmu)', marginTop: 6 }}>Add promoters, venue staff, drivers — anyone the team might need to reach during this booking.</div></div>}
+      {/* No contacts at this venue yet, so Add contact is the form itself — no picker over an empty set. */}
+      {f < 4 ? <Sheet h={st.h} ratio={0.8} header={<div className="ap-row" style={{ gap: 12, padding: '16px 16px 12px', borderBottom: '1px solid var(--b)' }}><div style={{ flex: 1 }}><div className="ap-dis" style={{ fontSize: 17, lineHeight: '21px' }}>Add contact</div><div className="ap-cap" style={{ color: 'var(--tmu)' }}>to Aurora Hall</div></div><I n="close" s={20} c="var(--tmu)" /></div>} footer={<Btn press={f === 3} dis={f < 1}>{f === 3 ? 'Saving…' : 'Add contact'}</Btn>}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-          <CField label="NAME" ph="Full name" value={f >= 1 ? c.name : ''} typing={f === 0} />
-          <CField label="ROLE" ph="e.g. Promoter, Stage Manager, Venue FOH Engineer" value={f >= 1 ? c.role : ''} />
+          <CField label="NAME" icon="account" ph="Full name" value={f >= 1 ? c.name : ''} typing={f === 0} />
+          <CField label="ROLE" icon="handshake-outline" ph="e.g. Promoter, Stage Manager, Venue FOH Engineer" value={f >= 1 ? c.role : ''} />
           <CField label="PHONE" icon="phone-outline" ph="+351 …" value={f >= 2 ? c.phone : ''} typing={f === 1} />
           <CField label="EMAIL" icon="email-outline" ph="name@example.com" value={f >= 2 ? c.email : ''} />
         </div>
@@ -492,49 +522,62 @@ export function ScrContacts({ st, ping }) {
   );
 }
 
-// ── Inline quick-add (components/itinerary/ItineraryQuickAddRow.tsx): type, title, start time, place; Save.
+// ── Inline quick-add (components/itinerary/ItineraryQuickAddRow.tsx, native rows) ──
+export const QA_TYPES = [['truck', 'Travel', '#2563a8', '#e3eef9'], ['silverware-fork-knife', 'Meal', '#7d4ea3', '#f1e8f7'], ['bed', 'Housing', '#1f7a6f', '#e1f1ee'], ['bullhorn', 'Event', '#9c4a17', '#fceadb']];
+// Collapsed: the day's last row, on the item rows' own geometry.
+export function QuickAddRow({ i = 0 }) {
+  return <div className="ap-row" style={{ gap: 10, padding: '10px 8px 10px 12px', background: i % 2 ? 'var(--bg)' : 'var(--s)' }}><div style={{ width: 44, display: 'flex', justifyContent: 'center', flex: 'none' }}><I n="plus" s={14} c="var(--tmu)" /></div><div style={{ width: 3, alignSelf: 'stretch', minHeight: 17, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flex: 'none' }}>{[0, 1, 2].map((k) => <span key={k} style={{ height: 4, borderRadius: 1, background: 'var(--bm)' }}></span>)}</div><span style={{ fontSize: 12, lineHeight: '17px', color: 'var(--tmu)' }}>Add item to Sun 14</span></div>;
+}
+// Expanded: eyebrow, type chips, then title · time · place · participants, then the footer.
 export function QuickAdd({ qa = 0 }) {
-  const typed = qa >= 1, f = qa >= 2 ? 1.7 : typed ? 1.6 : 1.5;
+  const typed = qa >= 1;
+  const row = (icon, children, hair = true) => <div className="ap-row" style={{ gap: 10, minHeight: 52, borderBottom: hair ? '1px solid var(--b)' : 0 }}><div style={{ width: 44, alignSelf: 'stretch', display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none' }}>{icon}</div>{children}</div>;
+  const dashed = { borderBottom: '1px dashed var(--bs)' };
   return (
-    <div data-a="quickadd" className="ap-fade" style={{ borderTop: '1px solid var(--b)', background: 'var(--s)', padding: '12px 14px', boxShadow: 'inset 3px 0 0 var(--o)' }}>
-      <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>{[['truck', 'Travel', '#2563a8', '#e3eef9'], ['silverware-fork-knife', 'Meal', '#7d4ea3', '#f1e8f7'], ['bed', 'Housing', '#1f7a6f', '#e1f1ee'], ['bullhorn', 'Event', '#9c4a17', '#fceadb']].map(([ic, l, c, bg]) => { const on = l === 'Event'; return <span key={l} className="ap-pill" style={{ height: 28, padding: '0 10px', gap: 5, border: '1px solid ' + (on ? c : 'var(--b)'), background: on ? bg : 'var(--s)', fontSize: 11, fontWeight: 600, color: on ? c : 'var(--tb)' }}><I n={ic} s={12} c={on ? c : 'var(--tmu)'} />{l}</span>; })}</div>
-      <div className="ap-row" style={{ gap: 12, marginTop: 10 }}>
-        <div style={{ flex: 1, height: 40, border: '1px solid ' + (f < 1.7 ? 'var(--o)' : 'var(--bm)'), boxShadow: f < 1.7 ? '0 0 0 3px rgba(255,143,0,.25)' : 'none', borderRadius: 8, display: 'flex', alignItems: 'center', padding: '0 10px', fontSize: 14, color: typed ? 'var(--t)' : 'var(--tsu)' }}>{typed ? 'Soundcheck' : 'Soundcheck, Show, Press…'}{f < 1.7 ? <span className="caret"></span> : null}</div>
-        <div style={{ textAlign: 'right' }}><div className="ap-micro" style={{ color: 'var(--tmu)' }}>START</div><div className="ap-mono" style={{ fontSize: 18, fontWeight: 600, color: typed ? 'var(--t)' : 'var(--tf)' }}>{typed ? '17:00' : '16:00'}</div></div>
+    <div data-a="quickadd" className="ap-fade" style={{ borderTop: '1px solid var(--b)', background: 'var(--s)', padding: '10px 12px 14px' }}>
+      <div className="ap-row" style={{ gap: 6, marginBottom: 12 }}><I n="plus" s={12} c="var(--fg)" /><span style={{ fontWeight: 700, fontSize: 11, letterSpacing: .77, color: 'var(--fg)' }}>NEW ITEM · SUN 14</span><span style={{ flex: 1 }}></span><I n="close" s={14} c="var(--tmu)" /></div>
+      <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 12 }}>{QA_TYPES.map(([ic, l, c, bg]) => { const on = l === 'Event'; return <span key={l} className="ap-pill" style={{ padding: '5px 10px', gap: 5, border: '1px solid ' + (on ? c : 'var(--b)'), background: on ? bg : 'var(--s)', fontSize: 12, fontWeight: 500, color: on ? c : 'var(--tb)' }}><I n={ic} s={11} c={on ? c : 'var(--tmu)'} />{l}</span>; })}</div>
+      {row(<I n="bullhorn" s={18} c="var(--tsu)" />, <div className="ap-row" style={{ flex: 1, minWidth: 0, padding: '7px 10px', margin: '0 0 0 -10px', background: qa < 2 ? 'var(--sa)' : 'transparent', border: '1.5px solid ' + (qa < 2 ? 'var(--o)' : 'transparent'), borderRadius: 6, fontFamily: 'Inter', fontWeight: 600, fontSize: 17, lineHeight: '22px', color: typed ? 'var(--t)' : 'var(--tsu)' }}>{typed ? 'Soundcheck' : 'Soundcheck, Show, Press…'}{qa < 2 ? <span className="caret"></span> : null}</div>)}
+      {row(<I n="clock-outline" s={14} c="var(--tsu)" />, <><span key={typed ? 't' : 'p'} className="ap-dis ap-typed" style={{ fontSize: 18, lineHeight: '22px', fontVariantNumeric: 'tabular-nums', ...dashed }}>{typed ? '17:00' : '16:00'}</span><I n="arrow-right" s={14} c="var(--tf)" /><span style={{ fontSize: 14, fontWeight: 600, color: 'var(--fg)' }}>+ Add end time</span></>)}
+      {row(<I n="map-marker" s={14} c="var(--tsu)" />, <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--tb)', ...dashed }}>Aurora Hall</span>)}
+      {row(<span style={{ width: 18, height: 18, borderRadius: 9, background: 'var(--o)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><I n="account-multiple" s={11} c="#fff" /></span>, <div className="ap-row" style={{ gap: 8 }}><div className="ap-row">{['dan', 'rui', 'nils', 'petr'].map((w, k) => <Av key={w} who={w} s={20} style={{ marginLeft: k ? -5 : 0, boxShadow: '0 0 0 1.5px #fff' }} />)}</div><span style={{ fontSize: 13, fontWeight: 500, color: 'var(--tb)' }}>Full crew · 4</span></div>, false)}
+      <div style={{ marginTop: 12, paddingTop: 12, borderTop: '1px solid var(--b)', display: 'flex', flexDirection: 'column', gap: 12 }}>
+        <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--tmu)', textDecoration: 'underline' }}>Open full editor</span>
+        <div className="ap-row" style={{ gap: 8, justifyContent: 'flex-end' }}><span style={{ border: '1px solid var(--bm)', borderRadius: 6, padding: '8px 11px', fontSize: 13, fontWeight: 600, color: 'var(--fg)', opacity: typed ? 1 : .45 }}>Save &amp; add another</span><span className={qa >= 2 ? 'press' : ''} style={{ display: 'inline-block', minWidth: 64, textAlign: 'center', padding: '8px 16px', borderRadius: 6, background: typed ? 'var(--o)' : '#ffe0b2', fontSize: 14, fontWeight: 600, color: '#fff' }}>Save</span></div>
       </div>
-      <div className="ap-row" style={{ gap: 6, marginTop: 8 }}><I n="map-marker" s={13} c="var(--fg)" /><span className="ap-bsm" style={{ color: 'var(--tb)' }}>Aurora Hall</span></div>
-      <div className="ap-row" style={{ gap: 12, marginTop: 12, justifyContent: 'flex-end' }}><span className="ap-cap" style={{ color: 'var(--tmu)', textDecoration: 'underline' }}>Open full editor</span><span className="ap-cap" style={{ color: 'var(--fg)', fontWeight: 600 }}>Save &amp; add another</span><span className={'ap-pill' + (f >= 1.7 ? ' press' : '')} style={{ height: 32, padding: '0 16px', background: typed ? 'var(--o)' : '#f3ddbe', color: typed ? '#fff' : '#c2b2a2', fontFamily: 'Inter', fontWeight: 600, fontSize: 13 }}>Save</span></div>
     </div>
   );
 }
 
-// ── Itinerary section (app/(tabs)/bookings/[id]/itinerary · ItineraryPlannerRow · constants/itineraryTypes.ts) ──
-// ItineraryEmptyHero (components/itinerary/ItineraryEmptyHero.tsx) — the day before anything is on it.
+// ── Itinerary section (app/(tabs)/bookings/[id]/itinerary · ItinerarySection · ItineraryDayStack / DaySection · ItineraryPlannerRow) ──
+// ItineraryEmptyHero (components/itinerary/ItineraryEmptyHero.tsx) — the day before anything is on it. The hero's Add item pill is suppressed while empty.
 export function ItinEmpty({ press }) {
   return (
-    <div className="ap-col"><ApStatus /><ApTop />
-      <SecHero title="Itinerary" summary="Nothing added yet" />
+    <div className="ap-col"><ApStatus /><SecTop />
+      <SecHero title="Itinerary" />
       <div style={{ padding: '28px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: 12 }}>
         <span title="BeckstageMark" style={{ width: 68, height: 68, background: 'var(--o)', WebkitMask: 'url(/avatars/logo-mark.png) center / contain no-repeat', mask: 'url(/avatars/logo-mark.png) center / contain no-repeat' }}></span>
-        <div className="ap-dis" style={{ fontSize: 20, lineHeight: '25px', marginTop: 4 }}>Build the day, hour by hour.</div>
-        <div style={{ color: 'var(--tmu)', maxWidth: 300 }}>Add travel, hotels, meals and stage events — pin times, locations and the people involved.</div>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, justifyContent: 'center', marginTop: 6 }}>{[['truck', 'Travel', '#2563a8'], ['silverware-fork-knife', 'Meal', '#7d4ea3'], ['bed', 'Housing', '#1f7a6f'], ['bullhorn', 'Event', '#9c4a17']].map(([ic, l, c]) => <span key={l} className="ap-pill" style={{ gap: 5, height: 30, padding: '0 11px', border: '1px solid var(--b)', background: 'var(--s)', fontSize: 12, fontWeight: 600, color: 'var(--tb)' }}><I n={ic} s={13} c={c} />+ {l}</span>)}</div>
-        <div className={'ap-btn pri' + (press ? ' press' : '')} style={{ marginTop: 8, padding: '0 22px' }}><I n="plus" s={16} c="#fff" /><span>Add first item</span></div>
+        <div className="ap-dis" style={{ fontSize: 22, lineHeight: '26px', letterSpacing: -0.3, marginTop: 6 }}>Build the day, hour by hour.</div>
+        <div style={{ color: 'var(--tmu)', maxWidth: 300, fontSize: 14, lineHeight: '21px' }}>Add travel, hotels, meals and stage events — pin times, locations and the people involved.</div>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, justifyContent: 'center', marginTop: 14 }}>{QA_TYPES.map(([ic, l, c]) => <span key={l} className="ap-pill" style={{ gap: 6, height: 34, padding: '0 12px', border: '1px solid var(--b)', background: 'var(--s)', fontSize: 12, fontWeight: 600, color: 'var(--tb)' }}><I n={ic} s={13} c={c} />+ {l}</span>)}</div>
+        <div className={'ap-btn pri sm' + (press ? ' press' : '')} style={{ height: 36, borderRadius: 6, padding: '0 14px', gap: 6, fontFamily: 'Poppins', fontSize: 13 }}><I n="plus" s={16} c="#fff" /><span>Add first item</span></div>
       </div>
     </div>
   );
 }
+export function FilterChip() { return <span className="ap-pill" style={{ gap: 6, height: 32, padding: '0 11px', border: '1px solid var(--b)', background: 'var(--s)', fontSize: 12, fontWeight: 600, color: 'var(--t)', flex: 'none' }}><I n="tune" s={14} c="var(--t)" />Filter</span>; }
 export function ScrItin({ st }) {
   if (st.n === 0) return <ItinEmpty press={st.press} />;
   const n = st.n || HIW_ITIN.length;
+  const items = hiwItinItems(n);
   return (
-    <div className="ap-col"><ApStatus /><ApTop />
-      <SecHero title="Itinerary" summary={`${n} ${n === 1 ? 'item' : 'items'} across 1 day`} />
+    <div className="ap-col"><ApStatus /><SecTop />
+      <SecHero title="Itinerary" summary={`${n} ${n === 1 ? 'item' : 'items'} across 1 day`} trailing={<FilterChip />} action={{ icon: 'plus', label: 'Add item' }} />
       <div style={{ padding: '0 16px' }}>
-        <div data-a="itin-day" className="ap-card ap-xl">
-          <div className="ap-row" style={{ gap: 10, padding: '10px 14px', background: 'var(--sa)', borderBottom: '1px solid var(--b)' }}><span className="ap-dis" style={{ fontSize: 15, flex: 1 }}>Sun 14 Mar</span><Lbl>DAY OF SHOW</Lbl></div>
-          {hiwItinItems(n).map((it, i) => <div key={it.title} className="ap-fade"><PlannerRow start={it.start === 'LOADIN' ? '15:00' : it.start} end={it.end} color={it.color} title={it.title} place={it.place} who={it.who} i={i} /></div>)}
-          {st.qa != null ? <QuickAdd qa={st.qa} /> : <div className="ap-row" style={{ gap: 8, padding: '11px 14px', borderTop: '1px solid var(--b)' }}><I n="plus" s={14} c="var(--fg)" /><span className="ap-bsm" style={{ fontWeight: 600, color: 'var(--fg)' }}>Add an item</span></div>}
+        <div data-a="itin-day" className="ap-card" style={{ borderRadius: 10 }}>
+          <DayBand inset={12} />
+          {items.map((it, i) => <div key={it.title} className="ap-fade"><PlannerRow start={it.start === 'LOADIN' ? '15:00' : it.start} end={it.end} color={it.color} title={it.title} place={it.place} who={it.who} i={i} /></div>)}
+          {st.qa != null ? <QuickAdd qa={st.qa} /> : <QuickAddRow i={items.length} />}
         </div>
       </div>
     </div>
@@ -545,17 +588,22 @@ export function ItemSec({ children, first }) { return <div className="ap-label" 
 export function WhenRow({ label, value, sub, focus, k }) {
   return <><div style={{ height: 1, background: 'var(--b)' }}></div><div className="ap-row" style={{ justifyContent: 'space-between', padding: '14px 0', minHeight: 48, gap: 12 }}><span style={{ color: 'var(--tb)' }}>{label}</span><div style={{ textAlign: 'right' }}><span className="ap-row" style={{ gap: 6, justifyContent: 'flex-end', ...(focus ? { background: 'var(--tint)', borderRadius: 6, padding: '2px 8px', margin: '-2px -8px', boxShadow: '0 0 0 1.5px var(--o)' } : null) }}><span key={k || value} className="ap-typed" style={{ fontWeight: 600, fontSize: 15, lineHeight: '21px', fontVariantNumeric: 'tabular-nums' }}>{value}</span><I n="chevron-down" s={14} c="var(--tsu)" /></span>{sub ? <div style={{ fontSize: 12, color: 'var(--tmu)', marginTop: 2 }}>{sub}</div> : null}</div></div></>;
 }
+// New item is a sheet over the itinerary (itinerary/add.tsx · SheetOrDrawer `New item` + ✕), footer Cancel · Save item.
 export function ScrItem({ st }) {
   const isNew = st.mode === 'new';
   const f = st.f || 0;
   const t = isNew ? (f >= 2 ? '15:00' : '12:00') : st.time || '15:00';
   const desc = isNew ? (f >= 1 ? 'Load-in' : '') : 'Load-in';
+  const h = st.h || 844;
   return (
-    <div className="ap-col"><ApStatus />
-      <div className="ap-row" style={{ justifyContent: 'space-between', padding: '14px 20px 10px', borderBottom: '1px solid var(--b)' }}><span style={{ color: 'var(--tmu)', fontWeight: 600 }}>Cancel</span><span className="ap-dis" style={{ fontSize: 17, lineHeight: '21px' }}>{isNew ? 'New item' : 'Edit item'}</span><span className={st.press ? 'press' : ''} style={{ display: 'inline-block', color: 'var(--fg)', fontWeight: 700 }}>Save</span></div>
-      <ApScroll y={st.scroll || 0} pad="16px 20px 24px">
+    <div className="ap-col"><ItinEmpty />
+      <div className="ap-scrim"></div>
+      <div className="ap-sheet" style={{ height: Math.round(h * 0.92) }}>
+        <div className="ap-grab"></div>
+        <div className="ap-row" style={{ justifyContent: 'space-between', padding: '12px 20px', borderBottom: '1px solid var(--b)' }}><span className="ap-dis" style={{ fontSize: 17, lineHeight: '21px' }}>{isNew ? 'New item' : 'Edit item'}</span><I n="close" s={22} c="var(--tmu)" /></div>
+        <div style={{ flex: 1, minHeight: 0, overflow: 'hidden' }}><div style={{ padding: '16px 20px 24px' }}>
         <ItemSec first>TYPE</ItemSec>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>{[['truck', 'Travel', '#2563a8', '#e3eef9'], ['silverware-fork-knife', 'Meal', '#7d4ea3', '#f1e8f7'], ['bed', 'Housing', '#1f7a6f', '#e1f1ee'], ['bullhorn', 'Event', '#9c4a17', '#fceadb']].map(([ic, l, c, bg]) => { const on = l === 'Event'; return <div key={l} style={{ flex: '1 1 48%', padding: '12px 6px', borderRadius: 8, border: '1.5px solid ' + (on ? c : 'var(--b)'), background: on ? bg : 'var(--s)', boxShadow: on ? '0 0 0 3px ' + c + '20' : 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}><I n={ic} s={20} c={on ? c : 'var(--tmu)'} /><span className="ap-label" style={{ color: on ? c : 'var(--tb)' }}>{l}</span></div>; })}</div>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>{QA_TYPES.map(([ic, l, c, bg]) => { const on = l === 'Event'; return <div key={l} style={{ flex: '1 1 40%', padding: '12px 6px', borderRadius: 8, border: '1.5px solid ' + (on ? c : 'var(--b)'), background: on ? bg : 'var(--s)', boxShadow: on ? '0 0 0 3px ' + c + '20' : 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}><I n={ic} s={20} c={on ? c : 'var(--tmu)'} /><span className="ap-label" style={{ color: on ? c : 'var(--tb)' }}>{l}</span></div>; })}</div>
         <ItemSec>DESCRIPTION</ItemSec>
         <div className="ap-row" style={{ gap: 8, padding: '12px', background: 'var(--s)', border: '1px solid ' + (isNew && f === 0 ? 'var(--o)' : 'var(--b)'), boxShadow: isNew && f === 0 ? '0 0 0 3px rgba(255,143,0,.25)' : 'none', borderRadius: 8 }}><I n="format-text" s={16} c="var(--tmu)" /><span key={desc} className="ap-typed" style={{ fontSize: 13, color: desc ? 'var(--t)' : 'var(--tf)' }}>{desc || 'Soundcheck, Show, Press…'}</span>{isNew && f === 0 ? <span className="caret"></span> : null}</div>
         <ItemSec>WHEN</ItemSec>
@@ -580,8 +628,12 @@ export function ScrItem({ st }) {
         <div className="ap-row" style={{ gap: 8, alignItems: 'flex-start', padding: 12, minHeight: 76, background: 'var(--s)', border: '1px solid var(--b)', borderRadius: 8 }}><I n="text-box-outline" s={16} c="var(--tmu)" /><span style={{ color: 'var(--tf)' }}>Linecheck 30 min, then Set A rehearsal…</span></div>
         <ItemSec>ATTACHMENTS (OPTIONAL)</ItemSec>
         <div style={{ padding: 16, border: '1.5px dashed var(--bm)', borderRadius: 8, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}><I n="plus" s={18} c="var(--tmu)" /><span style={{ color: 'var(--tmu)' }}>Add files</span><span className="ap-cap" style={{ color: 'var(--tsu)', textAlign: 'center' }}>Interview questions, run-of-show · PDF, images — max 10 MB each</span></div>
-      </ApScroll>
-      {st.editing ? <><div className="ap-scrim" style={{ background: 'rgba(33,26,21,.25)' }}></div><div className="ap-sheet" style={{ boxShadow: '0 -8px 24px rgba(99,65,30,.12)' }}><div className="ap-grab"></div><div className="ap-row" style={{ justifyContent: 'space-between', padding: '10px 20px 4px' }}><span style={{ color: 'var(--tmu)', fontWeight: 600 }}>Starts at</span><span style={{ color: 'var(--fg)', fontWeight: 700 }}>Done</span></div><div style={{ position: 'relative', display: 'flex', justifyContent: 'center', gap: 48, padding: '14px 0 34px', fontFamily: 'Inter', fontSize: 22 }}><div style={{ position: 'absolute', left: 40, right: 40, top: '50%', height: 38, marginTop: -29, borderRadius: 9, background: 'var(--sm)' }}></div>{[['11', '12', '13', '14', '15', '16', '17', '18', '19'], ['50', '55', '00', '05', '10']].map((col, ci) => { const sel = ci === 0 ? t.slice(0, 2) : '00'; const i = col.indexOf(sel); return <div key={ci} style={{ position: 'relative', height: 190, overflow: 'hidden', width: 44 }}><div style={{ position: 'absolute', left: 0, right: 0, top: 95 - 19 - i * 38, transition: 'top .6s cubic-bezier(.2,.7,.3,1)' }}>{col.map((v) => <div key={v} style={{ height: 38, display: 'flex', alignItems: 'center', justifyContent: 'center', color: v === sel ? 'var(--t)' : 'var(--tf)', fontWeight: v === sel ? 600 : 400, fontVariantNumeric: 'tabular-nums' }}>{v}</div>)}</div></div>; })}</div></div></> : null}
+        <div className="ap-row" style={{ justifyContent: 'space-between', marginTop: 18, marginBottom: 8 }}><span className="ap-label" style={{ color: 'var(--fg)' }}>PARTICIPANTS · 4 OF 4</span><span className="ap-cap" style={{ fontWeight: 700, color: 'var(--fg)' }}>Deselect all</span></div>
+        <div className="ap-row" style={{ gap: 10, padding: '10px 12px', background: 'var(--s)', border: '1px solid var(--b)', borderRadius: 8 }}><span style={{ width: 26, height: 26, borderRadius: 13, background: 'var(--o)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><I n="account-multiple" s={14} c="#fff" /></span><div style={{ flex: 1 }}><div style={{ fontWeight: 600 }}>All crew</div><div className="ap-cap" style={{ color: 'var(--tmu)' }}>4 people</div></div><div className="ap-row">{['dan', 'rui', 'nils', 'petr'].map((w, k) => <Av key={w} who={w} s={22} style={{ marginLeft: k ? -6 : 0, boxShadow: '0 0 0 1.5px #fff' }} />)}</div></div>
+        </div></div>
+        <div className="ap-row" style={{ gap: 10, justifyContent: 'flex-end', padding: '12px 16px', borderTop: '1px solid var(--b)', background: 'var(--bg)' }}><Btn kind="ghost" full={false}>Cancel</Btn><Btn icon="check" full={false} press={st.press}>{isNew ? 'Save item' : 'Save changes'}</Btn></div>
+      </div>
+      {st.editing ? <><div className="ap-scrim" style={{ background: 'rgba(33,26,21,.25)', zIndex: 12 }}></div><div className="ap-sheet" style={{ zIndex: 13, boxShadow: '0 -8px 24px rgba(99,65,30,.12)' }}><div className="ap-grab"></div><div className="ap-row" style={{ justifyContent: 'space-between', padding: '10px 20px 4px' }}><span style={{ color: 'var(--tmu)', fontWeight: 600 }}>Start time</span><span style={{ color: 'var(--fg)', fontWeight: 700 }}>Done</span></div><div style={{ position: 'relative', display: 'flex', justifyContent: 'center', gap: 48, padding: '14px 0 34px', fontFamily: 'Inter', fontSize: 22 }}><div style={{ position: 'absolute', left: 40, right: 40, top: '50%', height: 38, marginTop: -29, borderRadius: 9, background: 'var(--sm)' }}></div>{[['11', '12', '13', '14', '15', '16', '17', '18', '19'], ['50', '55', '00', '05', '10']].map((col, ci) => { const sel = ci === 0 ? t.slice(0, 2) : '00'; const i = col.indexOf(sel); return <div key={ci} style={{ position: 'relative', height: 190, overflow: 'hidden', width: 44 }}><div style={{ position: 'absolute', left: 0, right: 0, top: 95 - 19 - i * 38, transition: 'top .6s cubic-bezier(.2,.7,.3,1)' }}>{col.map((v) => <div key={v} style={{ height: 38, display: 'flex', alignItems: 'center', justifyContent: 'center', color: v === sel ? 'var(--t)' : 'var(--tf)', fontWeight: v === sel ? 600 : 400, fontVariantNumeric: 'tabular-nums' }}>{v}</div>)}</div></div>; })}</div></div></> : null}
     </div>
   );
 }
@@ -591,19 +643,24 @@ export function WRow({ op, label, sub, c, kind }) {
   const sub2 = kind === 'subtotal' || kind === 'accent', acc = kind === 'accent';
   return <div className="ap-row" style={{ gap: 12, padding: '10px 14px', borderTop: (sub2 ? '1.5px solid ' + (acc ? 'var(--bo)' : 'var(--bs)') : '1px solid var(--b)'), background: acc ? 'var(--tint)' : sub2 ? 'var(--sm)' : 'var(--s)' }}><span className="ap-mono" style={{ width: 16, textAlign: 'center', fontSize: 15, fontWeight: 600, color: op === '−' ? 'var(--tmu)' : 'var(--tf)' }}>{op}</span><div style={{ flex: 1 }}><div className="ap-dis" style={{ fontSize: 13, fontWeight: sub2 ? 700 : 600, letterSpacing: sub2 && !acc ? .28 : -.07, textTransform: sub2 && !acc ? 'uppercase' : 'none', color: acc ? 'var(--fg)' : 'var(--t)' }}>{label}</div>{sub ? <div className="ap-cap" style={{ color: 'var(--tmu)', marginTop: 1 }}>{sub}</div> : null}</div><HiwMoney c={c} size={acc ? 19 : 15} strong={sub2} accent={acc} out={op === '−'} /></div>;
 }
-export function LedgerRow({ item, cat, stripe, meta, payer, c, id, ping, clip }) {
-  return <P id={id} ping={ping}><div className="ap-row" style={{ gap: 10, padding: '10px 14px', borderTop: '1px solid var(--b)', alignItems: 'flex-start' }}><div style={{ flex: 1.7, minWidth: 0 }}><div className="ap-bsm" style={{ fontWeight: 600 }}>{item}</div><div className="ap-row" style={{ gap: 7, marginTop: 3 }}><span className="ap-row" style={{ gap: 7 }}><span style={{ width: 8, height: 8, borderRadius: 2, background: stripe }}></span><span className="ap-bsm" style={{ color: 'var(--tb)' }}>{cat}</span></span><span style={{ color: 'var(--tf)' }}>·</span>{clip ? <I n="paperclip" s={12} c="var(--fg)" /> : <span className="ap-pill" style={{ gap: 3, padding: '1px 6px', background: 'var(--sm)' }}><I n="bank-transfer" s={12} c="var(--tmu)" /><span style={{ fontSize: 10, fontWeight: 700, color: 'var(--tmu)' }}>{meta}</span></span>}</div>{payer ? <div className="ap-cap" style={{ color: 'var(--tmu)', marginTop: 2 }}>Paid by {payer}</div> : null}</div><div style={{ flex: .9, display: 'flex', justifyContent: 'flex-end' }}><HiwMoney c={c} size={12} /></div></div></P>;
+export function LedgerRow({ item, cat, stripe, payer, c, id, ping, clip, date }) {
+  const dot = <span style={{ color: 'var(--tf)' }}>·</span>;
+  return <P id={id} ping={ping}><div className="ap-row" style={{ gap: 10, padding: '10px 14px', borderTop: '1px solid var(--b)', alignItems: 'flex-start' }}><div style={{ flex: 1.7, minWidth: 0 }}><div className="ap-bsm" style={{ fontWeight: 600 }}>{item}</div><div className="ap-row" style={{ gap: 7, marginTop: 3 }}><span className="ap-row" style={{ gap: 7 }}><span style={{ width: 8, height: 8, borderRadius: 2, background: stripe }}></span><span className="ap-bsm" style={{ color: 'var(--tb)' }}>{cat}</span></span>{clip ? <>{dot}<I n="paperclip" s={12} c="var(--fg)" /></> : null}{date ? <>{dot}<span className="ap-bsm" style={{ color: 'var(--tmu)' }}>{date}</span></> : null}</div>{payer ? <div className="ap-cap" style={{ color: 'var(--tmu)', marginTop: 2 }}>Paid by {payer}</div> : null}</div><div style={{ flex: .9, display: 'flex', justifyContent: 'flex-end' }}><HiwMoney c={c} size={12} /></div></div></P>;
 }
 export function LedgerHead() { return <div className="ap-row" style={{ padding: '8px 14px', background: 'var(--sa)' }}><span className="ap-micro" style={{ flex: 1.7, color: 'var(--tmu)' }}>ITEM</span><span className="ap-micro" style={{ flex: .9, textAlign: 'right', color: 'var(--tmu)' }}>AMOUNT</span></div>; }
 export function LedgerFoot({ label, c }) { return <div className="ap-row" style={{ padding: '10px 14px', borderTop: '1.5px solid var(--bs)', background: 'var(--sm)' }}><span className="ap-cap" style={{ flex: 1, fontWeight: 700, color: 'var(--tb)' }}>{label}</span><HiwMoney c={c} size={13} strong /></div>; }
+// CategorySubtotals (accounting/ledger/CategorySubtotals.tsx): one chip per category, by spend.
+export function CatChips({ exp }) {
+  return <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 8 }}>{[['#f47340', 'Crew fee ×4', 110000], ...(exp ? [['#5b8cc4', 'Travel', 6000]] : [])].map(([c, l, v]) => <span key={l} className="ap-pill" style={{ gap: 7, padding: '5px 10px', background: 'var(--s)', border: '1px solid var(--b)' }}><span style={{ width: 8, height: 8, borderRadius: 2, background: c }}></span><span className="ap-cap" style={{ fontWeight: 600, color: 'var(--tb)' }}>{l}</span><HiwMoney c={v} size={12} out /></span>)}</div>;
+}
 export function ScrAcct({ st, ping }) {
   const exp = st.exp;
   const total = exp ? 116000 : 110000;
   const n = exp ? 5 : 4;
   return (
-    <div className="ap-col"><ApStatus /><ApTop />
+    <div className="ap-col"><ApStatus /><SecTop />
       {st.closed ? <div style={{ padding: '12px 16px 16px' }}><div className="ap-row" style={{ justifyContent: 'space-between', alignItems: 'flex-end' }}><span className="ap-dis" style={{ fontSize: 32, lineHeight: '39px', letterSpacing: -0.5 }}>Accounting</span><span className="ap-pill ap-fade" style={{ gap: 4, padding: '3px 8px', background: 'var(--sm)' }}><I n="lock-outline" s={11} c="var(--tmu)" /><span className="ap-mono" style={{ fontSize: 10, color: 'var(--tmu)', letterSpacing: .8 }}>LOCKED · 15 MAR</span></span></div><div className="ap-bsm" style={{ color: 'var(--tmu)', marginTop: 6 }}>€2,840 net</div></div>
-        : <SecHero title="Accounting" summary={`€4,000 fee · ${n} expenses · €${exp ? '2,840' : '2,900'} net`} />}
+        : <SecHero title="Accounting" />}
       <ApScroll y={st.scroll || 0} pad="0 16px 24px">
         <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
           <div><SheetLbl action={st.closed ? null : ['pencil', 'Edit']}>SUMMARY</SheetLbl>
@@ -612,17 +669,17 @@ export function ScrAcct({ st, ping }) {
               <WRow op="−" label="Expenses" sub={`${n} items`} c={total} />
               <WRow op="=" label="After expenses" kind="subtotal" c={400000 - total} />
               <WRow op="−" label={HIW_REP.name} sub={'Commission · ' + HIW_REP.commission} c={400000 * HIW_REP.pct / 100} />
-              <WRow op="=" label="Artist earnings" sub="The Sundowners" kind="accent" c={400000 - total - 400000 * HIW_REP.pct / 100} />
+              <WRow op="=" label="Artist earnings" kind="accent" c={400000 - total - 400000 * HIW_REP.pct / 100} />
               {st.closed ? <div className="ap-row ap-fade" style={{ gap: 9, padding: '11px 14px', background: 'var(--sm)', borderTop: '1px solid var(--bm)' }}><I n="account-multiple-outline" s={14} c="var(--tmu)" /><span className="ap-cap" style={{ color: 'var(--tb)', flex: 1 }}>Paid as one — what this booking earns isn't divided between members.</span></div> : null}
               {st.closed ? <div className="ap-fade"><BalNote text="The €2,840 is in The Sundowners’s Balance" /></div> : null}
             </P></div>
           <div><SheetLbl tally={exp ? '1/1' : null} action={st.closed ? null : ['plus', 'Add expense']}>EXPENSES</SheetLbl>
             <div className="ap-card" style={{ borderRadius: 6 }}><LedgerHead />
-              {exp ? <LedgerRow id="exp-new" ping={ping} item="Fuel" cat="Travel" stripe="#5b8cc4" clip payer="Dan Whitaker" c={6000} /> : null}
-              {['dan', 'rui', 'nils', 'petr'].map((k) => <LedgerRow key={k} item={HIW_PEOPLE[k].name} cat="Crew fee" stripe="#f47340" meta="Via balance" payer="The Sundowners" c={HIW_PEOPLE[k].fee * 100} />)}
+              {exp ? <LedgerRow id="exp-new" ping={ping} item="Fuel" cat="Travel" stripe="#5b8cc4" clip payer="Dan Whitaker" date="14 Mar" c={6000} /> : null}
+              {['dan', 'rui', 'nils', 'petr'].map((k) => <LedgerRow key={k} item={HIW_PEOPLE[k].name} cat="Crew fee" stripe="#f47340" date="06 Oct" payer="The Sundowners" c={HIW_PEOPLE[k].fee * 100} />)}
               <LedgerFoot label={`Total · ${n} items`} c={total} />
-            </div></div>
-          {st.band ? <div className="ap-row" style={{ justifyContent: 'space-between', gap: 10, padding: '12px 16px', margin: '0 -16px', background: 'var(--sa)', borderTop: '1px solid var(--b)' }}><span className="ap-bsm" style={{ color: 'var(--tmu)', flexShrink: 1 }}>Books still open — close to lock.</span><Btn kind="wf" icon="shield-check" full={false} press={st.closeSheet == null && st.band}>Close &amp; lock</Btn></div> : null}
+            </div><CatChips exp={exp} /></div>
+          {!st.closed ? <div className="ap-row" style={{ justifyContent: 'space-between', gap: 10, padding: '12px 16px', margin: '0 -16px', background: 'var(--sa)', borderTop: '1px solid var(--b)' }}><span className="ap-bsm" style={{ color: 'var(--tmu)', flexShrink: 1 }}>Books still open — close to lock.</span><Btn kind="wf" icon="shield-check" full={false} press={st.closeSheet == null && st.band}>Close &amp; lock</Btn></div> : null}
         </div>
       </ApScroll>
       {st.closeSheet != null ? <Sheet h={st.h} ratio={0.9}
@@ -630,7 +687,7 @@ export function ScrAcct({ st, ping }) {
         footer={<div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}><Btn kind="wf" icon="shield-lock-outline" press={st.closeSheet === 1}>{st.closeSheet === 1 ? 'Closing…' : 'Close & lock the books'}</Btn><span className="ap-cap" style={{ color: 'var(--tsu)', textAlign: 'center' }}>You won't be able to change the fee or the expenses after this.</span></div>}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
           <div><div className="ap-label" style={{ color: 'var(--tmu)', marginBottom: 8 }}>THE NUMBERS</div>
-            <div className="ap-card" style={{ borderRadius: 6 }}><WRow op="" label="Total fee" sub="Flat Fee" c={400000} /><WRow op="−" label="Expenses" sub="5 items" c={116000} /><WRow op="=" label="After expenses" kind="subtotal" c={284000} /><WRow op="−" label={HIW_REP.name} sub={'Commission · ' + HIW_REP.commission} c={60000} /><WRow op="=" label="Artist earnings" sub="The Sundowners" kind="accent" c={224000} /></div></div>
+            <div className="ap-card" style={{ borderRadius: 6 }}><WRow op="" label="Total fee" sub="Flat Fee" c={400000} /><WRow op="−" label="Expenses" sub="5 items" c={116000} /><WRow op="=" label="After expenses" kind="subtotal" c={284000} /><WRow op="−" label={HIW_REP.name} sub={'Commission · ' + HIW_REP.commission} c={60000} /><WRow op="=" label="Artist earnings" kind="accent" c={224000} /></div></div>
           <div style={{ height: 1, background: 'var(--b)' }}></div>
           <div className="ap-dis" style={{ fontSize: 15, lineHeight: '20px' }}>How are this booking's artist earnings divided?</div>
           {[['Collective — the artist is paid as one', true], ['Individual — each member gets their share', false]].map(([t, on]) => <div key={t} style={{ padding: 12, borderRadius: 8, border: '1.5px solid ' + (on ? 'var(--fg)' : 'var(--bm)'), background: 'var(--s)', display: 'flex', gap: 10 }}><span style={{ width: 16, height: 16, marginTop: 2, borderRadius: 999, border: '1.5px solid ' + (on ? 'var(--fg)' : 'var(--bs)'), background: on ? 'var(--fg)' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none' }}>{on ? <span style={{ width: 6, height: 6, borderRadius: 3, background: '#fff' }}></span> : null}</span><div><div style={{ fontWeight: 600, fontSize: 13 }}>{t}</div>{on ? <div className="ap-bsm" style={{ color: 'var(--tmu)', marginTop: 4 }}>The whole €2,840 goes to the artist balance. No member is owed anything personally.</div> : null}</div></div>)}
@@ -641,9 +698,9 @@ export function ScrAcct({ st, ping }) {
 }
 export function ScrDacct({ st, ping }) {
   return (
-    <div className="ap-col"><ApStatus /><ApTop />
+    <div className="ap-col"><ApStatus /><SecTop />
       {st.closed ? <div style={{ padding: '12px 16px 16px' }}><div className="ap-row" style={{ justifyContent: 'space-between', alignItems: 'flex-end' }}><span className="ap-dis" style={{ fontSize: 32, lineHeight: '39px', letterSpacing: -0.5 }}>Accounting</span><span className="ap-pill ap-fade" style={{ gap: 4, padding: '3px 8px', background: 'var(--sm)' }}><I n="lock-outline" s={11} c="var(--tmu)" /><span className="ap-mono" style={{ fontSize: 10, color: 'var(--tmu)', letterSpacing: .8 }}>LOCKED · 15 MAR</span></span></div><div className="ap-bsm" style={{ color: 'var(--tmu)', marginTop: 6 }}>€350 fee · 1 expense submitted</div></div>
-        : <SecHero title="Accounting" summary={`€350 fee · ${st.exp ? '1 expense submitted' : 'No expenses submitted'}`} />}
+        : <SecHero title="Accounting" />}
       <div style={{ padding: '0 16px 24px', display: 'flex', flexDirection: 'column', gap: 18 }}>
         <div><SheetLbl>YOUR FEE</SheetLbl>
           <P id="fee" ping={ping} className="ap-card" style={{ borderRadius: 6 }}>
@@ -651,7 +708,7 @@ export function ScrDacct({ st, ping }) {
             {st.credited ? <div className="ap-fade"><BalNote text="This fee is in your Balance" press={st.pressOpen} /></div> : null}
           </P></div>
         <div><SheetLbl tally={st.exp ? '1/1' : null} action={st.exp && !st.closed ? ['plus', 'Add expense'] : null}>YOUR EXPENSES</SheetLbl>
-          {st.exp ? <div className="ap-card" style={{ borderRadius: 6 }}><LedgerHead /><LedgerRow item="Fuel" cat="Travel" stripe="#5b8cc4" clip c={6000} /><LedgerFoot label="You submitted · 1 item" c={6000} />{st.credited ? <P id="exp-bal" ping={ping}><div className="ap-fade"><BalNote text="This expense is in your Balance" /></div></P> : null}</div>
+          {st.exp ? <div className="ap-card" style={{ borderRadius: 6 }}><LedgerHead /><LedgerRow item="Fuel" cat="Travel" stripe="#5b8cc4" clip date="14 Mar" c={6000} /><LedgerFoot label="You submitted · 1 item" c={6000} />{st.credited ? <P id="exp-bal" ping={ping}><div className="ap-fade"><BalNote text="This expense is in your Balance" /></div></P> : null}</div>
             : <div className="ap-card" style={{ borderRadius: 6, padding: '24px 16px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}><I n="receipt-text-outline" s={24} c="var(--tsu)" /><span className="ap-dis" style={{ fontSize: 14 }}>No expenses logged</span><span className="ap-cap" style={{ color: 'var(--tmu)', textAlign: 'center', maxWidth: 300 }}>Add van rentals, hotels, crew fees and more as they happen — each row can carry a receipt.</span><Btn kind="ghost" size="md" icon="plus" full={false}>Add expense</Btn></div>}
         </div>
       </div>
@@ -663,12 +720,12 @@ export function ScrDacct({ st, ping }) {
 export function AddExpense({ f, h }) {
   const Field = ({ label, hint, children }) => <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}><Lbl>{label}</Lbl>{children}{hint ? <span className="ap-cap" style={{ color: 'var(--tsu)' }}>{hint}</span> : null}</div>;
   return (
-    <Sheet h={h} ratio={0.9} header={<div className="ap-row" style={{ justifyContent: 'space-between', padding: '14px 16px 12px', borderBottom: '1px solid var(--b)' }}><span className="ap-bsm" style={{ color: 'var(--tmu)' }}>Cancel</span><span className="ap-dis" style={{ fontSize: 17 }}>Add expense</span><span className="ap-bsm" style={{ fontWeight: 700, color: f >= 1 ? 'var(--o)' : 'var(--tf)' }}>Save</span></div>}>
+    <Sheet h={h} ratio={0.9} title="Add expense">
       <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
         <Field label="DESCRIPTION"><div className="ap-card" style={{ padding: '11px 12px', fontSize: 13, color: f >= 1 ? 'var(--t)' : 'var(--tsu)' }}>{f >= 1 ? 'Fuel' : 'What was spent?'}</div></Field>
         <Field label="AMOUNT" hint="Only EUR is supported at the moment."><div className="ap-card ap-row" style={{ padding: '8px 12px', gap: 8 }}><span className="ap-dis" style={{ fontSize: 17, color: 'var(--tmu)' }}>€</span><span className="ap-dis" style={{ fontSize: 22, lineHeight: '27px', color: f >= 1 ? 'var(--t)' : 'var(--tf)' }}>{f >= 1 ? '60' : '0'}</span></div></Field>
         <Field label="TYPE"><div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>{[['truck', 'Travel', '#2563a8', '#e3eef9'], ['bed', 'Housing', '#6b4a8a', '#efe7f8'], ['food-fork-drink', 'Food & drink', '#2c7449', '#e6f3ec'], ['speaker', 'Equipment', '#3a312b', '#f6ece1']].map(([ic, l, fg, bg]) => { const on = f >= 2 && l === 'Travel'; return <span key={l} className={'ap-pill' + (on && f === 2 ? ' press' : '')} style={{ gap: 8, padding: '5px 12px 5px 5px', border: '1px solid ' + (on ? 'var(--o)' : 'var(--b)'), background: on ? 'var(--o)' : 'var(--s)' }}><span style={{ width: 24, height: 24, borderRadius: 999, background: on ? 'rgba(255,255,255,.22)' : bg, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><I n={ic} s={14} c={on ? '#fff' : fg} /></span><span className="ap-bsm" style={{ fontWeight: 600, color: on ? '#fff' : 'var(--tb)' }}>{l}</span></span>; })}</div></Field>
-        <Field label="RECEIPT · OPTIONAL">{f >= 3 ? <div className="ap-card ap-row ap-fade" style={{ padding: '11px 12px', gap: 10 }}><I n="file-document-outline" s={18} c="var(--tmu)" /><span style={{ flex: 1, fontSize: 13 }}>IMG_2041.jpg</span><Lbl>Remove</Lbl></div> : <div className="ap-row" style={{ gap: 12, padding: '12px', border: '1px dashed var(--bs)', borderRadius: 8 }}><span style={{ width: 32, height: 32, borderRadius: 6, background: 'var(--tint)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><I n="upload" s={14} c="var(--fg)" /></span><div style={{ flex: 1 }}><div style={{ fontSize: 13, fontWeight: 600 }}>Upload receipt</div><div className="ap-cap" style={{ color: 'var(--tmu)' }}>PDF, JPG or PNG · up to 10 MB</div></div><Lbl>Choose</Lbl></div>}</Field>
+        <Field label="RECEIPT · OPTIONAL">{f >= 3 ? <div className="ap-card ap-row ap-fade" style={{ padding: '11px 12px', gap: 10 }}><I n="file-document-outline" s={18} c="var(--tmu)" /><span style={{ flex: 1, fontSize: 13 }}>Fuel-receipt.pdf</span><Lbl>Remove</Lbl></div> : <div className="ap-row" style={{ gap: 12, padding: '12px', border: '1px dashed var(--bs)', borderRadius: 8 }}><span style={{ width: 32, height: 32, borderRadius: 6, background: 'var(--tint)', border: '1px solid var(--bo)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><I n="receipt-text-plus-outline" s={14} c="var(--fg)" /></span><div style={{ flex: 1 }}><div style={{ fontSize: 13, fontWeight: 600 }}>Add receipt</div><div className="ap-cap" style={{ color: 'var(--tmu)' }}>PDF, JPG or PNG · up to 10 MB</div></div><Lbl>Add</Lbl></div>}</Field>
         <Btn dis={f < 1} press={f === 4}>Add expense</Btn>
       </div>
     </Sheet>
@@ -683,9 +740,24 @@ export function CpGroup({ dir, count, total, children }) {
   const g = { pay: ['YOU OWE', 'var(--w)', 'var(--w)'], collect: ['OWED TO YOU', 'var(--fg)', 'var(--o)'], square: ['SETTLED', 'var(--tmu)', 'var(--bm)'] }[dir];
   return <div style={{ marginBottom: 14 }}><div className="ap-row" style={{ justifyContent: 'space-between', padding: '4px 2px 8px' }}><span className="ap-row" style={{ gap: 7 }}><I n="chevron-down" s={14} c={g[1]} /><span className="ap-micro" style={{ color: g[1] }}>{g[0]}</span><span className="ap-cap" style={{ color: 'var(--tsu)' }}>{count}</span></span>{total ? <span className="ap-dis" style={{ fontSize: 13, fontVariantNumeric: 'tabular-nums' }}>{total}</span> : null}</div><div className="ap-card ap-xl" style={{ borderLeft: '3px solid ' + g[2] }}>{children}</div></div>;
 }
+// BooksOpenLine (components/bookings/booksOpen/BooksOpenLine.tsx): the organizer's played show with open books.
+export function BooksOpen() {
+  return <div className="ap-row" style={{ gap: 10, minHeight: 48, padding: '8px 4px', borderTop: '1px solid var(--b)', borderBottom: '1px solid var(--b)', marginBottom: 16 }}><I n="book-open-variant" s={16} c="var(--tmu)" /><span style={{ flex: 1, fontSize: 13, lineHeight: '20px', fontWeight: 500, color: 'var(--tb)' }}>1 played show still has books open</span><span className="ap-row" style={{ gap: 2, fontSize: 13, fontWeight: 600, color: 'var(--fg)' }}>See<I n="chevron-right" s={18} c="var(--fg)" /></span></div>;
+}
+// CounterpartyDetail STATEMENT: MOVEMENT / AMOUNT ↳ balance after, newest first (the top movement reads the hero's figure), the balance in the hero's words (statementFold.balanceWords); a request is a row with no figures. Rows are named as the app names them (utils/reimbursementLabels.ts).
+export function Statement({ req, dir }) {
+  const meta = 'The Sundowners · Aurora Hall · 14 Mar 2027';
+  const word = dir === 'pay' ? 'to pay' : 'to receive';
+  const rows = [...(req ? [[req === 'You requested' ? 'You requested payment' : 'Payment requested', '15 Mar 2027 · €410 asked', null, null, true]] : []), ['Expenses fronted · Fuel', meta, '+€60', '€410 ' + word], ['Tour Manager fee', meta, '+€350', '€350 ' + word]];
+  const after = (v, note) => <div className="ap-row" style={{ gap: 2, justifyContent: 'flex-end', whiteSpace: 'nowrap', fontSize: note ? 10 : 11, lineHeight: note ? '14px' : '16px', fontWeight: note ? 400 : 500, fontVariantNumeric: 'tabular-nums', color: 'var(--tmu)', marginTop: 2 }}><I n="subdirectory-arrow-right" s={note ? 11 : 13} c="var(--tmu)" />{v}</div>;
+  return <div><div className="ap-micro" style={{ color: 'var(--tmu)', marginBottom: 8 }}>STATEMENT</div><div className="ap-card ap-xl">
+    <div className="ap-row" style={{ gap: 12, padding: '8px 12px 7px', alignItems: 'flex-start', borderBottom: '1px solid var(--b)' }}><span className="ap-micro" style={{ flex: 1, color: 'var(--tmu)' }}>MOVEMENT</span><div style={{ textAlign: 'right' }}><div className="ap-micro" style={{ color: 'var(--tmu)' }}>AMOUNT</div>{after('balance after', true)}</div></div>
+    {rows.map(([t, m, a, v, muted], i) => <div key={t} className={'ap-row' + (muted ? ' ap-fade' : '')} style={{ gap: 12, padding: '11px 12px', alignItems: 'flex-start', borderTop: i ? '1px solid var(--b)' : 0 }}><div style={{ flex: 1, minWidth: 0 }}><div className="ap-bsm" style={{ fontWeight: 600, color: muted ? 'var(--tmu)' : 'var(--t)' }}>{t}</div><div className="ap-cap" style={{ color: 'var(--tmu)' }}>{m}</div></div>{a ? <div style={{ textAlign: 'right' }}><div className="ap-dis" style={{ fontSize: 14, fontVariantNumeric: 'tabular-nums' }}>{a}</div>{after(v)}</div> : null}</div>)}
+  </div></div>;
+}
 export function CpDetail({ h, wallet, who, name, dir, amt, req, square, footer, form, doc, docPress }) {
   return (
-    <Sheet h={h} ratio={0.82} header={<div className="ap-row" style={{ gap: 9, padding: '14px 16px 12px', borderBottom: '1px solid var(--b)' }}>{form ? <I n="chevron-left" s={20} c="var(--tmu)" /> : null}<span className="ap-micro" style={{ flex: 1, color: 'var(--tmu)' }}>{form || wallet}</span><I n="close" s={20} c="var(--tmu)" /></div>} footer={footer}>
+    <Sheet h={h} ratio={0.82} header={<div className="ap-row" style={{ gap: 9, padding: '14px 16px 12px', borderBottom: '1px solid var(--b)' }}>{form ? <I n="chevron-left" s={20} c="var(--tmu)" /> : null}<span className="ap-micro" style={{ flex: 1, color: 'var(--tmu)' }}>{form || wallet}</span>{form ? null : <span className="ap-circle"><I n="export-variant" s={16} /></span>}<I n="close" s={20} c="var(--tmu)" /></div>} footer={footer}>
       {form ? <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
         <div className="ap-row" style={{ gap: 12 }}><Av who={who} s={38} style={square ? { borderRadius: 10 } : null} /><span style={{ fontSize: 15, fontWeight: 600, flex: 1 }}>{name}</span><span className="ap-dis" style={{ fontSize: 16 }}>€410</span></div>
         <div><Lbl style={{ marginBottom: 8 }}>AMOUNT</Lbl><div className="ap-card ap-row" style={{ padding: '10px 12px', gap: 8 }}><span className="ap-dis" style={{ fontSize: 17, color: 'var(--tmu)' }}>€</span><span className="ap-dis" style={{ fontSize: 22 }}>410</span></div>{form === 'REQUEST PAYMENT' ? <div className="ap-cap" style={{ color: 'var(--tsu)', marginTop: 6 }}>Up to €410.</div> : null}</div>
@@ -693,7 +765,7 @@ export function CpDetail({ h, wallet, who, name, dir, amt, req, square, footer, 
       </div> : <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
         <div className="ap-row" style={{ justifyContent: 'space-between' }}><div className="ap-row" style={{ gap: 12 }}><Av who={who} s={44} style={square ? { borderRadius: 11 } : null} /><span className="ap-dis" style={{ fontSize: 17 }}>{name}</span></div><div style={{ textAlign: 'right' }}><div className="ap-micro" style={{ color: dir === 'collect' ? 'var(--fg)' : dir === 'pay' ? 'var(--w)' : 'var(--tmu)' }}>{dir === 'collect' ? 'THEY OWE YOU' : dir === 'pay' ? 'YOU OWE THEM' : 'SETTLED'}</div><div className="ap-dis" style={{ fontSize: 26, fontVariantNumeric: 'tabular-nums', marginTop: 2 }}>{amt}</div></div></div>
         {req ? <div className="ap-fade"><div className="ap-micro" style={{ color: 'var(--tmu)', marginBottom: 8 }}>OPEN REQUESTS · 1</div><div className="ap-card ap-xl ap-row" style={{ padding: '12px 14px', gap: 10 }}><I n="clock-outline" s={16} c="var(--w)" /><div style={{ flex: 1 }}><div className="ap-bsm" style={{ fontWeight: 600 }}>{req}</div><div className="ap-cap" style={{ color: 'var(--tmu)' }}>15 Mar 2027</div></div><span className="ap-dis" style={{ fontSize: 14 }}>€410</span></div></div> : null}
-        <div><div className="ap-micro" style={{ color: 'var(--tmu)', marginBottom: 8 }}>STATEMENT</div><div className="ap-card ap-xl">{[['Crew fee', '€350'], ['Fuel', '€60']].map(([l, v], i) => <div key={l} className="ap-row" style={{ gap: 10, padding: '11px 14px', borderTop: i ? '1px solid var(--b)' : 0 }}><div style={{ flex: 1 }}><div className="ap-bsm" style={{ fontWeight: 600 }}>{l}</div><div className="ap-cap" style={{ color: 'var(--tmu)' }}>The Sundowners · Aurora Hall · 14 Mar</div></div><span className="ap-dis" style={{ fontSize: 14 }}>{v}</span></div>)}</div></div>
+        <Statement req={req} dir={dir} />
       </div>}
     </Sheet>
   );
@@ -715,6 +787,7 @@ export function ScrBal({ st, ping }) {
   return (
     <div className="ap-col"><ApStatus /><BalHead wallets={[['maya', 'Maya Sundowner', '€0', '€0', false], ['band', 'The Sundowners', settled ? '€750' : '€1,160', '€0', true, true]]} />
       <div style={{ padding: '0 16px' }}>
+        <BooksOpen />
         <CpGroup dir="pay" count={settled ? 3 : 4} total={settled ? '€750' : '€1,160'}>
           {settled ? null : <HiwCpRow id="req" ping={ping} who="dan" name="Dan Whitaker" dir="pay" amt="€410" asked={st.req ? '€410' : null} />}
           {['rui', 'nils', 'petr'].map((k, i) => <HiwCpRow key={k} who={k} name={HIW_PEOPLE[k].name} dir="pay" amt={'€' + HIW_PEOPLE[k].fee} last={i === 2} />)}
@@ -756,4 +829,3 @@ export function AppScreen({ st, h = 844, ping, crop }) {
     </div>
   );
 }
-

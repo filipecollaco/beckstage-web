@@ -1,4 +1,4 @@
-// @ts-nocheck — ported from the Claude Design prototype (handoff_how_it_works, 2026-10-06), kept
+// @ts-nocheck — ported from the Claude Design prototype (handoff_how_it_works, 2026-10-06; re-synced from handoff_how_it_works_v2, 2026-11-02), kept
 // close to the reference so later handoffs diff cleanly.
 // How it works — the timeline as data. Same shape idea as STREAM in beckstage-web/src/data/site.ts:
 // one array the animation reads; nothing here knows how it is drawn.
@@ -73,7 +73,7 @@ export const BEATS = [
     { t: 2700, R: inv('rui', true), L: ov({ ...C0, petr: 'c', rui: 'c' }), say: { R: 'Accepted' } },
     { t: 3000, R: inv('nils'), key: 'Nils’s invite — €250', say: { R: 'Invite from Maya' } },
     { t: 4200, R: inv('nils', true), L: ov({ ...C0, petr: 'c', rui: 'c', nils: 'c' }), say: { R: 'Accepted' } },
-    { t: 4500, R: inv('dan'), cap: 'As tour manager, Dan runs production — Maya handed it over when she created the booking.', key: 'Dan’s invite — Eligible for delegation', say: { R: 'Invite from Maya' } },
+    { t: 4500, R: inv('dan'), cap: 'As tour manager, Dan runs production — Maya handed it over when she created the booking.', key: 'Dan’s invite — Delegation granted', say: { R: 'Invite from Maya' } },
     { t: 6000, R: inv('dan', true), L: ov(C4), say: { R: 'Accepted' } },
     { t: 6300, R: { scr: 'dov', p: 'dan', toast: true }, say: { R: 'Runs production' } },
     { t: 6700, R: { scr: 'dov', p: 'dan', toast: true }, ping: { side: 'R', id: 'strip' }, key: 'Dan’s booking — You can edit production' },
@@ -190,15 +190,15 @@ export const HIW_SOURCES = {
   ov: 'BookingDetail.tsx · booking/BookingOverviewTab.tsx · overview/{OverviewBlock, OverviewCrewBody, OverviewPerson, OverviewItineraryBlock, OverviewVenueBody}.tsx',
   invite: 'app/booking-invite/[inviteId].tsx · forms/crewInviteSlots.tsx (TourManagerNote)',
   dov: 'BookingDetail.tsx · booking/DelegationStrip.tsx · utils/viewerDelegateStatus.ts',
-  venue: 'app/(tabs)/bookings/[id]/venue/ · components/venue/{sections.ts, RidersBlockMobile, RiderRow, UploadDropzone}.tsx',
-  contacts: 'components/ContactsSection.tsx · forms/{ContactForm, ContactFields}.tsx · contacts/ContactLink.tsx',
-  itin: 'app/(tabs)/bookings/[id]/itinerary/ · itinerary/ItineraryPlannerRow.tsx · constants/itineraryTypes.ts',
-  item: 'ItineraryItemFormSection.tsx · constants/itineraryTypes.ts (TIME_LABELS, ADD_END_LABELS)',
-  acct: 'accounting/index.tsx · accounting/AccountingWorksheet.tsx · ledger/{WaterfallSummary, ExpenseLedger, SheetLabel}.tsx',
+  venue: 'components/VenueSection.tsx · primitives/{BookingMobileHeader, MobileSectionHero}.tsx · venue/{RidersBlockMobile, VenueSectionCardMobile, VenueFieldRow, EditVenueSheet, RiderRow, UploadDropzone}.tsx',
+  contacts: 'components/ContactsSection.tsx · contacts/add/ContactAddSheet.tsx (form-only, nothing at this venue) · forms/{ContactForm, ContactFields}.tsx · contacts/{ContactCard, LetterHeader, ContactLink}.tsx',
+  itin: 'components/ItinerarySection.tsx · itinerary/{ItineraryEmptyHero, ItineraryDayCard (DayStack, DayBand), ItineraryPlannerRow, ItineraryQuickAddRow, ItineraryFilterChip}.tsx',
+  item: 'itinerary/add.tsx (SheetOrDrawer `New item`) · ItineraryItemFormSection.tsx · constants/itineraryTypes.ts',
+  acct: 'components/AccountingSection.tsx · accounting/AccountingWorksheet.tsx · ledger/{WaterfallSummary, ExpenseLedger, CategorySubtotals, SheetLabel}.tsx · AccountingFooterBand.tsx',
   dacct: 'AccountingWorksheet.tsx (crew) · ledger/WorksheetNotes.tsx (CrewFeeCard) · balance/{BalanceNote.tsx, balanceLine.ts}',
   add: 'accounting/add-expense.tsx · AddAccountingExpenseSection.tsx',
-  bal: 'app/(tabs)/balance.tsx · balance/counterparty/{CounterpartyList, CounterpartyDetail, CounterpartyActionBar}.tsx',
-  dbal: 'app/(tabs)/balance.tsx · balance/counterparty/{CounterpartyList, CounterpartyDetail, CounterpartyActionBar}.tsx',
+  bal: 'app/(tabs)/balance.tsx · bookings/booksOpen/BooksOpenLine.tsx · balance/counterparty/{CounterpartyList, CounterpartyDetail, CounterpartyActionBar}.tsx',
+  dbal: 'app/(tabs)/balance.tsx · bookings/booksOpen/BooksOpenLine.tsx · balance/counterparty/{CounterpartyList, CounterpartyDetail, CounterpartyActionBar}.tsx',
 };
 export function hiwSource(st) { if (!st) return ''; if (st.sheet) return HIW_SOURCES.sheet; if (st.add != null) return HIW_SOURCES.add; return HIW_SOURCES[st.scr] || ''; }
 
