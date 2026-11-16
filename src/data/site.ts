@@ -122,9 +122,9 @@ export const FRAGMENTS = {
    the section is left out of the page. */
 export const QUOTES_LABEL = 'In their words';
 export const QUOTES = [
-  { quote: 'I don’t send roadbooks anymore. It’s sooo good.', role: 'Booking agent', authorized: true },
-  { quote: 'I booked 23 dates in two weeks. Just because I wasn’t worrying about pre-production, roadbooks and the money.', role: 'Artist manager', authorized: true },
-  { quote: 'Beckstage on my laptop is incredible. On tour, I’ll only need the app.', role: 'Tour manager', authorized: true },
+  { quote: 'I don’t send roadbooks anymore. It’s sooo good.', role: 'Booking agent', authorized: false },
+  { quote: 'I booked 23 dates in two weeks. Just because I wasn’t worrying about pre-production, roadbooks and the money.', role: 'Artist manager', authorized: false },
+  { quote: 'Beckstage on my laptop is incredible. On tour, I’ll only need the app.', role: 'Tour manager', authorized: false },
 ];
 
 /* ---- Who's Beckstage for? ----------------------------------------------- */
