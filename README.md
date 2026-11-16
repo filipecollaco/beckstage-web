@@ -3,10 +3,9 @@
 The public marketing site for Beckstage, served at **https://beckstage.music**.
 The app itself lives at `app.beckstage.music` (repo `beckstage-fe`).
 
-Astro (static output) + React islands for the four interactive parts: *How it
-works* (the two phones under the hero), *Who's Beckstage for?*, Pricing and the
-FAQ. Everything else — the hero included, which is the claim only — is plain
-HTML with no JavaScript.
+Astro (static output) + React islands for the three interactive parts: *One
+show* on the home, and Pricing and the FAQ on `/pricing`. Everything else — the
+hero included, which is the claim only — is plain HTML with no JavaScript.
 
 ## Run it
 
@@ -23,9 +22,9 @@ npx astro check    # type-check (CI runs this too)
 |---|---|
 | Any copy, prices, FAQ, links | `src/data/site.ts` (single source of truth) |
 | Styles and design tokens | `src/styles/site.css` |
-| Page order and meta tags | `src/pages/index.astro` |
+| Page order and meta tags | `src/pages/index.astro` (home) · `src/pages/pricing.astro` |
 | Share image (1200×630) | `public/og.png` |
-| How it works (two phones) | `src/components/how-it-works/` + `src/styles/how-it-works.css` |
+| One show (the four moments) | `src/components/one-show/` + `src/styles/one-show.css` |
 | Legal pages | `src/data/legal.ts` (copy) · `src/components/legal/` · `src/styles/legal.css` |
 
 - Sign-up and log-in buttons point at `LINKS.signup` / `LINKS.login`.
@@ -42,16 +41,47 @@ representation / representatives); the plans are Artist Free / Pro and
 Representative Free / Pro; never mention transaction fees; never promise crew
 is free forever.
 
-## How it works
+## The home
 
-The two-phone piece under the hero comes from the Claude Design handoff
-*How it works* (2026-10-06, second version: claim-only hero, poster frame,
-Maya's representation on the booking). Until playback starts it shows
-`HIW_POSTER`; it starts on its own at ≥ 50% visible. `data.ts` is the timeline (`BEATS`, `hiwFrame`),
-`screens.tsx` the app screens, `HowItWorks.tsx` the player (desktop: two phones;
-≤ 760px: one in front, scaled to fit the column and one viewport). These three
-are kept close to the reference (`@ts-nocheck`) so a later handoff diffs cleanly.
-Icons are inlined from `@mdi/js` (`mdi.ts`) — the site makes no external requests.
+Hero → One show → In their words → Who's Beckstage for? → Close → Footer. From
+the Claude Design handoff *Website — new home and /pricing* (November 2026).
+Pricing and the FAQ live on `/pricing`; an old `/#pricing` or `/#faq` link lands
+there.
+
+- **The hero's backdrop** is the row of stage lights (`public/img/hero-lights.webp`,
+  and a 1200px version for phones), until a real photo of the room before doors
+  replaces it under the same overlays. The hero is 820px tall (700 on a phone)
+  but never taller than the screen, so its one button stays on the first one.
+- **The nav** lies over the hero and becomes a fixed bar once the hero has
+  scrolled out (`Nav.astro`, `bar="hero"`). On `/pricing` it is the bar from the
+  top (`bar="fixed"`); on the legal pages it stays in the flow.
+- **In their words** renders only the quotes marked `authorized: true` in
+  `QUOTES`. Each needs its author's OK first; with none, the section is left out.
+  Nobody is named: a quote is signed with the person's role.
+
+## One show
+
+Four moments of one show, each with its line and a small animated fragment of
+the app. The lines and what the fragments show live in `site.ts` (`ONE_SHOW`,
+`FRAGMENTS`); `OneShow.tsx` is the player and `fragments.tsx` the four pieces,
+ported from the handoff's `wh/anim.jsx`.
+
+- **The four lines are always readable.** They are server-rendered and nothing
+  hides one behind a timer.
+- **Desktop:** the list beside a stage. One fragment plays at a time; when its
+  loop ends (`loop`, about 30 s for the four) the next moment takes over.
+  Clicking a row plays it from the start.
+- **Phone (≤ 760px):** an accordion. The open row's fragment sits under it and
+  loops; it holds still while it is off screen, so its changing height never
+  moves what is being read below it.
+- **Nothing plays** until the section's top passes 70% of the viewport. With
+  reduced motion there is no auto-advance and each fragment is its still frame.
+- **A fragment is a piece of the app as it is**, with invented people, places
+  and amounts. No finger, no cursor, no typing, and at most one thing opens or
+  changes per loop. The avatar and the `Accepted` mark on an invite are the
+  site's only additions to the app. When the app changes one of these pieces,
+  change it here too.
+- Icons are inlined from `@mdi/js`: the site makes no external requests.
 
 ## Deploy
 

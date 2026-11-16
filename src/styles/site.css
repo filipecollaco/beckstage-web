@@ -1,9 +1,9 @@
 /* ===========================================================================
    Beckstage marketing site
-   Ported from the Claude Design handoff (site.css, hero-v2.css,
-   audience-*.css). The reference's `.dir-b.alt` override cascade is flattened:
-   each section carries its own theme. The reference's `.is-mobile` class is
-   the media query below 761px.
+   Ported from the Claude Design handoffs (the first site, then handoff_web_home,
+   2026-11: the home as it is now). Each section carries its own theme. The
+   phone layout is the media query below 761px. One show has its own file,
+   one-show.css.
    =========================================================================== */
 
 :root {
@@ -148,6 +148,15 @@ img { max-width: none; }
 .bk-menu-link { display: flex; align-items: center; min-height: 52px; font-family: var(--display); font-size: 20px; font-weight: 600;
   letter-spacing: -0.01em; color: var(--spotlightFg); text-decoration: none; border-bottom: 1px solid rgba(255,249,243,0.10); }
 .bk-menu-cta { width: 100%; justify-content: center; margin-top: 20px; }
+/* On the home the nav lies over the top of the hero, and becomes the bar once
+   the hero has scrolled out. On /pricing it is the bar from the top. */
+.bk-nav-hero { position: absolute; left: 0; right: 0; top: 0; }
+.bk-nav.is-bar { position: fixed; left: 0; right: 0; top: 0; z-index: 50; background: rgba(26,20,16,0.92);
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255,249,243,0.08); box-shadow: 0 8px 24px rgba(8,4,1,0.18); }
+.bk-nav-hero.is-bar { animation: bkBarIn 260ms var(--ease) both; }
+@keyframes bkBarIn { from { transform: translateY(-100%); } to { transform: none; } }
+@media (prefers-reduced-motion: reduce) { .bk-nav-hero.is-bar { animation: none; } }
 /* tablet: the links and Log in move into the menu, the button stays */
 @media (max-width: 980px) {
   .bk-nav-links, .bk-login { display: none; }
@@ -156,11 +165,24 @@ img { max-width: none; }
 @media (max-width: 760px) {
   .bk-nav-inner { height: 64px; }
   .bk-nav-actions > .bk-btn { display: none; }
+  /* The bar on a phone: the wordmark, a small button, the burger. */
+  .bk-nav.is-bar .bk-nav-actions > .bk-btn { display: inline-flex; padding: 9px 16px; font-size: 13.5px; }
+  .bk-nav.is-bar .bk-nav-ig { display: none; }
+  .bk-nav.is-bar .bk-nav-actions { gap: 10px; }
+  .bk-nav.is-bar .bk-nav-brand svg { display: block; height: 21px; width: auto; }
+}
+/* Narrower than 390, the bar's three pieces need a tighter button. */
+@media (max-width: 389px) {
+  .bk-nav.is-bar .bk-nav-actions > .bk-btn { padding: 7px 12px; font-size: 12.5px; }
+  .bk-nav.is-bar .bk-nav-actions { gap: 8px; }
+  .bk-nav.is-bar .bk-nav-brand svg { height: 20px; }
 }
 
 /* ===========================================================================
-   HERO — the claim only: headline, sub, two CTAs, who it's for. Centred and
-   short, so the proof (How it works, the two phones) starts on the first screen.
+   HERO — the claim only: headline, sub and one button, low on the left of a
+   tall band that runs into One show with no seam. The backdrop is the row of
+   stage lights, until a real photo of the room before doors replaces it.
+   (`.hv2` alone is the dark band the 404 page uses.)
    =========================================================================== */
 .hv2 { background: var(--spotlight); color: var(--spotlightFg); position: relative; overflow: hidden; }
 .hv2::before {
@@ -170,173 +192,118 @@ img { max-width: none; }
     radial-gradient(46% 48% at 4% 96%, rgba(244,115,64,0.13), transparent 68%);
 }
 .hv2 .bk-nav { overflow: visible; }
-.hv3 .hv3-copy { position: relative; z-index: 2; text-align: center; padding-top: 36px; padding-bottom: 0; max-width: 820px; }
-.hv3 .bk-h1 { color: var(--spotlightFg); font-size: 64px; letter-spacing: -0.032em; line-height: 1; }
-.hv3 .bk-h1 em { font-style: normal; color: var(--burning); }
 .hv2-sub { font-size: 20px; line-height: 1.45; color: rgba(255,249,243,0.76); }
-.hv3 .hv2-sub { margin: 20px auto 0; max-width: 560px; text-wrap: balance; }
+
+/* 820 tall, but never taller than the screen: the button stays on the first one.
+   Over the photo: a wash that keeps the copy readable, then a fade to the band's
+   own colour at the bottom, which is One show's. */
+.hv4 { height: min(820px, max(600px, 100svh)); display: flex; flex-direction: column; justify-content: flex-end;
+  background-image:
+    linear-gradient(90deg, rgba(26,20,16,.86) 0%, rgba(26,20,16,.5) 50%, rgba(26,20,16,.1) 100%),
+    linear-gradient(0deg, #1a1410 0%, rgba(26,20,16,0) 45%),
+    url('/img/hero-lights.webp');
+  background-size: cover; background-position: center; }
+.hv4::before { content: none; }
+.hv4 .hv4-copy { position: relative; z-index: 2; width: 100%; padding-bottom: 112px; }
+.hv4 .bk-h1 { max-width: 760px; color: var(--spotlightFg); font-size: 96px; line-height: 0.98; letter-spacing: -0.035em; }
+.hv4 .bk-h1 em { font-style: normal; color: var(--burning); }
+.hv4 .hv2-sub { margin-top: 26px; max-width: 640px; font-size: 21px; color: rgba(255,249,243,0.78); }
 /* One sentence per line on desktop; on a phone each wraps, so the gap keeps them two. */
-.hv3 .hv2-sub span { display: block; }
-.hv3-ctas { display: flex; gap: 22px; align-items: center; justify-content: center; flex-wrap: wrap; margin-top: 30px; }
-/* Secondary hero link: scrolls to How it works. */
-.hv3-secondary { display: inline-flex; align-items: center; gap: 6px; padding: 8px 4px; font-family: var(--body); font-size: 15px; font-weight: 600;
-  color: var(--tintStrong); text-decoration: none; transition: color 140ms; }
-.hv3-secondary:hover { color: #fff; }
-@media (max-width: 760px) {
-  .hv3 .hv3-copy { padding-top: 20px; }
-  .hv3 .bk-h1 { font-size: 40px; letter-spacing: -0.028em; }
-  .hv3 .hv2-sub { font-size: 17px; margin-top: 16px; }
-  .hv3 .hv2-sub span + span { margin-top: 8px; }
-  .hv3-ctas { flex-direction: column; gap: 10px; margin-top: 24px; }
-}
-
-/* ===========================================================================
-   WHO'S BECKSTAGE FOR? — light (desktop: tabs + auto-advancing categories;
-   mobile: stacked picker + accordion)
-   =========================================================================== */
-.aud-host-mobile { display: none; }
-@media (max-width: 760px) {
-  .aud-host-desktop { display: none; }
-  .aud-host-mobile { display: block; }
-}
-@keyframes audFade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
-
-/* desktop */
-.aud-desktop { background: radial-gradient(120% 90% at 82% 0%, var(--tint) 0%, var(--surfaceAlt) 46%, var(--surfaceMuted) 100%);
-  border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); overflow: hidden; }
-.aud-desktop > .bk-wrap { position: relative; z-index: 2; }
-.aud-head { display: flex; flex-direction: column; align-items: center; text-align: center; }
-.aud-head .bk-h2 { font-size: 46px; }
-.aud-tabs { display: inline-flex; justify-content: center; gap: 34px; margin-top: 26px; }
-.aud-tabs button { position: relative; background: transparent; border: none; border-radius: 0; cursor: pointer;
-  padding: 0 0 16px; font-family: var(--display); font-size: 16px; font-weight: 600; letter-spacing: -0.01em;
-  color: var(--textBody); white-space: nowrap; transition: color 160ms; }
-.aud-tabs button.is-active { color: var(--text); }
-.aud-tabs button::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: transparent;
-  transition: background 200ms, transform 260ms var(--ease); transform-origin: left; }
-.aud-tabs button.is-active::after { background: var(--orange); height: 3px; bottom: -2px; }
-
-/* only the active persona and category take space; the body eases to the new height */
-.aud-body { transition: height 260ms var(--ease); }
-.aud-persona:not(.is-active) { display: none; }
-.aud-dir-line { margin: 48px 0 0; font-family: var(--display); font-size: 32px; font-weight: 600; line-height: 1.22;
-  letter-spacing: -0.02em; color: var(--text); text-wrap: pretty; }
-.aud-persona.is-active .aud-dir-line { animation: audFade 420ms var(--ease) both; }
-.aud-dir-hl { color: var(--foreground); }
-.aud-dir { margin-top: 36px; display: grid; grid-template-columns: 420px minmax(0, 1fr); gap: 72px; align-items: start; }
-.aud-dir-cats { display: grid; grid-template-columns: 1fr; gap: 4px; }
-.aud-dir-cat { position: relative; display: flex; align-items: center; gap: 12px; text-align: left; padding: 13px 16px;
-  border: none; border-radius: 12px; background: none; color: var(--textBody); cursor: pointer;
-  font-family: var(--display); font-size: 17px; font-weight: 600; letter-spacing: -0.01em;
-  transition: box-shadow 200ms, color 200ms, background 200ms; }
-.aud-dir-cat:hover { background: rgba(255,255,255,0.6); color: var(--text); }
-.aud-dir-cat.is-active { background: var(--surface); color: var(--text); box-shadow: 0 0 0 1px var(--borderOrange), var(--sh-md); }
-.aud-dir-num { display: inline-flex; align-items: center; justify-content: center; flex: none; width: 28px; height: 28px; border-radius: 999px;
-  background: rgba(255,255,255,0.7); color: var(--foreground); font-size: 11px; font-weight: 700; letter-spacing: 0.08em; font-variant-numeric: tabular-nums; }
-.aud-dir-cat.is-active .aud-dir-num { background: var(--orange); color: #fff; }
-.aud-dir-panel { display: grid; }
-.aud-dir-lines { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr; align-content: start; }
-.aud-dir-lines:not(.is-active) { display: none; }
-.aud-dir-lines li { font-family: var(--display); font-size: 22px; font-weight: 500; line-height: 1.4; letter-spacing: -0.01em;
-  color: var(--textBody); padding: 18px 0; border-bottom: 1px solid var(--borderMid); text-wrap: pretty; }
-.aud-dir-lines li:last-child { border-bottom: none; }
-.aud-dir-lines.is-active li { animation: audFade 420ms var(--ease) both; }
-.aud-kw { font-weight: 600; color: var(--foreground); }
-.aud-pre { display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--foreground); margin-bottom: 5px; }
-.aud-cta { display: flex; align-items: center; justify-content: center; gap: 18px; flex-wrap: wrap; margin-top: 36px; }
-.aud-cta-note { font-size: 14px; color: var(--textMuted); }
-@media (prefers-reduced-motion: reduce) {
-  .aud-persona.is-active .aud-dir-line, .aud-dir-lines.is-active li { animation: none; }
-  .aud-body { transition: none; }
-}
+.hv4 .hv2-sub span { display: block; }
+.hv4-ctas { display: flex; margin-top: 36px; }
 @media (max-width: 1100px) {
-  .aud-dir { grid-template-columns: 300px minmax(0, 1fr); gap: 44px; }
-  .aud-dir-line { font-size: 28px; }
-  .aud-dir-lines li { font-size: 20px; }
+  .hv4 .bk-h1 { font-size: 76px; }
+  .hv4 .hv4-copy { padding-bottom: 88px; }
+}
+@media (max-width: 760px) {
+  .hv4 { height: min(700px, max(540px, 100svh));
+    background-image:
+      linear-gradient(180deg, rgba(26,20,16,.25) 0%, rgba(26,20,16,.35) 50%, rgba(26,20,16,.92) 100%),
+      linear-gradient(0deg, #1a1410 0%, rgba(26,20,16,0) 45%),
+      url('/img/hero-lights-1200.webp'); }
+  .hv4 .hv4-copy { padding-bottom: 44px; }
+  .hv4 .bk-h1 { max-width: 320px; font-size: 46px; line-height: 1.02; }
+  .hv4 .hv2-sub { margin-top: 18px; font-size: 17px; }
+  .hv4 .hv2-sub span + span { margin-top: 8px; }
+  .hv4-ctas { margin-top: 26px; }
+  .hv4-ctas .bk-btn { width: 100%; justify-content: center; }
 }
 
-/* mobile */
-.audm { background: var(--bg); }
-.audm-h2 { font-size: 30px; }
-.audm-text-stack { display: flex; flex-direction: column; margin-top: 16px; }
-.audm-text-b { all: unset; cursor: pointer; font-family: var(--display); font-weight: 600; letter-spacing: -0.01em; color: var(--textMuted);
-  transition: color 160ms; font-size: 22px; line-height: 1.2; min-height: 46px; display: flex; align-items: center; gap: 10px; }
-.audm-text-b::before { content: ""; flex: none; width: 8px; height: 8px; border-radius: 999px; background: transparent; transition: background 160ms; }
-.audm-text-b.on { color: var(--text); }
-.audm-text-b.on::before { background: var(--orange); }
-.audm-text-b:focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; border-radius: 6px; }
-.audm-open { margin: 26px 0 0; font-family: var(--display); font-size: 22px; font-weight: 600; line-height: 1.25; letter-spacing: -0.015em;
-  color: var(--text); text-wrap: pretty; }
-.audm-hl { color: var(--foreground); }
-.audm-num { font-size: 12px; font-weight: 700; letter-spacing: 0.08em; font-variant-numeric: tabular-nums; color: var(--foreground); }
-.audm-kw { font-weight: 600; color: var(--foreground); }
-.audm-pre { display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--textMuted); margin-bottom: 3px; }
-.audm-lines { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
-.audm-lines li { font-size: 16px; line-height: 1.5; color: var(--textBody); padding: 10px 0 10px 32px; text-wrap: pretty; }
-.audm-acc { margin-top: 24px; border-top: 1px solid var(--borderMid); }
-.audm-acc-item { border-bottom: 1px solid var(--borderMid); }
-.audm-acc-head { all: unset; box-sizing: border-box; width: 100%; display: flex; align-items: center; gap: 12px; padding: 17px 0; cursor: pointer; }
-.audm-acc-head:focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
-.audm-acc-t { flex: 1; font-family: var(--display); font-size: 17px; font-weight: 600; letter-spacing: -0.01em; color: var(--text); }
-.audm-acc-ic { flex: none; width: 30px; height: 30px; border-radius: 999px; display: flex; align-items: center; justify-content: center;
-  border: 1px solid var(--borderMid); color: var(--foreground); transition: transform 220ms var(--ease), background 160ms, border-color 160ms; }
-.audm-acc-item.open .audm-acc-ic { transform: rotate(45deg); background: var(--orange); border-color: var(--orange); color: #fff; }
-.audm-acc-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 260ms var(--ease); }
-.audm-acc-item.open .audm-acc-body { grid-template-rows: 1fr; }
-.audm-acc-body > .audm-lines { overflow: hidden; }
-.audm-acc-item:not(.open) .audm-acc-body > .audm-lines { visibility: hidden; }
-.audm-acc-item.open .audm-acc-body > .audm-lines { padding-bottom: 10px; }
-.audm-cta { display: flex; flex-direction: column; align-items: stretch; gap: 12px; margin-top: 30px; text-align: center; }
-.audm-cta .bk-btn { justify-content: center; }
-.audm-cta-note { font-size: 14px; color: var(--textMuted); }
+/* ===========================================================================
+   IN THEIR WORDS — light. One card per authorized quote.
+   =========================================================================== */
+.qt-section { background: var(--bg); padding: 120px 0; }
+.qt-grid { display: grid; gap: 24px; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: stretch; }
+.qt-grid.qt-n2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.qt-grid.qt-n1 { grid-template-columns: minmax(0, 720px); justify-content: center; }
+.qt-card { margin: 0; display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--border); border-radius: 20px;
+  box-shadow: 0 1px 2px rgba(99,65,30,0.05), 0 10px 30px rgba(99,65,30,0.06); padding: 34px 32px 30px; }
+.qt-mark { display: block; font-family: var(--display); font-weight: 700; font-size: 60px; line-height: 41px; color: var(--orange); }
+.qt-card blockquote { margin: 12px 0 0; font-family: var(--display); font-weight: 600; font-size: 25px; line-height: 1.26;
+  letter-spacing: -0.018em; color: var(--text); text-wrap: pretty; }
+.qt-n2 .qt-card blockquote, .qt-n1 .qt-card blockquote { font-size: 28px; }
+.qt-card figcaption { margin-top: auto; padding-top: 28px; font-family: var(--body); font-weight: 600; font-size: 16px; color: var(--textMuted); }
+@media (max-width: 980px) {
+  .qt-grid, .qt-grid.qt-n2 { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 760px) {
+  .qt-section { padding: 64px 0; }
+  .qt-grid { gap: 16px; }
+  .qt-card { padding: 24px 22px; }
+  .qt-mark { font-size: 48px; line-height: 33px; }
+  .qt-card blockquote, .qt-n2 .qt-card blockquote, .qt-n1 .qt-card blockquote { margin-top: 8px; font-size: 22px; }
+  .qt-card figcaption { padding-top: 18px; font-size: 15px; }
+}
 
 /* ===========================================================================
-   PRIVACY & PERMISSIONS — dark
+   WHO'S BECKSTAGE FOR? — light. Three lines, one per audience.
    =========================================================================== */
-.pv-section { background: var(--spotlight); color: var(--spotlightFg); overflow: hidden; }
-.pv-section::before { content: ""; position: absolute; inset: 0; pointer-events: none;
-  background: radial-gradient(50% 60% at 96% 0%, rgba(255,143,0,0.10), transparent 65%); }
-.pv-section > .bk-wrap { position: relative; z-index: 2; }
-.pv-section .bk-eyebrow { color: var(--tintStrong); }
-.pv-section .bk-h2 { color: var(--spotlightFg); }
-.pv-section .bk-lead { color: rgba(255,249,243,0.74); }
-.pv-grid { display: grid; grid-template-columns: 1.12fr 0.88fr; gap: 44px; margin-top: 52px; align-items: center; }
-
-.pv-matrix { background: var(--surface); border: 1px solid transparent; border-radius: 20px; box-shadow: 0 24px 60px rgba(0,0,0,0.35); overflow: hidden; color: var(--text); }
-.pv-matrix-head { display: flex; align-items: center; gap: 9px; padding: 16px 24px; background: var(--tint); border-bottom: 1px solid var(--border);
-  font-family: var(--display); font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--foreground); }
-.pv-row { display: flex; gap: 22px; padding: 22px 24px; border-bottom: 1px solid var(--border); align-items: flex-start; flex-wrap: wrap; }
-.pv-row-who { display: flex; align-items: center; gap: 13px; flex: 0 0 184px; min-width: 0; }
-.pv-row-avatars { display: flex; }
-.pv-av { width: 38px; height: 38px; flex-shrink: 0; border-radius: 999px; object-fit: cover; margin-left: -10px; box-shadow: 0 0 0 3px var(--surface); }
-.pv-av:first-child { margin-left: 0; }
-.pv-av.org { border-radius: 10.64px; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.06); }
-.pv-row-name { font-family: var(--display); font-size: 15px; font-weight: 600; color: var(--text); letter-spacing: -0.01em; }
-.pv-row-role { font-size: 12px; color: var(--textSubtle); margin-top: 2px; }
-.pv-row-access { flex: 1; min-width: 252px; padding-top: 1px; }
-.pv-access { display: inline-flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase;
-  padding: 7px 13px; border-radius: 999px; white-space: nowrap; line-height: 1.2; }
-.pv-access-full { background: var(--successBg); color: var(--success); border: 1px solid #bfe0cc; }
-.pv-access-part { background: var(--tint); color: var(--foreground); border: 1px solid var(--borderOrange); }
-.pv-access-desc { margin: 11px 0 0; font-size: 14px; line-height: 1.5; color: var(--textMuted); max-width: 430px; }
-
-.pv-pillars { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 24px; }
-.pv-pillars li { display: flex; gap: 14px; align-items: flex-start; }
-.pv-pillar-ic { width: 40px; height: 40px; flex-shrink: 0; border-radius: 12px; display: flex; align-items: center; justify-content: center;
-  background: rgba(255,143,0,0.12); border: 1px solid rgba(255,143,0,0.32); color: var(--orange); }
-.pv-pillars strong { display: block; font-family: var(--display); font-size: 16px; font-weight: 600; color: var(--spotlightFg); letter-spacing: -0.01em; }
-.pv-pillars li > div > span { display: block; font-size: 14px; color: rgba(255,249,243,0.72); line-height: 1.55; margin-top: 4px; }
-@media (max-width: 1100px) { .pv-grid { grid-template-columns: 1fr; gap: 40px; } }
+.wf-section { background: var(--surfaceAlt); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 120px 0; }
+.wf-section .bk-h2 { font-size: 52px; line-height: 1.05; letter-spacing: -0.025em; }
+.wf-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 56px; margin-top: 64px; }
+.wf-rule { display: block; width: 28px; height: 3px; margin-bottom: 18px; border-radius: 2px; background: var(--orange); }
+.wf-label { font-family: var(--body); font-weight: 600; font-size: 11.5px; line-height: 1.4; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--foreground); }
+.wf-line { margin-top: 14px; font-family: var(--display); font-weight: 600; font-size: 28px; line-height: 1.28; letter-spacing: -0.02em;
+  color: var(--text); text-wrap: pretty; }
+@media (max-width: 1100px) {
+  .wf-section .bk-h2 { font-size: 44px; }
+  .wf-grid { gap: 36px; }
+  .wf-line { font-size: 24px; }
+}
+@media (max-width: 900px) {
+  .wf-grid { grid-template-columns: minmax(0, 1fr); gap: 40px; max-width: 620px; }
+}
 @media (max-width: 760px) {
-  .pv-grid { gap: 30px; margin-top: 34px; }
-  .pv-row-who { flex-basis: 100%; }
-  .pv-row-access { min-width: 0; }
+  .wf-section { padding: 64px 0; }
+  .wf-section .bk-h2 { font-size: 32px; }
+  .wf-grid { gap: 36px; margin-top: 36px; }
+  .wf-rule { margin-bottom: 14px; }
+  .wf-line { font-size: 23px; }
+}
+
+/* ===========================================================================
+   CLOSE — dark, centred: the next show and the one button. Home and /pricing.
+   =========================================================================== */
+.cl-section { position: relative; background: var(--spotlight); color: var(--spotlightFg); padding: 136px 0; text-align: center; overflow: hidden; }
+.cl-section::before { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(50% 70% at 50% 0%, rgba(255,143,0,0.20), transparent 70%); }
+.cl-section > .bk-wrap { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; }
+.cl-section h2 { font-family: var(--display); font-weight: 600; font-size: 64px; line-height: 1.02; letter-spacing: -0.032em; color: var(--spotlightFg); text-wrap: balance; }
+.cl-section .bk-btn { margin-top: 36px; }
+@media (max-width: 760px) {
+  .cl-section { padding: 80px 0; }
+  .cl-section h2 { font-size: 38px; }
+  .cl-section .bk-btn { margin-top: 28px; width: 100%; justify-content: center; }
 }
 
 /* ===========================================================================
    PRICING — light
    =========================================================================== */
 .pricing-section { background: var(--bg); }
+/* /pricing opens under the fixed bar. */
+.pricing-page > .pricing-section { padding-top: calc(104px + 76px); }
+@media (max-width: 760px) { .pricing-page > .pricing-section { padding-top: calc(60px + 64px); } }
 .pricing-head-row { display: flex; flex-direction: column; align-items: center; text-align: center; }
 .pricing-head-row .bk-lead { margin-top: 16px; max-width: 620px; }
 .pricing-controls { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; margin: 34px 0 6px; }
@@ -441,20 +408,6 @@ img { max-width: none; }
 @media (max-width: 760px) {
   .faq-grid { grid-template-columns: 1fr; gap: 28px; }
   .faq-q { font-size: 16px; padding: 18px 0; }
-}
-
-/* ===========================================================================
-   CONTACT — light
-   =========================================================================== */
-.bk-contact { background: var(--bg); padding: 88px 0 100px; }
-.bk-contact-grid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 56px; align-items: start; }
-.bk-contact-head .bk-h2 { margin-top: 18px; max-width: 420px; }
-.bk-contact-body { display: flex; flex-direction: column; gap: 18px; align-items: flex-start; max-width: 560px; }
-.bk-contact-cta { margin-top: 16px; }
-@media (max-width: 760px) {
-  .bk-contact { padding: 56px 0 64px; }
-  .bk-contact-grid { grid-template-columns: 1fr; gap: 26px; }
-  .bk-contact-cta { align-self: stretch; justify-content: center; }
 }
 
 /* ===========================================================================

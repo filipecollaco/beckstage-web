@@ -1,8 +1,16 @@
 ---
 import { BeckstageWordmark, Icon } from './icons';
 import { LINKS, NAV } from '../data/site';
+
+interface Props {
+  /** `hero`: lies over the home's hero and becomes a fixed bar once the hero
+   *  has scrolled out. `fixed`: a fixed bar from the top (a page with no
+   *  hero). Omitted: in the flow of its dark header, as on the legal pages. */
+  bar?: 'hero' | 'fixed';
+}
+const { bar } = Astro.props;
 ---
-<nav class="bk-nav" aria-label="Main">
+<nav class:list={['bk-nav', bar === 'hero' && 'bk-nav-hero', bar === 'fixed' && 'is-bar']} data-bar={bar} aria-label="Main">
   <div class="bk-wrap bk-nav-inner">
     <a href="/" class="bk-nav-brand"><BeckstageWordmark height={24} color="#ff9e2c" /></a>
     <div class="bk-nav-links">
@@ -44,5 +52,11 @@ import { LINKS, NAV } from '../data/site';
       if (e.key === 'Escape' && !menu.hidden) { set(false); burger.focus(); }
     });
     matchMedia('(min-width: 761px)').addEventListener('change', (e) => { if (e.matches) set(false); });
+  }
+  // On the home, the nav becomes the fixed bar once the hero has scrolled out under it.
+  const hero = nav?.closest('header');
+  if (nav && hero && nav.dataset.bar === 'hero') {
+    const io = new IntersectionObserver(([entry]) => nav.classList.toggle('is-bar', !entry.isIntersecting), { rootMargin: '-76px 0px 0px 0px' });
+    io.observe(hero);
   }
 </script>

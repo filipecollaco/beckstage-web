@@ -1,0 +1,20 @@
+---
+/* In their words: one card per authorized quote, signed with the person's
+   role. With no quote authorized yet, the section is left out of the page. */
+import { QUOTES, QUOTES_LABEL } from '../data/site';
+
+const quotes = QUOTES.filter((q) => q.authorized);
+---
+{quotes.length > 0 && (
+  <section class="qt-section" aria-label={QUOTES_LABEL}>
+    <div class:list={['bk-wrap', 'qt-grid', `qt-n${Math.min(quotes.length, 3)}`]}>
+      {quotes.map((q) => (
+        <figure class="qt-card">
+          <span class="qt-mark" aria-hidden="true">“</span>
+          <blockquote>{q.quote}</blockquote>
+          <figcaption>— {q.role}</figcaption>
+        </figure>
+      ))}
+    </div>
+  </section>
+)}
