@@ -197,12 +197,20 @@ img { max-width: none; }
 /* 820 tall, but never taller than the screen: the button stays on the first one.
    Over the photo: a wash that keeps the copy readable, then a fade to the band's
    own colour at the bottom, which is One show's. */
-.hv4 { height: min(820px, max(600px, 100svh)); display: flex; flex-direction: column; justify-content: flex-end;
+/* The lights always sit below the nav. The photo hangs from the top of the hero
+   (never centred: on a wide screen that slid the lights up behind the nav), and
+   is never drawn less than 760px tall, which keeps their glow about 100px down.
+   It still covers the hero: its width is the widest of the hero's width, the
+   width that fills the hero's height (the photo is 12:7), and that floor. */
+.hv4 { --hero-h: min(820px, max(600px, 100svh)); --photo-min: 1303px;
+  height: var(--hero-h); display: flex; flex-direction: column; justify-content: flex-end;
   background-image:
     linear-gradient(90deg, rgba(26,20,16,.86) 0%, rgba(26,20,16,.5) 50%, rgba(26,20,16,.1) 100%),
     linear-gradient(0deg, #1a1410 0%, rgba(26,20,16,0) 45%),
     url('/img/hero-lights.webp');
-  background-size: cover; background-position: center; }
+  background-repeat: no-repeat;
+  background-position: center, center, center top;
+  background-size: auto, auto, max(100%, calc(var(--hero-h) * 12 / 7), var(--photo-min)) auto; }
 .hv4::before { content: none; }
 .hv4 .hv4-copy { position: relative; z-index: 2; width: 100%; padding-bottom: 112px; }
 .hv4 .bk-h1 { max-width: 760px; color: var(--spotlightFg); font-size: 96px; line-height: 0.98; letter-spacing: -0.035em; }
@@ -216,7 +224,7 @@ img { max-width: none; }
   .hv4 .hv4-copy { padding-bottom: 88px; }
 }
 @media (max-width: 760px) {
-  .hv4 { height: min(700px, max(540px, 100svh));
+  .hv4 { --hero-h: min(700px, max(540px, 100svh)); --photo-min: 1097px;
     background-image:
       linear-gradient(180deg, rgba(26,20,16,.25) 0%, rgba(26,20,16,.35) 50%, rgba(26,20,16,.92) 100%),
       linear-gradient(0deg, #1a1410 0%, rgba(26,20,16,0) 45%),
