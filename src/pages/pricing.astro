@@ -1,0 +1,36 @@
+---
+/* /pricing: the plans and the FAQ, as they were on the home, then the close. */
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Close from '../components/Close.astro';
+import Footer from '../components/Footer.astro';
+import Pricing from '../components/Pricing';
+import Faq from '../components/Faq';
+import { FAQ_HEAD, PRICING } from '../data/site';
+
+const title = 'Beckstage · Pricing';
+---
+<Base title={title} description={PRICING.lead} path="/pricing">
+    <Nav bar="fixed" />
+
+    <main class="pricing-page">
+      <section class="bk-section pricing-section" id="pricing">
+        <Pricing client:load />
+      </section>
+
+      <section class="bk-section faq-section" id="faq">
+        <div class="bk-wrap faq-grid">
+          <div class="faq-head">
+            <p class="bk-eyebrow">{FAQ_HEAD.eyebrow}</p>
+            <h2 class="bk-h2">{FAQ_HEAD.h2}</h2>
+            <p class="bk-lead">{FAQ_HEAD.lead}</p>
+          </div>
+          <Faq client:idle />
+        </div>
+      </section>
+
+      <Close />
+    </main>
+
+    <Footer />
+</Base>

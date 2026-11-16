@@ -1,0 +1,11 @@
+---
+/* The close: the next show and the one button. On the home and on /pricing. */
+import { Icon } from './icons';
+import { CLOSE, LINKS } from '../data/site';
+---
+<section class="cl-section">
+  <div class="bk-wrap">
+    <h2>{CLOSE.h2}</h2>
+    <a class="bk-btn bk-btn-lg bk-btn-onDark plausible-event-name=Signup+close" href={LINKS.signup}>{CLOSE.cta}<Icon name="arrow" size={18} color="#fff" /></a>
+  </div>
+</section>

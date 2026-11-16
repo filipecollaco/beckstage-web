@@ -1,0 +1,19 @@
+---
+/* Who's Beckstage for? Three lines, one per audience: no tabs, no feature
+   lists, no button per audience. */
+import { AUDIENCE } from '../data/site';
+---
+<section class="wf-section" id="audience" aria-labelledby="wf-h2">
+  <div class="bk-wrap">
+    <h2 class="bk-h2" id="wf-h2">{AUDIENCE.h2}</h2>
+    <div class="wf-grid">
+      {AUDIENCE.items.map((it) => (
+        <div class="wf-col">
+          <i class="wf-rule" aria-hidden="true"></i>
+          <p class="wf-label">{it.label}</p>
+          <p class="wf-line">{it.line}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
