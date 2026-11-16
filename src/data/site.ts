@@ -64,7 +64,7 @@ export const FRAGMENTS = {
       { role: 'Sound Engineer', icon: 'speaker', fee: '€300', avatar: '/avatars/crew-foh.webp' },
       { role: 'Driver', icon: 'truck', fee: '€200', avatar: '/avatars/crew-driver.webp' },
       // A member of the artist: paid from what the booking earns, so no fee.
-      { role: 'Musician', icon: 'guitar', fee: null, avatar: '/avatars/user-4.webp' },
+      { role: 'Musician', icon: 'music', fee: null, avatar: '/avatars/user-4.webp' },
     ],
   },
   day: {
@@ -72,13 +72,13 @@ export const FRAGMENTS = {
     band: { date: 'Sat 13 Sep', tag: 'Day of show' },
     items: [
       { id: 'travel', start: '09:30', end: '12:15', title: 'Travel to Berlin', place: 'Leipzig → Aurora Hall', kind: 'travel',
-        who: ['/avatars/crew-foh.webp', '/avatars/crew-light.webp'] },
+        who: ['/avatars/crew-driver.webp', '/avatars/crew-foh.webp', '/avatars/user-4.webp'] },
       { id: 'loadin', start: '15:00', end: '', title: 'Load-in', place: 'Aurora Hall, Berlin', kind: 'event',
-        who: ['/avatars/crew-tm.webp', '/avatars/crew-foh.webp', '/avatars/crew-light.webp', '/avatars/crew-driver.webp'] },
+        who: ['/avatars/crew-tm.webp', '/avatars/crew-foh.webp', '/avatars/user-4.webp', '/avatars/crew-driver.webp'] },
       { id: 'soundcheck', start: '17:00', end: '17:45', title: 'Soundcheck', place: 'Aurora Hall, Berlin', kind: 'event',
-        who: ['/avatars/user-4.webp', '/avatars/crew-foh.webp', '/avatars/crew-light.webp'] },
+        who: ['/avatars/crew-light.webp', '/avatars/crew-foh.webp', '/avatars/user-4.webp'] },
       { id: 'show', start: '21:00', end: '22:30', title: 'Show', place: 'Aurora Hall, Berlin', kind: 'event',
-        who: ['/avatars/user-4.webp', '/avatars/crew-foh.webp', '/avatars/crew-light.webp', '/avatars/crew-tm.webp'] },
+        who: ['/avatars/crew-light.webp', '/avatars/crew-foh.webp', '/avatars/user-4.webp', '/avatars/crew-tm.webp'] },
     ],
     /* The one item that opens. */
     open: {
@@ -98,14 +98,15 @@ export const FRAGMENTS = {
   },
   books: {
     title: 'Accounting',
-    summaryOpen: '€6,000 fee · 3 expenses · €5,520 net',
+    /* The fee leads; the rest of the open summary is quieter. */
+    summaryOpen: { lead: '€6,000 fee', rest: ' · 3 expenses · €5,520 net' },
     summaryLocked: '€5,520 net',
     rows: [
-      { op: '', label: 'Total fee', sub: 'Flat Fee', amount: '6,000', kind: 'row' },
-      { op: '−', label: 'Expenses', sub: '3 items', amount: '480', kind: 'row' },
-      { op: '=', label: 'After expenses', sub: '', amount: '5,520', kind: 'subtotal' },
-      { op: '−', label: 'Commissions', sub: '1 recipient', amount: '900', kind: 'row' },
-      { op: '=', label: 'Artist earnings', sub: '', amount: '4,620', kind: 'accent' },
+      { op: '', label: 'Total fee', sub: 'Flat Fee', amount: '€6,000', kind: 'row' },
+      { op: '−', label: 'Expenses', sub: '3 items', amount: '€480', kind: 'row' },
+      { op: '=', label: 'After expenses', sub: '', amount: '€5,520', kind: 'subtotal' },
+      { op: '−', label: 'Commissions', sub: '1 recipient', amount: '€900', kind: 'row' },
+      { op: '=', label: 'Artist earnings', sub: '', amount: '€4,620', kind: 'accent' },
     ],
     band: 'Books still open — close to lock.',
     close: 'Close & lock',

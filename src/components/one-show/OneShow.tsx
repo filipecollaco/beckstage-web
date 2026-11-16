@@ -8,9 +8,8 @@
    row's fragment sits under it and loops. */
 import { useCallback, useEffect, useRef, useState, type MouseEvent } from 'react';
 import { flushSync } from 'react-dom';
-import { mdiChevronDown } from '@mdi/js';
 import { ONE_SHOW } from '../../data/site';
-import { Fragment, Glyph } from './fragments';
+import { Fragment } from './fragments';
 
 const PHONE = '(max-width: 760px)';
 const REDUCED = '(prefers-reduced-motion: reduce)';
@@ -103,7 +102,7 @@ export default function OneShow() {
     const moved = row.getBoundingClientRect().top - before;
     if (moved) window.scrollBy({ top: moved, behavior: 'instant' });
     const fits = row.getBoundingClientRect().bottom <= window.innerHeight;
-    const nearBar = before >= BAR_CLEARANCE && before - BAR_CLEARANCE <= 140;
+    const nearBar = before >= BAR_CLEARANCE && before < BAR_CLEARANCE + 132;
     if (nearBar && fits) return;
     // An absolute target: a smooth scroll started right after an instant one
     // can take its start from the offset before it, and land short or long.
@@ -127,7 +126,7 @@ export default function OneShow() {
                   <span className="os-label">
                     <i className="os-dot" aria-hidden="true"></i>
                     <span>{m.label}</span>
-                    <span className="os-chev" aria-hidden="true"><Glyph d={mdiChevronDown} size={16} /></span>
+                    <svg className="os-chev" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 6l4.5 4.5L12.5 6" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>
                   </span>
                   <span className="os-line">{m.line}</span>
                 </button>

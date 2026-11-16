@@ -166,15 +166,22 @@ img { max-width: none; }
   .bk-nav-inner { height: 64px; }
   .bk-nav-actions > .bk-btn { display: none; }
   /* The bar on a phone: the wordmark, a small button, the burger. */
-  .bk-nav.is-bar .bk-nav-actions > .bk-btn { display: inline-flex; padding: 7px 12px; font-size: 12.5px; box-shadow: none; }
+  .bk-nav.is-bar .bk-nav-actions > .bk-btn { display: inline-flex; padding: 9px 16px; font-size: 13.5px; }
   .bk-nav.is-bar .bk-nav-ig { display: none; }
+  .bk-nav.is-bar .bk-nav-actions { gap: 10px; }
+  .bk-nav.is-bar .bk-nav-brand svg { display: block; height: 21px; width: auto; }
+}
+/* Narrower than 390, the bar's three pieces need a tighter button. */
+@media (max-width: 389px) {
+  .bk-nav.is-bar .bk-nav-actions > .bk-btn { padding: 7px 12px; font-size: 12.5px; }
   .bk-nav.is-bar .bk-nav-actions { gap: 8px; }
-  .bk-nav.is-bar .bk-nav-brand svg { display: block; height: 20px; width: auto; }
+  .bk-nav.is-bar .bk-nav-brand svg { height: 20px; }
 }
 
 /* ===========================================================================
    HERO — the claim only: headline, sub and one button, low on the left of a
-   tall dark band that runs into One show with no seam.
+   tall band that runs into One show with no seam. The backdrop is the row of
+   stage lights, until a real photo of the room before doors replaces it.
    (`.hv2` alone is the dark band the 404 page uses.)
    =========================================================================== */
 .hv2 { background: var(--spotlight); color: var(--spotlightFg); position: relative; overflow: hidden; }
@@ -187,64 +194,80 @@ img { max-width: none; }
 .hv2 .bk-nav { overflow: visible; }
 .hv2-sub { font-size: 20px; line-height: 1.45; color: rgba(255,249,243,0.76); }
 
-/* 820 tall, but never taller than the screen: the button stays on the first one. */
-.hv4 { height: min(820px, max(560px, 100svh)); display: flex; flex-direction: column; justify-content: flex-end; }
-/* The bottom fades to the band's own colour, which is One show's. */
-.hv4::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(0deg, var(--spotlight) 0%, transparent 45%); }
-.hv4 .hv4-copy { position: relative; z-index: 2; width: 100%; padding-bottom: 88px; }
-.hv4 .bk-h1 { color: var(--spotlightFg); font-size: 64px; letter-spacing: -0.032em; line-height: 1; }
+/* 820 tall, but never taller than the screen: the button stays on the first one.
+   Over the photo: a wash that keeps the copy readable, then a fade to the band's
+   own colour at the bottom, which is One show's. */
+.hv4 { height: min(820px, max(600px, 100svh)); display: flex; flex-direction: column; justify-content: flex-end;
+  background-image:
+    linear-gradient(90deg, rgba(26,20,16,.86) 0%, rgba(26,20,16,.5) 50%, rgba(26,20,16,.1) 100%),
+    linear-gradient(0deg, #1a1410 0%, rgba(26,20,16,0) 45%),
+    url('/img/hero-lights.webp');
+  background-size: cover; background-position: center; }
+.hv4::before { content: none; }
+.hv4 .hv4-copy { position: relative; z-index: 2; width: 100%; padding-bottom: 112px; }
+.hv4 .bk-h1 { max-width: 760px; color: var(--spotlightFg); font-size: 96px; line-height: 0.98; letter-spacing: -0.035em; }
 .hv4 .bk-h1 em { font-style: normal; color: var(--burning); }
-.hv4 .hv2-sub { margin-top: 20px; max-width: 560px; }
+.hv4 .hv2-sub { margin-top: 26px; max-width: 640px; font-size: 21px; color: rgba(255,249,243,0.78); }
 /* One sentence per line on desktop; on a phone each wraps, so the gap keeps them two. */
 .hv4 .hv2-sub span { display: block; }
-.hv4-ctas { display: flex; margin-top: 30px; }
+.hv4-ctas { display: flex; margin-top: 36px; }
+@media (max-width: 1100px) {
+  .hv4 .bk-h1 { font-size: 76px; }
+  .hv4 .hv4-copy { padding-bottom: 88px; }
+}
 @media (max-width: 760px) {
-  .hv4 { height: min(700px, max(520px, 100svh)); }
+  .hv4 { height: min(700px, max(540px, 100svh));
+    background-image:
+      linear-gradient(180deg, rgba(26,20,16,.25) 0%, rgba(26,20,16,.35) 50%, rgba(26,20,16,.92) 100%),
+      linear-gradient(0deg, #1a1410 0%, rgba(26,20,16,0) 45%),
+      url('/img/hero-lights-1200.webp'); }
   .hv4 .hv4-copy { padding-bottom: 44px; }
-  .hv4 .bk-h1 { font-size: 40px; letter-spacing: -0.028em; }
-  .hv4 .hv2-sub { font-size: 17px; margin-top: 16px; }
+  .hv4 .bk-h1 { max-width: 320px; font-size: 46px; line-height: 1.02; }
+  .hv4 .hv2-sub { margin-top: 18px; font-size: 17px; }
   .hv4 .hv2-sub span + span { margin-top: 8px; }
-  .hv4-ctas { margin-top: 24px; }
+  .hv4-ctas { margin-top: 26px; }
   .hv4-ctas .bk-btn { width: 100%; justify-content: center; }
 }
 
 /* ===========================================================================
    IN THEIR WORDS — light. One card per authorized quote.
    =========================================================================== */
-.qt-section { background: var(--bg); padding: 104px 0; }
-.qt-grid { display: grid; gap: 22px; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: stretch; }
+.qt-section { background: var(--bg); padding: 120px 0; }
+.qt-grid { display: grid; gap: 24px; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: stretch; }
 .qt-grid.qt-n2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .qt-grid.qt-n1 { grid-template-columns: minmax(0, 720px); justify-content: center; }
 .qt-card { margin: 0; display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--border); border-radius: 20px;
-  box-shadow: var(--sh-md); padding: 30px 30px 28px; }
-.qt-mark { display: block; height: 30px; font-family: var(--display); font-weight: 700; font-size: 60px; line-height: 1; color: var(--orange); }
-.qt-card blockquote { flex: 1; margin: 12px 0 0; font-family: var(--display); font-weight: 600; font-size: 25px; line-height: 1.24;
+  box-shadow: 0 1px 2px rgba(99,65,30,0.05), 0 10px 30px rgba(99,65,30,0.06); padding: 34px 32px 30px; }
+.qt-mark { display: block; font-family: var(--display); font-weight: 700; font-size: 60px; line-height: 41px; color: var(--orange); }
+.qt-card blockquote { margin: 12px 0 0; font-family: var(--display); font-weight: 600; font-size: 25px; line-height: 1.26;
   letter-spacing: -0.018em; color: var(--text); text-wrap: pretty; }
 .qt-n2 .qt-card blockquote, .qt-n1 .qt-card blockquote { font-size: 28px; }
-.qt-card figcaption { margin-top: 28px; font-family: var(--body); font-weight: 600; font-size: 14px; color: var(--textMuted); }
+.qt-card figcaption { margin-top: auto; padding-top: 28px; font-family: var(--body); font-weight: 600; font-size: 16px; color: var(--textMuted); }
 @media (max-width: 980px) {
   .qt-grid, .qt-grid.qt-n2 { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 760px) {
-  .qt-section { padding: 60px 0; }
-  .qt-grid { gap: 14px; }
-  .qt-card { padding: 24px 22px 22px; }
-  .qt-card blockquote, .qt-n2 .qt-card blockquote, .qt-n1 .qt-card blockquote { font-size: 22px; }
-  .qt-card figcaption { margin-top: 22px; }
+  .qt-section { padding: 64px 0; }
+  .qt-grid { gap: 16px; }
+  .qt-card { padding: 24px 22px; }
+  .qt-mark { font-size: 48px; line-height: 33px; }
+  .qt-card blockquote, .qt-n2 .qt-card blockquote, .qt-n1 .qt-card blockquote { margin-top: 8px; font-size: 22px; }
+  .qt-card figcaption { padding-top: 18px; font-size: 15px; }
 }
 
 /* ===========================================================================
    WHO'S BECKSTAGE FOR? — light. Three lines, one per audience.
    =========================================================================== */
-.wf-section { background: var(--surfaceAlt); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 104px 0; }
-.wf-section .bk-h2 { font-size: 46px; }
-.wf-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 48px; margin-top: 56px; }
-.wf-rule { display: block; width: 28px; height: 3px; border-radius: 2px; background: var(--orange); }
-.wf-label { margin-top: 18px; font-family: var(--body); font-weight: 600; font-size: 11.5px; line-height: 1.4; letter-spacing: 0.14em;
+.wf-section { background: var(--surfaceAlt); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 120px 0; }
+.wf-section .bk-h2 { font-size: 52px; line-height: 1.05; letter-spacing: -0.025em; }
+.wf-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 56px; margin-top: 64px; }
+.wf-rule { display: block; width: 28px; height: 3px; margin-bottom: 18px; border-radius: 2px; background: var(--orange); }
+.wf-label { font-family: var(--body); font-weight: 600; font-size: 11.5px; line-height: 1.4; letter-spacing: 0.14em;
   text-transform: uppercase; color: var(--foreground); }
-.wf-line { margin-top: 14px; font-family: var(--display); font-weight: 600; font-size: 28px; line-height: 1.22; letter-spacing: -0.02em;
+.wf-line { margin-top: 14px; font-family: var(--display); font-weight: 600; font-size: 28px; line-height: 1.28; letter-spacing: -0.02em;
   color: var(--text); text-wrap: pretty; }
 @media (max-width: 1100px) {
+  .wf-section .bk-h2 { font-size: 44px; }
   .wf-grid { gap: 36px; }
   .wf-line { font-size: 24px; }
 }
@@ -252,25 +275,26 @@ img { max-width: none; }
   .wf-grid { grid-template-columns: minmax(0, 1fr); gap: 40px; max-width: 620px; }
 }
 @media (max-width: 760px) {
-  .wf-section { padding: 60px 0; }
-  .wf-section .bk-h2 { font-size: 30px; }
-  .wf-grid { gap: 34px; margin-top: 34px; }
-  .wf-line { font-size: 23px; margin-top: 12px; }
+  .wf-section { padding: 64px 0; }
+  .wf-section .bk-h2 { font-size: 32px; }
+  .wf-grid { gap: 36px; margin-top: 36px; }
+  .wf-rule { margin-bottom: 14px; }
+  .wf-line { font-size: 23px; }
 }
 
 /* ===========================================================================
    CLOSE — dark, centred: the next show and the one button. Home and /pricing.
    =========================================================================== */
-.cl-section { position: relative; background: var(--spotlight); color: var(--spotlightFg); padding: 128px 0 132px; text-align: center; overflow: hidden; }
+.cl-section { position: relative; background: var(--spotlight); color: var(--spotlightFg); padding: 136px 0; text-align: center; overflow: hidden; }
 .cl-section::before { content: ""; position: absolute; inset: 0; pointer-events: none;
   background: radial-gradient(50% 70% at 50% 0%, rgba(255,143,0,0.20), transparent 70%); }
 .cl-section > .bk-wrap { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; }
-.cl-section h2 { font-family: var(--display); font-weight: 600; font-size: 64px; line-height: 1.04; letter-spacing: -0.03em; color: var(--spotlightFg); text-wrap: balance; }
-.cl-section .bk-btn { margin-top: 40px; }
+.cl-section h2 { font-family: var(--display); font-weight: 600; font-size: 64px; line-height: 1.02; letter-spacing: -0.032em; color: var(--spotlightFg); text-wrap: balance; }
+.cl-section .bk-btn { margin-top: 36px; }
 @media (max-width: 760px) {
-  .cl-section { padding: 76px 0 80px; }
-  .cl-section h2 { font-size: 38px; letter-spacing: -0.025em; }
-  .cl-section .bk-btn { margin-top: 30px; width: 100%; justify-content: center; }
+  .cl-section { padding: 80px 0; }
+  .cl-section h2 { font-size: 38px; }
+  .cl-section .bk-btn { margin-top: 28px; width: 100%; justify-content: center; }
 }
 
 /* ===========================================================================

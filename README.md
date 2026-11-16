@@ -48,6 +48,10 @@ the Claude Design handoff *Website — new home and /pricing* (November 2026).
 Pricing and the FAQ live on `/pricing`; an old `/#pricing` or `/#faq` link lands
 there.
 
+- **The hero's backdrop** is the row of stage lights (`public/img/hero-lights.webp`,
+  and a 1200px version for phones), until a real photo of the room before doors
+  replaces it under the same overlays. The hero is 820px tall (700 on a phone)
+  but never taller than the screen, so its one button stays on the first one.
 - **The nav** lies over the hero and becomes a fixed bar once the hero has
   scrolled out (`Nav.astro`, `bar="hero"`). On `/pricing` it is the bar from the
   top (`bar="fixed"`); on the legal pages it stays in the flow.
@@ -59,7 +63,8 @@ there.
 
 Four moments of one show, each with its line and a small animated fragment of
 the app. The lines and what the fragments show live in `site.ts` (`ONE_SHOW`,
-`FRAGMENTS`); `OneShow.tsx` is the player and `fragments.tsx` the four pieces.
+`FRAGMENTS`); `OneShow.tsx` is the player and `fragments.tsx` the four pieces,
+ported from the handoff's `wh/anim.jsx`.
 
 - **The four lines are always readable.** They are server-rendered and nothing
   hides one behind a timer.
