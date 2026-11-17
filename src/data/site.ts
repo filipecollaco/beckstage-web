@@ -27,7 +27,8 @@ export const NAV = [
 
 export const HERO = {
   h1: ['Where', 'live music', 'works.'],
-  sub: ['Tour production and accounting, in one place.', 'Artists, agents, managers and crew on the same page.'],
+  /* The four are in the order ONE_SHOW.intro names them. */
+  sub: ['Tour production and accounting, in one place.', 'Artists, managers, agents and crew on the same page.'],
   primary: 'Create your free account',
 };
 
@@ -35,9 +36,13 @@ export const HERO = {
 
 /* Four moments of one show. The lines are final copy (handoff_web_home,
    2026-11): don't change a word. `loop` is how long the moment's fragment
-   plays, in ms, which is also how long its bar takes to fill. */
+   plays, in ms, which is also how long its bar takes to fill.
+
+   `intro` is the one sentence on what Beckstage is, in small type above the
+   four lines. Approved word by word (2026-11-17): don't change it either. */
 export const ONE_SHOW = {
   label: 'One show',
+  intro: 'Beckstage brings together artists, managers, agents and crew, making show and tour production as easy for everyone involved as it always should have been.',
   moments: [
     { id: 'invites', label: 'When the show is booked', line: 'The artist and crew said yes, knowing their role and their fee.', loop: 9900 },
     { id: 'day', label: 'Before the show', line: 'The roadbook lands on everyone’s phone. Nobody sent it.', loop: 7400 },
