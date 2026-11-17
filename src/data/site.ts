@@ -38,8 +38,9 @@ export const HERO = {
    2026-11): don't change a word. `loop` is how long the moment's fragment
    plays, in ms, which is also how long its bar takes to fill.
 
-   `intro` is the one sentence on what Beckstage is, in small type above the
-   four lines. Approved word by word (2026-11-17): don't change it either. */
+   `intro` is the one sentence on what Beckstage is: the passage from the hero
+   into the four lines. Approved word by word (2026-11-17): don't change it
+   either. */
 export const ONE_SHOW = {
   label: 'One show',
   intro: 'Beckstage brings together artists, managers, agents and crew, making show and tour production as easy for everyone involved as it always should have been.',

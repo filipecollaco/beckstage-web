@@ -32,6 +32,8 @@ function useMedia(query: string) {
 export default function OneShow() {
   const moments = ONE_SHOW.moments;
   const root = useRef<HTMLElement>(null);
+  /* What starts the player: the list, not the section, so the sentence above it is read first. */
+  const list = useRef<HTMLOListElement>(null);
   const phone = useMedia(PHONE);
   const reduced = useMedia(REDUCED);
   const [started, setStarted] = useState(false);
@@ -49,9 +51,9 @@ export default function OneShow() {
     setActive((a) => a ?? 0);
   }, []);
 
-  /* Nothing plays until the section's top passes 70% of the viewport. Once. */
+  /* Nothing plays until the list's top passes 70% of the viewport. Once. */
   useEffect(() => {
-    const el = root.current;
+    const el = list.current;
     if (!el || started) return;
     const io = new IntersectionObserver((entries) => {
       if (entries.some((e) => e.isIntersecting)) { start(); io.disconnect(); }
@@ -114,7 +116,7 @@ export default function OneShow() {
     <section className="os-root" ref={root} aria-label={ONE_SHOW.label}>
       <div className="bk-wrap os-grid">
         <p className="os-intro">{ONE_SHOW.intro}</p>
-        <ol className="os-list">
+        <ol className="os-list" ref={list}>
           {moments.map((m, i) => {
             const on = shown === i;
             // Desktop: earlier moments stay full, later ones empty. Phone: only the open row has a bar.
