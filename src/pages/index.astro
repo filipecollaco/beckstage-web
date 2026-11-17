@@ -13,7 +13,8 @@ import { Icon } from '../components/icons';
 import { HERO, LINKS } from '../data/site';
 
 const title = 'Beckstage · Where live music works';
-const description = 'Tour production and accounting, in one place. Artists, agents, managers and crew on the same page.';
+// The hero's sub, so the two never read differently.
+const description = HERO.sub.join(' ');
 ---
 <Base title={title} description={description} path="/">
     {/* Pricing and the FAQ used to be sections of this page: their old links land on /pricing. */}

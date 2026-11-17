@@ -66,6 +66,9 @@ the app. The lines and what the fragments show live in `site.ts` (`ONE_SHOW`,
 `FRAGMENTS`); `OneShow.tsx` is the player and `fragments.tsx` the four pieces,
 ported from the handoff's `wh/anim.jsx`.
 
+- **One sentence sits above the four lines**, in small type (`ONE_SHOW.intro`):
+  what Beckstage is. It was approved word by word, and the hero's sub names
+  artists, managers, agents and crew in the same order.
 - **The four lines are always readable.** They are server-rendered and nothing
   hides one behind a timer.
 - **Desktop:** the list beside a stage. One fragment plays at a time; when its
