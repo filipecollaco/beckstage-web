@@ -115,7 +115,7 @@ export default function OneShow() {
   return (
     <section className="os-root" ref={root} aria-label={ONE_SHOW.label}>
       <div className="bk-wrap os-grid">
-        <p className="os-intro">{ONE_SHOW.intro}</p>
+        <p className="os-intro">{ONE_SHOW.intro[0]} <em>{ONE_SHOW.intro[1]}</em> {ONE_SHOW.intro[2]}</p>
         <ol className="os-list" ref={list}>
           {moments.map((m, i) => {
             const on = shown === i;
