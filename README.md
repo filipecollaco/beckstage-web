@@ -66,9 +66,13 @@ the app. The lines and what the fragments show live in `site.ts` (`ONE_SHOW`,
 `FRAGMENTS`); `OneShow.tsx` is the player and `fragments.tsx` the four pieces,
 ported from the handoff's `wh/anim.jsx`.
 
-- **One sentence sits above the four lines**, in small type (`ONE_SHOW.intro`):
-  what Beckstage is. It was approved word by word, and the hero's sub names
-  artists, managers, agents and crew in the same order.
+- **One sentence leads into the four lines** (`ONE_SHOW.intro`): what
+  Beckstage is. It is the first thing in the section and runs across it, above
+  the list and the stage, larger than the four lines and smaller than the
+  hero's title (Claude Design handoff *the sentence above One show*,
+  2026-11-17). "as easy for everyone involved" is in the hero's orange, like
+  "live music" in the title. It was approved word by word, and the hero's sub
+  names artists, managers, agents and crew in the same order.
 - **The four lines are always readable.** They are server-rendered and nothing
   hides one behind a timer.
 - **Desktop:** the list beside a stage. One fragment plays at a time; when its
@@ -77,8 +81,9 @@ ported from the handoff's `wh/anim.jsx`.
 - **Phone (≤ 760px):** an accordion. The open row's fragment sits under it and
   loops; it holds still while it is off screen, so its changing height never
   moves what is being read below it.
-- **Nothing plays** until the section's top passes 70% of the viewport. With
-  reduced motion there is no auto-advance and each fragment is its still frame.
+- **Nothing plays** until the list's top passes 70% of the viewport, so the
+  sentence above it is read first. With reduced motion there is no
+  auto-advance and each fragment is its still frame.
 - **A fragment is a piece of the app as it is**, with invented people, places
   and amounts. No finger, no cursor, no typing, and at most one thing opens or
   changes per loop. The avatar and the `Accepted` mark on an invite are the
