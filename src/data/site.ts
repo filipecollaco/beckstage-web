@@ -39,12 +39,14 @@ export const HERO = {
    plays, in ms, which is also how long its bar takes to fill.
 
    `intro` is the one sentence on what Beckstage is: the passage from the hero
-   into the four lines. Approved word by word (2026-11-17): don't change it
-   either. It is one sentence in three parts, like the hero's title: the
-   middle one is in the hero's orange (Filipe's call, 2026-11-17). */
+   into the four lines. Approved word by word (2026-11-17; its opening,
+   "Beckstage is where … come together", on 2026-11-19): don't change it
+   either. "is where" answers the "Where" of the hero's title. It is one
+   sentence in three parts, like that title: the middle one is in the hero's
+   orange (Filipe's call, 2026-11-17). */
 export const ONE_SHOW = {
   label: 'One show',
-  intro: ['Beckstage brings together artists, managers, agents and crew, making show and tour production', 'as easy for everyone involved', 'as it always should have been.'],
+  intro: ['Beckstage is where artists, managers, agents and crew come together, making show and tour production', 'as easy for everyone involved', 'as it always should have been.'],
   moments: [
     { id: 'invites', label: 'When the show is booked', line: 'The artist and crew said yes, knowing their role and their fee.', loop: 9900 },
     { id: 'day', label: 'Before the show', line: 'The roadbook lands on everyone’s phone. Nobody sent it.', loop: 7400 },
