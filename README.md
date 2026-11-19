@@ -71,8 +71,9 @@ ported from the handoff's `wh/anim.jsx`.
   the list and the stage, larger than the four lines and smaller than the
   hero's title (Claude Design handoff *the sentence above One show*,
   2026-11-17). "as easy for everyone involved" is in the hero's orange, like
-  "live music" in the title. It was approved word by word, and the hero's sub
-  names artists, managers, agents and crew in the same order.
+  "live music" in the title. It opens "Beckstage is where…", which answers
+  the title's "Where" (2026-11-19). It was approved word by word, and the
+  hero's sub names artists, managers, agents and crew in the same order.
 - **The four lines are always readable.** They are server-rendered and nothing
   hides one behind a timer.
 - **Desktop:** the list beside a stage. One fragment plays at a time; when its
